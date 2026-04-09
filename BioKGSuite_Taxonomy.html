@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioKGSuite Taxonomy</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px 50px 55px 200px;
+  }
+
+  .chart-outer {
+    position: relative;
+    width: 100%;
+    max-width: 1120px;
+  }
+
+  /* ── Left-side labels ────────────────────────────────── */
+  .left-label {
+    position: absolute;
+    border: 1.5px solid #C0C0C0;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+    background: white;
+    left: -172px;
+    width: 148px;
+    line-height: 1.5;
+  }
+
+  /* ── Root box ────────────────────────────────────────── */
+  .root-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .root-box {
+    border: 2px solid #AAAAAA;
+    border-radius: 11px;
+    padding: 9px 38px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+    background: white;
+  }
+
+  /* ── Tree SVG ────────────────────────────────────────── */
+  #tree-svg {
+    display: block;
+    width: 100%;
+  }
+
+  /* ── Category labels row ─────────────────────────────── */
+  .categories-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  .cat-label {
+    text-align: center;
+    letter-spacing: 4px;
+    font-size: 9px;
+    color: #AAAAAA;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .cat-content  { flex: 3; }
+  .cat-structure{ flex: 2; }
+  .cat-inference{ flex: 2; }
+
+  /* ── Panels row ──────────────────────────────────────── */
+  .panels-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .section-panel {
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .panel-content  { background: #F2E2EC; flex: 3; }
+  .panel-structure{ background: #E2F1EE; flex: 2; }
+  .panel-inference{ background: #E2EBF6; flex: 2; }
+
+  /* ── Dimension column ────────────────────────────────── */
+  .dim-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Dimension header box ────────────────────────────── */
+  .dim-hdr {
+    width: 100%;
+    border-radius: 7px;
+    padding: 9px 10px;
+    text-align: center;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;
+    flex-shrink: 0;
+  }
+
+  .dim-num {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 8.5px;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+
+  .dim-title {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .hdr-content  { background: #8C5472; }
+  .hdr-structure{ background: #4A9390; }
+  .hdr-inference{ background: #1C4F82; }
+
+  /* ── Vertical connector line ─────────────────────────── */
+  .vline {
+    width: 1px;
+    height: 11px;
+    background: #C8C8C8;
+    margin: 0 auto;
+    flex-shrink: 0;
+  }
+
+  /* ── Dim description ─────────────────────────────────── */
+  .dim-desc {
+    font-style: italic;
+    font-size: 9.5px;
+    color: #666;
+    text-align: center;
+    line-height: 1.45;
+    padding: 0 3px;
+    flex-shrink: 0;
+  }
+
+  /* ── Metric box ──────────────────────────────────────── */
+  .metric {
+    width: 100%;
+    border-radius: 5px;
+    padding: 7px 6px;
+    text-align: center;
+    font-size: 10.5px;
+    line-height: 1.35;
+    color: #333;
+    flex-shrink: 0;
+  }
+
+  .m-content  { background: #EDD3E2; }
+  .m-structure{ background: #BCDDD5; }
+  .m-inference{ background: #BDD3EA; }
+</style>
+</head>
+<body>
+
+<div class="chart-outer" id="chart">
+
+  <!-- Left-side labels (JS-positioned) -->
+  <div class="left-label" id="lbl-dim">7 evaluation<br>dimensions</div>
+  <div class="left-label" id="lbl-met">19 metrics</div>
+
+  <!-- Root node -->
+  <div class="root-section">
+    <div class="root-box" id="root-box">BioKGSuite</div>
+  </div>
+
+  <!-- Branching tree SVG -->
+  <svg id="tree-svg" height="46"></svg>
+
+  <!-- Category labels -->
+  <div class="categories-row">
+    <div class="cat-label cat-content"  id="cat-content" >C O N T E N T</div>
+    <div class="cat-label cat-structure" id="cat-structure">S T R U C T U R E</div>
+    <div class="cat-label cat-inference" id="cat-inference">I N F E R E N C E</div>
+  </div>
+
+  <!-- Dimension panels -->
+  <div class="panels-row">
+
+    <!-- ── CONTENT ─────────────────────────────────────── -->
+    <div class="section-panel panel-content" id="panel-content">
+
+      <!-- 01 Coverage -->
+      <div class="dim-col" id="col-01">
+        <div class="dim-hdr hdr-content">
+          <span class="dim-num">01</span>
+          <span class="dim-title">Coverage</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How complete<br>the KG content is</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Entity<br>coverage</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Relation<br>coverage</div>
+      </div>
+
+      <!-- 02 Annotation Accuracy -->
+      <div class="dim-col" id="col-02">
+        <div class="dim-hdr hdr-content">
+          <span class="dim-num">02</span>
+          <span class="dim-title">Annotation<br>Accuracy</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How accurate<br>the KG content is</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Entity<br>validity</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Relational<br>consistency</div>
+      </div>
+
+      <!-- 03 Trustworthiness -->
+      <div class="dim-col" id="col-03">
+        <div class="dim-hdr hdr-content">
+          <span class="dim-num">03</span>
+          <span class="dim-title">Trustworthiness</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How well-evidenced<br>the KG content is</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Source<br>diversity</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Edge<br>traceability</div>
+        <div class="vline"></div>
+        <div class="metric m-content">Uncertainty<br>quantification</div>
+      </div>
+
+    </div><!-- /panel-content -->
+
+    <!-- ── STRUCTURE ───────────────────────────────────── -->
+    <div class="section-panel panel-structure" id="panel-structure">
+
+      <!-- 04 Topology -->
+      <div class="dim-col" id="col-04">
+        <div class="dim-hdr hdr-structure">
+          <span class="dim-num">04</span>
+          <span class="dim-title">Topology</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How interconnected<br>the KG structure is</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Graph<br>cohesion</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Clustering<br>coefficient</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Graph<br>reachability</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Community<br>purity</div>
+      </div>
+
+      <!-- 05 Stability -->
+      <div class="dim-col" id="col-05">
+        <div class="dim-hdr hdr-structure">
+          <span class="dim-num">05</span>
+          <span class="dim-title">Stability</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How robust<br>the KG structure is</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Random-dropout<br>sensitivity</div>
+        <div class="vline"></div>
+        <div class="metric m-structure">Periphery-dropout<br>sensitivity</div>
+      </div>
+
+    </div><!-- /panel-structure -->
+
+    <!-- ── INFERENCE ───────────────────────────────────── -->
+    <div class="section-panel panel-inference" id="panel-inference">
+
+      <!-- 06 Task Performance -->
+      <div class="dim-col" id="col-06">
+        <div class="dim-hdr hdr-inference">
+          <span class="dim-num">06</span>
+          <span class="dim-title">Task<br>Performance</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How reliable<br>the KG inferences are</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Link<br>prediction</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Neighbourhood<br>retrieval</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Multi-hop<br>reasoning</div>
+      </div>
+
+      <!-- 07 Generalisation -->
+      <div class="dim-col" id="col-07">
+        <div class="dim-hdr hdr-inference">
+          <span class="dim-num">07</span>
+          <span class="dim-title">Generalisation</span>
+        </div>
+        <div class="vline"></div>
+        <div class="dim-desc">How generalisable<br>the KG inferences are</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Data-sparse<br>generalisation</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Cross-domain<br>generalisation</div>
+        <div class="vline"></div>
+        <div class="metric m-inference">Prospective<br>generalisation</div>
+      </div>
+
+    </div><!-- /panel-inference -->
+
+  </div><!-- /panels-row -->
+
+</div><!-- /chart-outer -->
+
+<script>
+window.addEventListener('load', function () {
+  const chart     = document.getElementById('chart');
+  const chartRect = chart.getBoundingClientRect();
+
+  function cx(el) {
+    const r = el.getBoundingClientRect();
+    return Math.round(r.left + r.width / 2 - chartRect.left);
+  }
+
+  /* ── Position left-side labels ── */
+  const dimHeaders = document.querySelectorAll('.dim-hdr');
+  const metrics    = document.querySelectorAll('.metric');
+
+  const firstHdrRect = dimHeaders[0].getBoundingClientRect();
+  const lblDim = document.getElementById('lbl-dim');
+  const hdrCY  = firstHdrRect.top + firstHdrRect.height / 2 - chartRect.top;
+  lblDim.style.top = (hdrCY - 21) + 'px';
+
+  const firstMetRect = metrics[0].getBoundingClientRect();
+  const lastMetRect  = metrics[metrics.length - 1].getBoundingClientRect();
+  const metCY = (firstMetRect.top + lastMetRect.bottom) / 2 - chartRect.top;
+  const lblMet = document.getElementById('lbl-met');
+  lblMet.style.top = (metCY - 16) + 'px';
+
+  /* ── Draw branching tree SVG ── */
+  const svg            = document.getElementById('tree-svg');
+  const rootBox        = document.getElementById('root-box');
+  const panelContent   = document.getElementById('panel-content');
+  const panelStructure = document.getElementById('panel-structure');
+  const panelInference = document.getElementById('panel-inference');
+
+  const svgW = chart.offsetWidth;
+  svg.setAttribute('width', svgW);
+
+  const rootCx      = cx(rootBox);
+  const contentCx   = cx(panelContent);
+  const structureCx = cx(panelStructure);
+  const inferenceCx = cx(panelInference);
+
+  const svgH = parseInt(svg.getAttribute('height'));
+  const midY = Math.round(svgH * 0.58);
+
+  const stroke = '#BBBBBB';
+  const sw = '1.5';
+
+  svg.innerHTML = `
+    <line x1="${rootCx}"      y1="0"    x2="${rootCx}"      y2="${midY}" stroke="${stroke}" stroke-width="${sw}"/>
+    <line x1="${contentCx}"  y1="${midY}" x2="${inferenceCx}" y2="${midY}" stroke="${stroke}" stroke-width="${sw}"/>
+    <line x1="${contentCx}"  y1="${midY}" x2="${contentCx}"  y2="${svgH}" stroke="${stroke}" stroke-width="${sw}"/>
+    <line x1="${structureCx}" y1="${midY}" x2="${structureCx}" y2="${svgH}" stroke="${stroke}" stroke-width="${sw}"/>
+    <line x1="${inferenceCx}" y1="${midY}" x2="${inferenceCx}" y2="${svgH}" stroke="${stroke}" stroke-width="${sw}"/>
+  `;
+});
+</script>
+
+</body>
+</html>

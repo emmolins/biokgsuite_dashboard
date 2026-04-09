@@ -1,0 +1,141 @@
+KG,Conflict,Entity_A_ID,Entity_A_Name,Entity_B_ID,Entity_B_Name
+primekg,Indication vs. Contraindication,10162_10160_10161_4741,tyrosinemia,DB00348,Nitisinone
+primekg,Indication vs. Contraindication,1200_1134_15512_5080_100078,hypertension,DB00622,Nicardipine
+primekg,Indication vs. Contraindication,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB00836,Loperamide
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00136,Calcitriol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00146,Calcifediol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00153,Ergocalciferol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00169,Cholecalciferol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00258,Calcium acetate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00326,Calcium glucoheptonate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00710,Ibandronate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00974,Edetic acid
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01022,Phylloquinone
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01070,Dihydrotachysterol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01164,Calcium chloride
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01377,Magnesium oxide
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11110,Magnesium citrate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11126,Calcium gluconate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11264,Calcium glycerophosphate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB13231,Calcium lactate
+primekg,Indication vs. Contraindication,1567,cholesterol 25-hydroxylase activity,DB00136,Calcitriol
+primekg,Indication vs. Off-label,1068,transcription regulatory region RNA binding,DB00146,Calcifediol
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00443,Betamethasone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00620,Triamcinolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00635,Prednisone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00860,Prednisolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00959,Methylprednisolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB01234,Dexamethasone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB01380,Cortisone acetate
+primekg,Indication vs. Off-label,11786_5324_24332,allergic rhinitis,DB00747,Scopolamine
+primekg,Indication vs. Off-label,11786_5324_24332,allergic rhinitis,DB11315,Methscopolamine
+primekg,Indication vs. Off-label,12048,Oromandibular dystonia,DB00472,Fluoxetine
+primekg,Indication vs. Off-label,1214_6668_2314_5808_4811,conjunctivitis,DB00199,Erythromycin
+primekg,Indication vs. Off-label,1214_6668_2314_5808_4811,conjunctivitis,DB00634,Sulfacetamide
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB00537,Ciprofloxacin
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB01059,Norfloxacin
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB01165,Ofloxacin
+primekg,Indication vs. Off-label,15758,primary cutaneous T-cell lymphoma,DB00553,Methoxsalen
+primekg,Indication vs. Off-label,15898,amiloride transport,DB00741,Hydrocortisone
+primekg,Indication vs. Off-label,16684,anaplastic astrocytoma,DB00262,Carmustine
+primekg,Indication vs. Off-label,1673,male germ cell nucleus,DB00537,Ciprofloxacin
+primekg,Contraindication vs. Off-label,11479,postural orthostatic tachycardia syndrome,DB00373,Timolol
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,15758,primary cutaneous T-cell lymphoma,DB00755,Tretinoin
+primekg,Contraindication vs. Off-label,19142,2-hydroxyglutarate synthase activity,DB00608,Chloroquine
+primekg,Contraindication vs. Off-label,19142,2-hydroxyglutarate synthase activity,DB01611,Hydroxychloroquine
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,2406,antigen sampling by M cells in mucosal-associated lymphoid tissue,DB00410,Mupirocin
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:100,100,PUBCHEM.COMPOUND:6021,6021
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10018,10018,PUBCHEM.COMPOUND:25066467,25066467
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10018,10018,PUBCHEM.COMPOUND:3006531,3006531
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:3779,3779
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:445154,445154
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:77998,77998
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1017,1017,PUBCHEM.COMPOUND:5280795,5280795
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1017,1017,PUBCHEM.COMPOUND:5591,5591
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10257,10257,PUBCHEM.COMPOUND:6076,6076
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:5284616,5284616
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:5743,5743
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:71308609,71308609
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10365,10365,PUBCHEM.COMPOUND:5284616,5284616
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10383,10383,PUBCHEM.COMPOUND:13342,13342
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1051,1051,PUBCHEM.COMPOUND:5538,5538
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:1023,1023
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:5957,5957
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:6013,6013
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:6076,6076
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:108,108,PUBCHEM.COMPOUND:1023,1023
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:130013,130013,PUBCHEM.COMPOUND:23925,23925
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:136,136,PUBCHEM.COMPOUND:4171,4171
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2216,2216
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5487,5487
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:2216,2216
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:31100,31100
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:5095,5095
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:57242,57242
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:6005,6005
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1814,1814,PUBCHEM.COMPOUND:31100,31100
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2746,2746,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:1023,1023
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:24316,24316
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:198756,198756
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4431,4431
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3357,3357,PUBCHEM.COMPOUND:4171,4171
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:111,111,PUBCHEM.COMPOUND:271,271
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:2230,2230
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:146,146,PUBCHEM.COMPOUND:5815,5815
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:150,150,PUBCHEM.COMPOUND:3340,3340
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:152,152,PUBCHEM.COMPOUND:3340,3340
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:153,153,PUBCHEM.COMPOUND:2995,2995
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:123600,123600
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:2995,2995
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:3410,3410
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:2477,2477
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:2746,2746,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3274,3274,PUBCHEM.COMPOUND:7741,7741
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:128918,128918
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:2818,2818
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4431,4431
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4585,4585
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:5002,5002
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:57347,57347
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:60795,60795
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:60853,60853
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:11255,11255,PUBCHEM.COMPOUND:156615,156615
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:4168,4168
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:5314,5314
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:146,146,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:146,146,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:147,147,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:147,147,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:148,148,PUBCHEM.COMPOUND:2803,2803
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:148,148,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2216,2216
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2368,2368
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:4436,4436
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5487,5487
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:6005,6005
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:5073,5073
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:6005,6005

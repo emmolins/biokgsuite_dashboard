@@ -1,0 +1,34 @@
+name: biokgsuite
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+
+  # ── Core data science ─────────────────────────────────────────────────────
+  - pandas>=2.1,<3
+  - numpy>=1.26,<3
+  - scipy>=1.12,<2
+
+  # ── Machine learning ──────────────────────────────────────────────────────
+  - scikit-learn>=1.4,<2
+
+  # ── Graph analysis ────────────────────────────────────────────────────────
+  - networkx>=3.2,<4
+
+  # ── Visualisation ─────────────────────────────────────────────────────────
+  - matplotlib>=3.8,<4
+
+  # ── Notebook environment ──────────────────────────────────────────────────
+  - jupyter>=1.1
+  - jupyterlab>=4.0
+  - ipykernel>=6.29
+  - tqdm>=4.66
+
+  # ── Configuration ─────────────────────────────────────────────────────────
+  - pyyaml>=6.0
+
+  # ── pip-only packages ─────────────────────────────────────────────────────
+  - pip:
+    - nbconvert>=7.14        # notebook export / CI execution
