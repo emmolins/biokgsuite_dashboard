@@ -2,7 +2,7 @@
 
 **A systematic evaluation framework for biomedical knowledge graphs.**
 
-BioKGSuite provides a reproducible, multi-dimensional evaluation framework for biomedical knowledge graphs — demonstrated on **PrimeKG**, **Hetionet**, and **DRKG** — across seven complementary evaluation dimensions, with the intended application area of drug repurposing. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
+BioKGSuite provides a reproducible, multi-dimensional evaluation framework for biomedical knowledge graphs — demonstrated on **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, and **BioKG** — across seven complementary evaluation dimensions, with the intended application area of drug repurposing. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
