@@ -2,7 +2,7 @@
 
 **A systematic evaluation framework for biomedical knowledge graphs.**
 
-BioKGSuite provides a reproducible, multi-dimensional evaluation framework for biomedical knowledge graphs — demonstrated on **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, and **BioKG** — across seven complementary evaluation dimensions, with the intended application area of drug repurposing. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
+BioKGSuite provides a reproducible, multi-dimensional evaluation framework for biomedical knowledge graphs — demonstrated on **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, and **BioKG** — across seven complementary evaluation dimensions and 18 individual metrics, with the intended application area of drug repurposing. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript. An interactive dashboard provides visual exploration of all results, including a D3.js-powered subgraph explorer for navigating local neighbourhoods across all five KGs.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -10,27 +10,26 @@ BioKGSuite provides a reproducible, multi-dimensional evaluation framework for b
 
 ## Benchmark dimensions
 
-| Notebook | Dimension | Key question |
-|---|---|---|
-| `00_benchmark_summary.ipynb` | **Summary** | How do the KGs compare across all dimensions? |
-| `01_coverage.ipynb` | **Coverage** | Does the KG cover the relevant biomedical domain? |
-| `02_annotation_accuracy.ipynb` | **Annotation accuracy** | Do entities resolve to valid ontology entries and are relations schema-conformant? |
-| `03_trustworthiness.ipynb` | **Trustworthiness** | How reliable are the curated sources? |
-| `04_topology.ipynb` | **Topology** | What are the structural properties of the graph? |
-| `05_stability.ipynb` | **Stability** | Is predictive performance robust to edge dropout? |
-| `06_task_performance.ipynb` | **Task performance** | Does the KG support accurate link prediction? |
-| `07_generalization.ipynb` | **Generalization** | Does performance hold across domains and sparse-entity settings? |
-| `08_matrix.ipynb` | **MATRIX** | How does the emerging MATRIX KG compare on the same dimensions? |
+| Notebook | Dimension | Metrics | Key question |
+|---|---|---|---|
+| `00_benchmark_summary.ipynb` | **Summary** | — | How do the KGs compare across all dimensions? |
+| `01_coverage.ipynb` | **Coverage** | Entity Coverage, Relation Coverage | Does the KG cover the relevant biomedical domain? |
+| `02_annotation_accuracy.ipynb` | **Annotation accuracy** | Entity Validity, Relational Consistency | Do entities resolve to valid ontology entries and are relations schema-conformant? |
+| `03_trustworthiness.ipynb` | **Trustworthiness** | Edge Traceability, Uncertainty Quantification | How reliable and transparent are the curated sources? |
+| `04_topology.ipynb` | **Topology** | Connectedness, Small-World, Reachability, Community Purity | What are the structural properties of the graph? |
+| `05_stability.ipynb` | **Stability** | Random Dropout, Peripheral Dropout | Is predictive performance robust to edge dropout? |
+| `06_task_performance.ipynb` | **Task performance** | Link Prediction, Neighbourhood Retrieval, Multi-hop Reasoning | Does the KG support accurate link prediction and retrieval? |
+| `07_generalization.ipynb` | **Generalisation** | Data-Sparse Gen., Cross-Domain Gen., Prospective Gen. | Does performance hold across domains and sparse-entity settings? |
 
 ---
 
 ## Repository layout
 
 ```
-BioKGSuite/
-├── eval_notebooks/          # Nine evaluation notebooks (00–08)
+biokgsuite/
+├── eval_notebooks/          # Eight evaluation notebooks (00–07)
 ├── src/                     # Shared Python modules
-│   ├── loading.py           # KG loaders (PrimeKG, Hetionet, DRKG, MATRIX)
+│   ├── loading.py           # KG loaders (PrimeKG, Hetionet, DRKG, OpenBioLink, BioKG)
 │   ├── evaluation.py        # AUROC, AUPRC, MRR, Hits@10
 │   ├── scoring.py           # Topological link-prediction scorers
 │   ├── negative_sampling.py # Corruption-based negative generation
@@ -40,9 +39,12 @@ BioKGSuite/
 │   ├── primekg/             # primekg.csv
 │   ├── hetionet/            # nodes.tsv, edges.tsv
 │   ├── drkg/                # drkg.tsv
-│   ├── matrix/              # nodes.tsv, edges.tsv
+│   ├── openbilink/          # edges.csv
+│   ├── biokg/               # biokg.links.tsv
 │   └── gold_standards/      # DrugBank, UniProt, DO, Reactome, Open Targets, DDI, CTD, MONDO
 ├── results/
+│   ├── biokgbench_dashboard.html  # Interactive dashboard (self-contained)
+│   ├── benchmark_summary.csv      # Scores for all 18 metrics × 5 KGs
 │   ├── figures/             # PDF + PNG for every manuscript figure
 │   ├── checkpoints/         # Serialised intermediate results (.pkl)
 │   ├── coverage/            # Per-entity membership CSVs (generated by 01)
@@ -66,8 +68,8 @@ BioKGSuite/
 ### 1 — Clone and enter the repository
 
 ```bash
-git clone https://github.com/emilymolins/BioKGSuite.git
-cd BioKGSuite
+git clone https://github.com/emmolins/biokgsuite_dashboard.git
+cd biokgsuite_dashboard
 ```
 
 ### 2 — Create and activate the conda environment
@@ -96,8 +98,8 @@ data/primekg/primekg.csv
 data/hetionet/nodes.tsv
 data/hetionet/edges.tsv
 data/drkg/drkg.tsv
-data/matrix/nodes.tsv
-data/matrix/edges.tsv
+data/openbilink/edges.csv
+data/biokg/biokg.links.tsv
 ```
 
 If you are missing any of these, see [Data availability](#data-availability) below.
@@ -114,13 +116,13 @@ The default `config.yaml` assumes all data files live under `data/` relative to 
 jupyter lab
 ```
 
-Open `eval_notebooks/` and run notebooks **in numerical order** (00 → 08). Each notebook is designed to run top-to-bottom from a clean kernel (`Kernel → Restart Kernel and Run All Cells`). Notebook 01 writes per-entity membership files to `results/coverage/`; running in order is recommended for reproducibility.
+Open `eval_notebooks/` and run notebooks **in numerical order** (00 → 07). Each notebook is designed to run top-to-bottom from a clean kernel (`Kernel → Restart Kernel and Run All Cells`). Notebook 01 writes per-entity membership files to `results/coverage/`; running in order is recommended for reproducibility.
 
 ---
 
 ## Reproducing all figures non-interactively
 
-To execute all nine notebooks programmatically and regenerate every figure:
+To execute all eight notebooks programmatically and regenerate every figure:
 
 ```bash
 conda activate biokgsuite
@@ -128,7 +130,7 @@ cd eval_notebooks
 
 for nb in 00_benchmark_summary 01_coverage 02_annotation_accuracy \
            03_trustworthiness 04_topology 05_stability \
-           06_task_performance 07_generalization 08_matrix; do
+           06_task_performance 07_generalization; do
     echo "Running ${nb}.ipynb ..."
     jupyter nbconvert --to notebook --execute \
         --ExecutePreprocessor.timeout=3600 \
@@ -149,7 +151,8 @@ All output figures are written to `results/figures/` as both `.pdf` (for the man
 | **PrimeKG** | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM) | v2.0 (2023-01) | Open |
 | **Hetionet** | [Zenodo / GitHub](https://github.com/hetio/hetionet) | v1.0 (2017) | Open |
 | **DRKG** | [AWS / GitHub](https://github.com/gnn4dr/DRKG) | 2020-09 release | Open |
-| **MATRIX** | See notebook 08 | 2025 | Open |
+| **OpenBioLink** | [GitHub](https://github.com/openbiolink/openbiolink) | HQ (2020) | Open |
+| **BioKG** | [GitHub](https://github.com/dsi-bdi/biokg) | 2021 | Open |
 | **DrugBank** | [DrugBank](https://go.drugbank.com/releases/latest) | v5.1.12 | Free academic account required |
 | **UniProt human proteome** | [UniProt](https://www.uniprot.org/proteomes/UP000005640) | 2024-06 | Open |
 | **Disease Ontology** | [Disease Ontology](https://disease-ontology.org/) | 2024-04 | Open |
@@ -190,7 +193,7 @@ If you use BioKGSuite in your research, please cite:
                Knowledge Graphs for Drug-Repurposing Applications},
   year      = {2026},
   version   = {1.0.0},
-  url       = {https://github.com/emilymolins/BioKGSuite},
+  url       = {https://github.com/emmolins/biokgsuite_dashboard},
   license   = {MIT}
 }
 ```
