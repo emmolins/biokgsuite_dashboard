@@ -102,8 +102,8 @@ Notebook 02 validates entity identifiers against external APIs (NCBI, EBI QuickG
 ```bibtex
 @software{molins_biokgsuite_2026,
   author  = {Molins, Emily},
-  title   = {{BioKGSuite}: A systematic evaluation framework for biomedical
-             knowledge graphs for drug-repurposing applications},
+  title   = {{BioKGSuite}: A multidimensional framework for systematic
+             evaluation of biomedical knowledge graphs},
   year    = {2026},
   version = {1.0.0},
   url     = {https://github.com/emmolins/biokgsuite_dashboard},
