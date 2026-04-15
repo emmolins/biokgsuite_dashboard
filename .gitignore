@@ -45,13 +45,3 @@ data/validation_cache.json
 # ── Generated results (reproducible by running notebooks) ────────────────────
 results/figures/
 results/checkpoints/
-results/coverage/
-results/annotation/
-results/trustworthiness/
-results/topology/
-results/stability/
-results/task_performance/
-results/generalization/
-
-# ── Personal / unpublished ────────────────────────────────────────────────────
-eval_notebooks/08_matrix.ipynb

@@ -1,97 +1,58 @@
 # BioKGSuite
 
-**A systematic evaluation framework for biomedical knowledge graphs.**
+A reproducible evaluation framework for biomedical knowledge graphs, applied to drug repurposing. BioKGSuite benchmarks five public KGs — PrimeKG, Hetionet, DRKG, OpenBioLink, and BioKG — across seven evaluation dimensions and 18 metrics. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
 
-BioKGSuite provides a reproducible, multi-dimensional evaluation framework for biomedical knowledge graphs — demonstrated on **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, and **BioKG** — across seven complementary evaluation dimensions and 18 individual metrics, with the intended application area of drug repurposing. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript. An interactive dashboard provides visual exploration of all results, including a D3.js-powered subgraph explorer for navigating local neighbourhoods across all five KGs.
+**Interactive dashboard:** https://emmolins.github.io/biokgsuite_dashboard/dashboard.html
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+## Evaluation dimensions
 
----
+| Notebook | Dimension | Metrics |
+|---|---|---|
+| `01_coverage.ipynb` | Coverage | Entity coverage, relation coverage |
+| `02_annotation_accuracy.ipynb` | Annotation accuracy | Entity validity, relational consistency |
+| `03_trustworthiness.ipynb` | Trustworthiness | Edge traceability, uncertainty quantification |
+| `04_topology.ipynb` | Topology | Connectedness, small-world, reachability, community purity |
+| `05_stability.ipynb` | Stability | Random dropout, peripheral dropout |
+| `06_task_performance.ipynb` | Task performance | Link prediction, neighbourhood retrieval, multi-hop reasoning |
+| `07_generalization.ipynb` | Generalisation | Data-sparse, cross-domain, prospective |
+| `00_benchmark_summary.ipynb` | Summary | Cross-dimension aggregate of all 18 metrics |
 
-## Benchmark dimensions
-
-| Notebook | Dimension | Metrics | Key question |
-|---|---|---|---|
-| `00_benchmark_summary.ipynb` | **Summary** | — | How do the KGs compare across all dimensions? |
-| `01_coverage.ipynb` | **Coverage** | Entity Coverage, Relation Coverage | Does the KG cover the relevant biomedical domain? |
-| `02_annotation_accuracy.ipynb` | **Annotation accuracy** | Entity Validity, Relational Consistency | Do entities resolve to valid ontology entries and are relations schema-conformant? |
-| `03_trustworthiness.ipynb` | **Trustworthiness** | Edge Traceability, Uncertainty Quantification | How reliable and transparent are the curated sources? |
-| `04_topology.ipynb` | **Topology** | Connectedness, Small-World, Reachability, Community Purity | What are the structural properties of the graph? |
-| `05_stability.ipynb` | **Stability** | Random Dropout, Peripheral Dropout | Is predictive performance robust to edge dropout? |
-| `06_task_performance.ipynb` | **Task performance** | Link Prediction, Neighbourhood Retrieval, Multi-hop Reasoning | Does the KG support accurate link prediction and retrieval? |
-| `07_generalization.ipynb` | **Generalisation** | Data-Sparse Gen., Cross-Domain Gen., Prospective Gen. | Does performance hold across domains and sparse-entity settings? |
-
----
+Notebooks 01 – 07 produce per-dimension results; notebook 00 reads their checkpoints to assemble the final summary. Run in order `01 → 07`, then `00`.
 
 ## Repository layout
 
 ```
 biokgsuite/
-├── eval_notebooks/          # Eight evaluation notebooks (00–07)
-├── src/                     # Shared Python modules
-│   ├── loading.py           # KG loaders (PrimeKG, Hetionet, DRKG, OpenBioLink, BioKG)
-│   ├── evaluation.py        # AUROC, AUPRC, MRR, Hits@10
-│   ├── scoring.py           # Topological link-prediction scorers
-│   ├── negative_sampling.py # Corruption-based negative generation
-│   ├── graph_utils.py       # NetworkX graph construction helpers
-│   └── plotting.py          # Shared colour palette and style utilities
-├── data/
-│   ├── primekg/             # primekg.csv
-│   ├── hetionet/            # nodes.tsv, edges.tsv
-│   ├── drkg/                # drkg.tsv
-│   ├── openbilink/          # edges.csv
-│   ├── biokg/               # biokg.links.tsv
-│   └── gold_standards/      # DrugBank, UniProt, DO, Reactome, Open Targets, DDI, CTD, MONDO
+├── docs/dashboard.html       # Interactive dashboard (served by GitHub Pages)
+├── eval_notebooks/           # Eight evaluation notebooks (00–07)
+├── src/                      # Shared modules (loaders, scorers, plotting)
+├── data/                     # KG files + gold-standard references (gitignored)
 ├── results/
-│   ├── biokgbench_dashboard.html  # Interactive dashboard (self-contained)
-│   ├── benchmark_summary.csv      # Scores for all 18 metrics × 5 KGs
-│   ├── figures/             # PDF + PNG for every manuscript figure
-│   ├── checkpoints/         # Serialised intermediate results (.pkl)
-│   ├── coverage/            # Per-entity membership CSVs (generated by 01)
-│   ├── annotation/          # Entity validity and relational consistency outputs
-│   ├── trustworthiness/     # Source granularity CSV
-│   ├── topology/            # Degree, clustering, small-world, path-diversity CSVs
-│   ├── stability/           # Edge-dropout robustness CSV
-│   ├── task_performance/    # Link prediction and retrieval outputs
-│   └── generalization/      # Generalisation summary CSV
-├── config.yaml              # Data paths and analysis parameters
-├── environment.yml          # Conda environment specification
-├── pyproject.toml           # Package definition (enables pip install -e .)
-├── CITATION.cff             # Machine-readable citation metadata
-└── LICENSE                  # MIT
+│   ├── benchmark_summary.csv # 18 metrics × 5 KGs (produced by 00)
+│   ├── figures/              # PDF + PNG for every manuscript figure
+│   └── checkpoints/          # Per-notebook serialised results (.pkl)
+├── config.yaml               # Data paths and analysis parameters
+├── environment.yml           # Conda environment
+├── pyproject.toml            # Editable install
+├── CITATION.cff              # Machine-readable citation
+└── LICENSE                   # MIT
 ```
 
----
+## Reproducing the benchmark
 
-## Quickstart
-
-### 1 — Clone and enter the repository
+**1. Clone and install.**
 
 ```bash
 git clone https://github.com/emmolins/biokgsuite_dashboard.git
 cd biokgsuite_dashboard
-```
-
-### 2 — Create and activate the conda environment
-
-```bash
 conda env create -f environment.yml
 conda activate biokgsuite
-```
-
-> **Python version:** 3.11. All notebooks were developed and validated under this version. Using 3.10 or 3.12 should also work but is not guaranteed.
-
-### 3 — Install the `src` package in editable mode
-
-```bash
 pip install -e .
 ```
 
-This makes the shared `src/` modules (`loading`, `scoring`, `evaluation`, etc.) importable from anywhere — including when notebooks are executed non-interactively via `nbconvert`.
+Python 3.11 is tested on macOS 14 (Apple Silicon) and Ubuntu 22.04 (x86-64). Python 3.10 and 3.12 are expected to work.
 
-### 4 — Verify data files are present
-
-The knowledge graphs are large and are **not** committed to git. Confirm that the following files exist before running any notebook:
+**2. Download input data.** Place each knowledge graph at the path declared in `config.yaml` (sources and versions in [Data availability](#data-availability)). The six required files are:
 
 ```
 data/primekg/primekg.csv
@@ -102,106 +63,56 @@ data/openbilink/edges.csv
 data/biokg/biokg.links.tsv
 ```
 
-If you are missing any of these, see [Data availability](#data-availability) below.
+Gold-standard reference files under `data/gold_standards/` are regenerated from the sources listed in [Data availability](#data-availability). To tune analysis parameters (random seed, negative-sampling ratio, dropout rates, etc.), edit `config.yaml` under `analysis_params`.
 
-The gold-standard reference files (`data/gold_standards/`) are included in the repository.
-
-### 5 — (Optional) Edit `config.yaml` if data files are stored elsewhere or to tune parameters
-
-The default `config.yaml` assumes all data files live under `data/` relative to the repository root. If you relocate any file, update the corresponding path. All analysis parameters (random seed, negative sampling ratio, bootstrap resamples, path-enumeration caps, dropout rates, etc.) are also centralised in `config.yaml` under `analysis_params` — edit them there rather than in individual notebooks.
-
-### 6 — Launch JupyterLab and run notebooks
+**3. Run the notebooks.** Interactively via `jupyter lab` (run in order `01 → 07`, then `00`), or non-interactively:
 
 ```bash
-jupyter lab
-```
-
-Open `eval_notebooks/` and run notebooks **in numerical order** (00 → 07). Each notebook is designed to run top-to-bottom from a clean kernel (`Kernel → Restart Kernel and Run All Cells`). Notebook 01 writes per-entity membership files to `results/coverage/`; running in order is recommended for reproducibility.
-
----
-
-## Reproducing all figures non-interactively
-
-To execute all eight notebooks programmatically and regenerate every figure:
-
-```bash
-conda activate biokgsuite
 cd eval_notebooks
-
-for nb in 00_benchmark_summary 01_coverage 02_annotation_accuracy \
-           03_trustworthiness 04_topology 05_stability \
-           06_task_performance 07_generalization; do
-    echo "Running ${nb}.ipynb ..."
-    jupyter nbconvert --to notebook --execute \
-        --ExecutePreprocessor.timeout=3600 \
-        --inplace "${nb}.ipynb"
+for nb in 01_coverage 02_annotation_accuracy 03_trustworthiness \
+          04_topology 05_stability 06_task_performance \
+          07_generalization 00_benchmark_summary; do
+    jupyter nbconvert --to notebook --execute --inplace \
+        --ExecutePreprocessor.timeout=3600 "${nb}.ipynb"
 done
 ```
 
-All output figures are written to `results/figures/` as both `.pdf` (for the manuscript) and `.png` (for quick inspection). Intermediate result tables are written to the corresponding per-dimension subdirectories under `results/`.
+Figures are written to `results/figures/` as both `.pdf` (for the manuscript) and `.png` (for inspection). Per-notebook intermediate results are serialised to `results/checkpoints/` as `.pkl` files. The final cross-dimension summary is `results/benchmark_summary.csv`.
 
-> **Notebook 02 — annotation accuracy and network access:** notebook 02 validates entity identifiers against external APIs (NCBI, EBI QuickGO, EBI OLS4, DrugBank, Reactome, PubChem). API responses are cached on first run; subsequent runs are fully offline.
-
----
+Notebook 02 validates entity identifiers against external APIs (NCBI, EBI QuickGO, EBI OLS4, DrugBank, Reactome, PubChem). API responses are cached on first run; subsequent runs are offline.
 
 ## Data availability
 
-| Dataset | Source | Version / date | Access |
+| Dataset | Source | Version | Access |
 |---|---|---|---|
-| **PrimeKG** | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM) | v2.0 (2023-01) | Open |
-| **Hetionet** | [Zenodo / GitHub](https://github.com/hetio/hetionet) | v1.0 (2017) | Open |
-| **DRKG** | [AWS / GitHub](https://github.com/gnn4dr/DRKG) | 2020-09 release | Open |
-| **OpenBioLink** | [GitHub](https://github.com/openbiolink/openbiolink) | HQ (2020) | Open |
-| **BioKG** | [GitHub](https://github.com/dsi-bdi/biokg) | 2021 | Open |
-| **DrugBank** | [DrugBank](https://go.drugbank.com/releases/latest) | v5.1.12 | Free academic account required |
-| **UniProt human proteome** | [UniProt](https://www.uniprot.org/proteomes/UP000005640) | 2024-06 | Open |
-| **Disease Ontology** | [Disease Ontology](https://disease-ontology.org/) | 2024-04 | Open |
-| **Reactome pathways** | [Reactome](https://reactome.org/download-data) | v88 | Open |
-| **Open Targets drug indications** | [Open Targets](https://platform.opentargets.org/downloads) | 24.06 | Open |
-| **CTD** | [CTD](http://ctdbase.org/) | 2024 | Open |
+| PrimeKG | [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM) | v2.0, 2023-01 | Open |
+| Hetionet | [GitHub](https://github.com/hetio/hetionet) | v1.0, 2017 | Open |
+| DRKG | [GitHub](https://github.com/gnn4dr/DRKG) | 2020-09 | Open |
+| OpenBioLink | [GitHub](https://github.com/openbiolink/openbiolink) | HQ, 2020 | Open |
+| BioKG | [GitHub](https://github.com/dsi-bdi/biokg) | 2021 | Open |
+| DrugBank | [DrugBank](https://go.drugbank.com/releases/latest) | v5.1.12 | Free academic account |
+| UniProt (human) | [UniProt](https://www.uniprot.org/proteomes/UP000005640) | 2024-06 | Open |
+| Disease Ontology | [Disease Ontology](https://disease-ontology.org/) | 2024-04 | Open |
+| Reactome | [Reactome](https://reactome.org/download-data) | v88 | Open |
+| Open Targets | [Open Targets](https://platform.opentargets.org/downloads) | 24.06 | Open |
+| CTD | [CTD](http://ctdbase.org/) | 2024 | Open |
 
-Gold-standard CSV files derived from these sources are included in `data/gold_standards/`.
-
----
-
-## Computational environment
-
-| Component | Version |
-|---|---|
-| Python | 3.11 |
-| pandas | >= 2.1 |
-| NumPy | >= 1.26 |
-| scikit-learn | >= 1.4 |
-| NetworkX | >= 3.2 |
-| matplotlib | >= 3.8 |
-| SciPy | >= 1.12 |
-| tqdm | >= 4.66 |
-| PyYAML | >= 6.0 |
-
-The full pinned specification is in `environment.yml`. The environment is tested on macOS 14 (Apple Silicon) and Ubuntu 22.04 (x86-64).
-
----
-
-## How to cite
-
-If you use BioKGSuite in your research, please cite:
+## Citing
 
 ```bibtex
 @software{molins_biokgsuite_2026,
-  author    = {Molins, Emily},
-  title     = {{BioKGSuite}: A Systematic Evaluation Framework for Biomedical
-               Knowledge Graphs for Drug-Repurposing Applications},
-  year      = {2026},
-  version   = {1.0.0},
-  url       = {https://github.com/emmolins/biokgsuite_dashboard},
-  license   = {MIT}
+  author  = {Molins, Emily},
+  title   = {{BioKGSuite}: A systematic evaluation framework for biomedical
+             knowledge graphs for drug-repurposing applications},
+  year    = {2026},
+  version = {1.0.0},
+  url     = {https://github.com/emmolins/biokgsuite_dashboard},
+  license = {MIT}
 }
 ```
 
-Machine-readable citation metadata is in [`CITATION.cff`](CITATION.cff).
-
----
+Machine-readable metadata in [`CITATION.cff`](CITATION.cff).
 
 ## License
 
-This project is released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE).
