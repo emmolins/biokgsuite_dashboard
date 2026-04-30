@@ -486,15 +486,20 @@ def load_biokg(links_path, metadata_dir=None):
                             id_to_name[eid] = name
 
     # ── Build node table ────────────────────────────────────────────────────
+    # BioKG uses bare IDs (e.g. "DB00001", "D000006", "P21917").  While
+    # current ID namespaces don't collide in practice, we add a type-
+    # qualified ``uid`` column for safe lookups, consistent with PrimeKG.
     all_entities = sorted(set(raw['head']) | set(raw['tail']))
     id_to_idx = {eid: i for i, eid in enumerate(all_entities)}
 
+    _types_list = [entity_type.get(eid, 'unknown') for eid in all_entities]
     nodes_df = pd.DataFrame({
         'idx':  range(len(all_entities)),
         'id':   all_entities,
-        'type': [entity_type.get(eid, 'unknown') for eid in all_entities],
+        'type': _types_list,
         'name': [id_to_name.get(eid, eid) for eid in all_entities],
     })
+    nodes_df['uid'] = nodes_df['type'].astype(str) + '/' + nodes_df['id'].astype(str)
 
     # ── Build edge table ────────────────────────────────────────────────────
     type_arr = nodes_df['type'].values
@@ -573,14 +578,27 @@ def load_kg(kg_name, config):
 # Private helpers 
 
 def _build_node_table(kg):
-    """Build a deduplicated node table from PrimeKG edge table."""
+    """Build a deduplicated node table from PrimeKG edge table.
+
+    .. warning::
+
+       PrimeKG external IDs (the ``id`` column) are **not unique across node
+       types**.  For example, ``"9891"`` is both gene NUAK1 (NCBI) and disease
+       "acquired polycythemia vera" (MONDO).  Any lookup dict built from
+       ``id`` alone will silently collide.  Use the ``uid`` column (which
+       prefixes the type) or the helper :func:`graph_utils.node_id_lookup`
+       for safe lookups.
+    """
     nodes = pd.concat([
         kg[['x_index', 'x_id', 'x_type', 'x_name']].rename(
             columns={'x_index': 'idx', 'x_id': 'id', 'x_type': 'type', 'x_name': 'name'}),
         kg[['y_index', 'y_id', 'y_type', 'y_name']].rename(
             columns={'y_index': 'idx', 'y_id': 'id', 'y_type': 'type', 'y_name': 'name'}),
     ]).drop_duplicates(subset=['idx'])
-    return nodes.reset_index(drop=True)
+    nodes = nodes.reset_index(drop=True)
+    # Type-qualified unique ID — safe for dict lookups across node types.
+    nodes['uid'] = nodes['type'].astype(str) + '/' + nodes['id'].astype(str)
+    return nodes
 
 
 def load_matrix(nodes_path, edges_path):
@@ -741,12 +759,12 @@ def load_matrix(nodes_path, edges_path):
         if _drug_mask.any():
             raw_nodes.loc[_drug_mask, 'drugbank_id'] = (
                 raw_nodes.loc[_drug_mask, _eq_col]
-                .str.extract(r'\b(DB\d{5,})\b', expand=False)
+                .str.extract(r'\b(DB\d{5})\b', expand=False)
                 .fillna('')
             )
             raw_nodes.loc[_drug_mask, 'drugbank_ids_all'] = (
                 raw_nodes.loc[_drug_mask, _eq_col]
-                .apply(lambda s: '|'.join(re.findall(r'\b(DB\d{5,})\b', str(s))))
+                .apply(lambda s: '|'.join(re.findall(r'\b(DB\d{5})\b', str(s))))
             )
 
         # Pathway nodes: Reactome ID from equivalent_identifiers

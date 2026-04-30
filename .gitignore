@@ -39,9 +39,20 @@ data/biokg/
 data/pharmkg/
 data/gold_standards/
 
-# ── API response cache (regenerated on first run of notebook 02) ──────────────
+# ── API response cache (regenerated on first run of notebooks) ───────────────
 data/validation_cache.json
+data/mesh_area_cache.json
 
 # ── Generated results (reproducible by running notebooks) ────────────────────
 results/figures/
 results/checkpoints/
+results/cache/
+
+# ── Cowork / skill workspace (local only) ────────────────────────────────────
+skills/
+
+# ── Executed notebook copies (regenerable) ───────────────────────────────────
+*_executed.ipynb
+
+# ── Working documents (not part of the benchmark) ────────────────────────────
+*.docx

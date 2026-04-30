@@ -39,18 +39,52 @@ def build_lookup_maps(nodes: pd.DataFrame) -> dict:
     Parameters
     ----------
     nodes : pd.DataFrame
-        Node table with columns idx, type, name.
+        Node table with columns idx, type, name (and optionally uid).
 
     Returns
     -------
     dict with keys:
         'node_type_map' : {idx -> type}
         'node_name_map' : {idx -> name}
+        'uid_to_idx'    : {uid -> idx}  (only if ``uid`` column exists)
     """
-    return {
+    maps = {
         'node_type_map': dict(zip(nodes['idx'], nodes['type'])),
         'node_name_map': dict(zip(nodes['idx'], nodes['name'])),
     }
+    if 'uid' in nodes.columns:
+        maps['uid_to_idx'] = dict(zip(nodes['uid'], nodes['idx']))
+    return maps
+
+
+def node_id_lookup(nodes: pd.DataFrame, node_type: str, node_id: str):
+    """Look up a node index by type and external ID — collision-safe.
+
+    This is the recommended way to map external IDs (e.g. DrugBank, MONDO)
+    to node indices in KGs where the same external ID string can refer to
+    different entity types (notably PrimeKG).
+
+    Parameters
+    ----------
+    nodes : pd.DataFrame
+        Node table with columns idx, id, type.
+    node_type : str
+        Entity type (e.g. 'drug', 'disease', 'gene/protein').
+    node_id : str
+        External identifier (e.g. 'DB15119', '9891').
+
+    Returns
+    -------
+    int or None — node index if found, else None.
+    """
+    mask = (nodes['type'] == node_type) & (nodes['id'].astype(str) == str(node_id))
+    match = nodes.loc[mask, 'idx']
+    if len(match) == 1:
+        return int(match.iloc[0])
+    elif len(match) > 1:
+        # Multiple matches (shouldn't happen but be safe) — return first.
+        return int(match.iloc[0])
+    return None
 
 
 def find_node(name: str, node_name_map: dict, node_type_map: dict,

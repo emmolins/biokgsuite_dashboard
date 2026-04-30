@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible evaluation framework for biomedical knowledge graphs, applied to drug repurposing. BioKGSuite benchmarks five public KGs — PrimeKG, Hetionet, DRKG, OpenBioLink, and BioKG — across seven evaluation dimensions and 18 metrics. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
+A reproducible evaluation framework for biomedical knowledge graphs, applied to drug repurposing. BioKGSuite benchmarks five public KGs — PrimeKG, Hetionet, DRKG, OpenBioLink, and BioKG — across eight evaluation dimensions and 18 metrics. All analyses are implemented as self-contained Jupyter notebooks that produce every figure and result table in the associated manuscript.
 
 **Interactive dashboard:** https://emmolins.github.io/biokgsuite_dashboard/dashboard.html
 
@@ -15,27 +15,33 @@ A reproducible evaluation framework for biomedical knowledge graphs, applied to 
 | `05_stability.ipynb` | Stability | Random dropout, peripheral dropout |
 | `06_task_performance.ipynb` | Task performance | Link prediction, neighbourhood retrieval, multi-hop reasoning |
 | `07_generalization.ipynb` | Generalisation | Data-sparse, cross-domain, prospective |
+| `08_embedding_validation.ipynb` | Embedding models | TransE vs. RotatE comparison across KGs |
 | `00_benchmark_summary.ipynb` | Summary | Cross-dimension aggregate of all 18 metrics |
 
-Notebooks 01 – 07 produce per-dimension results; notebook 00 reads their checkpoints to assemble the final summary. Run in order `01 → 07`, then `00`.
+Notebooks 01 – 08 produce per-dimension results; notebook 00 reads their checkpoints to assemble the final summary. Run in order `01 → 08`, then `00`.
 
 ## Repository layout
 
 ```
 biokgsuite/
-├── docs/dashboard.html       # Interactive dashboard (served by GitHub Pages)
-├── eval_notebooks/           # Eight evaluation notebooks (00–07)
-├── src/                      # Shared modules (loaders, scorers, plotting)
-├── data/                     # KG files + gold-standard references (gitignored)
+├── docs/dashboard.html          # Interactive dashboard (served by GitHub Pages)
+├── eval_notebooks/              # Nine evaluation notebooks (00–08)
+├── src/                         # Shared modules (loaders, embeddings, scorers, plotting)
+├── run_emb_model.py             # Standalone embedding model runner (TransE, RotatE)
+├── data/                        # KG files + gold-standard references (gitignored)
 ├── results/
-│   ├── benchmark_summary.csv # 18 metrics × 5 KGs (produced by 00)
-│   ├── figures/              # PDF + PNG for every manuscript figure
-│   └── checkpoints/          # Per-notebook serialised results (.pkl)
-├── config.yaml               # Data paths and analysis parameters
-├── environment.yml           # Conda environment
-├── pyproject.toml            # Editable install
-├── CITATION.cff              # Machine-readable citation
-└── LICENSE                   # MIT
+│   ├── benchmark_summary.csv    # 18 metrics × 5 KGs (produced by 00)
+│   ├── embedding_comparison.csv # TransE vs. RotatE per-KG results (produced by 08)
+│   ├── relation_conflicts.csv   # Cross-KG relation mapping discrepancies
+│   ├── *.md                     # Gold-standard vetting and replication reports
+│   ├── figures/                 # PDF + PNG for every manuscript figure (gitignored)
+│   ├── checkpoints/             # Per-notebook serialised results (gitignored)
+│   └── cache/                   # Precomputed KG preparations (gitignored)
+├── config.yaml                  # Data paths and analysis parameters
+├── environment.yml              # Conda environment
+├── pyproject.toml               # Editable install
+├── CITATION.cff                 # Machine-readable citation
+└── LICENSE                      # MIT
 ```
 
 ## Reproducing the benchmark
@@ -65,16 +71,23 @@ data/biokg/biokg.links.tsv
 
 Gold-standard reference files under `data/gold_standards/` are regenerated from the sources listed in [Data availability](#data-availability). To tune analysis parameters (random seed, negative-sampling ratio, dropout rates, etc.), edit `config.yaml` under `analysis_params`.
 
-**3. Run the notebooks.** Interactively via `jupyter lab` (run in order `01 → 07`, then `00`), or non-interactively:
+**3. Run the notebooks.** Interactively via `jupyter lab` (run in order `01 → 08`, then `00`), or non-interactively:
 
 ```bash
 cd eval_notebooks
 for nb in 01_coverage 02_annotation_accuracy 03_trustworthiness \
           04_topology 05_stability 06_task_performance \
-          07_generalization 00_benchmark_summary; do
+          07_generalization 08_embedding_validation \
+          00_benchmark_summary; do
     jupyter nbconvert --to notebook --execute --inplace \
         --ExecutePreprocessor.timeout=3600 "${nb}.ipynb"
 done
+```
+
+Notebook 08 depends on embedding results cached by `run_emb_model.py`. To generate them from scratch (optional — cached results are committed):
+
+```bash
+python run_emb_model.py
 ```
 
 Figures are written to `results/figures/` as both `.pdf` (for the manuscript) and `.png` (for inspection). Per-notebook intermediate results are serialised to `results/checkpoints/` as `.pkl` files. The final cross-dimension summary is `results/benchmark_summary.csv`.
