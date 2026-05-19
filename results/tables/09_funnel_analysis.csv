@@ -1,0 +1,81 @@
+kg,drug,drug_in_kg,any_target_node,any_direct_edge,any_pharm_match,n_targets,n_target_nodes,n_direct,n_pharm
+biokg,GILTERITINIB,True,True,True,True,3,4,2,2
+biokg,METHYLPREDNISOLONE,True,True,True,True,2,6,1,1
+biokg,ISONIAZID,True,True,True,True,3,8,2,2
+biokg,SORAFENIB,True,True,True,True,11,31,6,6
+biokg,CALCIFEDIOL ANHYDROUS,True,True,True,True,1,6,1,1
+biokg,SILODOSIN,True,True,False,False,4,3,0,0
+biokg,LABRADIMIL,True,False,False,False,1,0,0,0
+biokg,CEFORANIDE,True,True,False,False,1,1,0,0
+biokg,DABRAFENIB,True,True,True,True,5,21,5,5
+biokg,DIACEREIN,True,True,True,True,9,13,2,2
+biokg,CUPRIC SULFATE,False,False,False,False,0,0,0,0
+biokg,BOSENTAN,True,True,True,True,2,10,2,2
+biokg,ACETAMINOPHEN,True,True,True,True,6,3,1,1
+biokg,OMIGAPIL,False,False,False,False,1,0,0,0
+biokg,LEVOBETAXOLOL,True,True,True,True,1,6,1,1
+biokg,AMILORIDE,True,True,True,True,9,14,4,4
+hetionet,GILTERITINIB,False,True,False,False,3,3,0,0
+hetionet,METHYLPREDNISOLONE,True,True,True,True,2,2,1,1
+hetionet,ISONIAZID,True,True,False,False,3,1,0,0
+hetionet,SORAFENIB,True,True,True,True,11,11,10,10
+hetionet,CALCIFEDIOL ANHYDROUS,True,True,True,True,1,1,1,1
+hetionet,SILODOSIN,True,True,True,True,4,4,3,3
+hetionet,LABRADIMIL,False,True,False,False,1,1,0,0
+hetionet,CEFORANIDE,True,False,False,False,1,0,0,0
+hetionet,DABRAFENIB,True,True,True,True,5,5,5,5
+hetionet,DIACEREIN,False,True,False,False,9,9,0,0
+hetionet,CUPRIC SULFATE,False,False,False,False,0,0,0,0
+hetionet,BOSENTAN,True,True,True,True,2,2,2,2
+hetionet,ACETAMINOPHEN,True,True,True,True,6,6,3,3
+hetionet,OMIGAPIL,False,True,False,False,1,1,0,0
+hetionet,LEVOBETAXOLOL,False,True,False,False,1,1,0,0
+hetionet,AMILORIDE,True,True,True,True,9,9,9,9
+openbilink,GILTERITINIB,False,False,False,False,3,0,0,0
+openbilink,METHYLPREDNISOLONE,True,False,False,False,2,0,0,0
+openbilink,ISONIAZID,True,False,False,False,3,0,0,0
+openbilink,SORAFENIB,True,False,False,False,11,0,0,0
+openbilink,CALCIFEDIOL ANHYDROUS,True,False,False,False,1,0,0,0
+openbilink,SILODOSIN,True,False,False,False,4,0,0,0
+openbilink,LABRADIMIL,False,False,False,False,1,0,0,0
+openbilink,CEFORANIDE,False,False,False,False,1,0,0,0
+openbilink,DABRAFENIB,True,False,False,False,5,0,0,0
+openbilink,DIACEREIN,True,False,False,False,9,0,0,0
+openbilink,CUPRIC SULFATE,False,False,False,False,0,0,0,0
+openbilink,BOSENTAN,True,False,False,False,2,0,0,0
+openbilink,ACETAMINOPHEN,True,False,False,False,6,0,0,0
+openbilink,OMIGAPIL,False,False,False,False,1,0,0,0
+openbilink,LEVOBETAXOLOL,True,False,False,False,1,0,0,0
+openbilink,AMILORIDE,True,False,False,False,9,0,0,0
+drkg,GILTERITINIB,True,False,False,False,3,0,0,0
+drkg,METHYLPREDNISOLONE,True,False,False,False,2,0,0,0
+drkg,ISONIAZID,True,False,False,False,3,0,0,0
+drkg,SORAFENIB,True,False,False,False,11,0,0,0
+drkg,CALCIFEDIOL ANHYDROUS,True,False,False,False,1,0,0,0
+drkg,SILODOSIN,True,False,False,False,4,0,0,0
+drkg,LABRADIMIL,True,False,False,False,1,0,0,0
+drkg,CEFORANIDE,True,False,False,False,1,0,0,0
+drkg,DABRAFENIB,True,False,False,False,5,0,0,0
+drkg,DIACEREIN,True,False,False,False,9,0,0,0
+drkg,CUPRIC SULFATE,False,False,False,False,0,0,0,0
+drkg,BOSENTAN,True,False,False,False,2,0,0,0
+drkg,ACETAMINOPHEN,True,False,False,False,6,0,0,0
+drkg,OMIGAPIL,True,False,False,False,1,0,0,0
+drkg,LEVOBETAXOLOL,True,False,False,False,1,0,0,0
+drkg,AMILORIDE,True,False,False,False,9,0,0,0
+primekg,GILTERITINIB,True,True,True,True,3,3,3,3
+primekg,METHYLPREDNISOLONE,True,True,True,True,2,2,2,2
+primekg,ISONIAZID,True,True,False,False,3,1,0,0
+primekg,SORAFENIB,True,True,True,True,11,11,10,10
+primekg,CALCIFEDIOL ANHYDROUS,True,True,True,True,1,1,1,1
+primekg,SILODOSIN,True,True,True,True,4,4,3,3
+primekg,LABRADIMIL,True,True,True,True,1,1,1,1
+primekg,CEFORANIDE,True,False,False,False,1,0,0,0
+primekg,DABRAFENIB,True,True,True,True,5,5,5,5
+primekg,DIACEREIN,True,True,True,True,9,9,8,8
+primekg,CUPRIC SULFATE,False,False,False,False,0,0,0,0
+primekg,BOSENTAN,True,True,True,True,2,2,2,2
+primekg,ACETAMINOPHEN,True,True,True,True,6,6,4,4
+primekg,OMIGAPIL,False,True,False,False,1,1,0,0
+primekg,LEVOBETAXOLOL,True,True,True,True,1,1,1,1
+primekg,AMILORIDE,True,True,True,True,9,9,9,9

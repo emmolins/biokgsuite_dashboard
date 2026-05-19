@@ -1,0 +1,305 @@
+KG,Conflict,Entity_A_ID,Entity_A_Name,Entity_B_ID,Entity_B_Name
+primekg,Indication vs. Contraindication,10162_10160_10161_4741,tyrosinemia,DB00348,Nitisinone
+primekg,Indication vs. Contraindication,1200_1134_15512_5080_100078,hypertension,DB00622,Nicardipine
+primekg,Indication vs. Contraindication,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB00836,Loperamide
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00136,Calcitriol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00146,Calcifediol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00153,Ergocalciferol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00169,Cholecalciferol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00258,Calcium acetate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00326,Calcium glucoheptonate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00710,Ibandronate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB00974,Edetic acid
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01022,Phylloquinone
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01070,Dihydrotachysterol
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01164,Calcium chloride
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB01377,Magnesium oxide
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11110,Magnesium citrate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11126,Calcium gluconate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB11264,Calcium glycerophosphate
+primekg,Indication vs. Contraindication,1566,non-kinase phorbol ester receptor activity,DB13231,Calcium lactate
+primekg,Indication vs. Contraindication,1567,cholesterol 25-hydroxylase activity,DB00136,Calcitriol
+primekg,Indication vs. Off-label,1068,transcription regulatory region RNA binding,DB00146,Calcifediol
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00443,Betamethasone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00620,Triamcinolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00635,Prednisone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00860,Prednisolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB00959,Methylprednisolone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB01234,Dexamethasone
+primekg,Indication vs. Off-label,10917_7319_1314,chondrocalcinosis,DB01380,Cortisone acetate
+primekg,Indication vs. Off-label,11786_5324_24332,allergic rhinitis,DB00747,Scopolamine
+primekg,Indication vs. Off-label,11786_5324_24332,allergic rhinitis,DB11315,Methscopolamine
+primekg,Indication vs. Off-label,12048,Oromandibular dystonia,DB00472,Fluoxetine
+primekg,Indication vs. Off-label,1214_6668_2314_5808_4811,conjunctivitis,DB00199,Erythromycin
+primekg,Indication vs. Off-label,1214_6668_2314_5808_4811,conjunctivitis,DB00634,Sulfacetamide
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB00537,Ciprofloxacin
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB01059,Norfloxacin
+primekg,Indication vs. Off-label,1517,N-acetylglucosamine 6-O-sulfotransferase activity,DB01165,Ofloxacin
+primekg,Indication vs. Off-label,15758,primary cutaneous T-cell lymphoma,DB00553,Methoxsalen
+primekg,Indication vs. Off-label,15898,amiloride transport,DB00741,Hydrocortisone
+primekg,Indication vs. Off-label,16684,anaplastic astrocytoma,DB00262,Carmustine
+primekg,Indication vs. Off-label,1673,male germ cell nucleus,DB00537,Ciprofloxacin
+primekg,Contraindication vs. Off-label,11479,postural orthostatic tachycardia syndrome,DB00373,Timolol
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,1566,non-kinase phorbol ester receptor activity,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,1567,cholesterol 25-hydroxylase activity,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,15758,primary cutaneous T-cell lymphoma,DB00755,Tretinoin
+primekg,Contraindication vs. Off-label,19142,2-hydroxyglutarate synthase activity,DB00608,Chloroquine
+primekg,Contraindication vs. Off-label,19142,2-hydroxyglutarate synthase activity,DB01611,Hydroxychloroquine
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB00695,Furosemide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB00887,Bumetanide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB01086,Benzocaine
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB09104,Magnesium hydroxide
+primekg,Contraindication vs. Off-label,2319,memory B cell differentiation,DB09481,Magnesium carbonate
+primekg,Contraindication vs. Off-label,2406,antigen sampling by M cells in mucosal-associated lymphoid tissue,DB00410,Mupirocin
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:100,100,PUBCHEM.COMPOUND:6021,6021
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10018,10018,PUBCHEM.COMPOUND:25066467,25066467
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10018,10018,PUBCHEM.COMPOUND:3006531,3006531
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:3779,3779
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:445154,445154
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10135,10135,PUBCHEM.COMPOUND:77998,77998
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1017,1017,PUBCHEM.COMPOUND:5280795,5280795
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1017,1017,PUBCHEM.COMPOUND:5591,5591
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10257,10257,PUBCHEM.COMPOUND:6076,6076
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:5284616,5284616
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:5743,5743
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1027,1027,PUBCHEM.COMPOUND:71308609,71308609
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10365,10365,PUBCHEM.COMPOUND:5284616,5284616
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:10383,10383,PUBCHEM.COMPOUND:13342,13342
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:1051,1051,PUBCHEM.COMPOUND:5538,5538
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:1023,1023
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:5957,5957
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:6013,6013
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:107,107,PUBCHEM.COMPOUND:6076,6076
+openbilink,Activation vs. Inhibition (direct),NCBIGENE:108,108,PUBCHEM.COMPOUND:1023,1023
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:130013,130013,PUBCHEM.COMPOUND:23925,23925
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:136,136,PUBCHEM.COMPOUND:4171,4171
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2216,2216
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5487,5487
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:2216,2216
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:31100,31100
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:5095,5095
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:5374,5374
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:57242,57242
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:6005,6005
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:1814,1814,PUBCHEM.COMPOUND:31100,31100
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2746,2746,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:1023,1023
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:24316,24316
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:2979,2979,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:198756,198756
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4431,4431
+openbilink,Bind-Activate vs. Bind-Inhibit,NCBIGENE:3357,3357,PUBCHEM.COMPOUND:4171,4171
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:111,111,PUBCHEM.COMPOUND:271,271
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:2230,2230
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:146,146,PUBCHEM.COMPOUND:5815,5815
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:150,150,PUBCHEM.COMPOUND:3340,3340
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:152,152,PUBCHEM.COMPOUND:3340,3340
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:153,153,PUBCHEM.COMPOUND:2995,2995
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:123600,123600
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:2995,2995
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:154,154,PUBCHEM.COMPOUND:3410,3410
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:1813,1813,PUBCHEM.COMPOUND:2477,2477
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:2746,2746,PUBCHEM.COMPOUND:6830,6830
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3274,3274,PUBCHEM.COMPOUND:7741,7741
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:128918,128918
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:2818,2818
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4431,4431
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:4585,4585
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:5002,5002
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:57347,57347
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:60795,60795
+openbilink,Bind-Activate vs. Inhibition,NCBIGENE:3350,3350,PUBCHEM.COMPOUND:60853,60853
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:11255,11255,PUBCHEM.COMPOUND:156615,156615
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:4168,4168
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:1128,1128,PUBCHEM.COMPOUND:5314,5314
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:146,146,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:146,146,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:147,147,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:147,147,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:148,148,PUBCHEM.COMPOUND:2803,2803
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:148,148,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2216,2216
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:2368,2368
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:4436,4436
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:5487,5487
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:150,150,PUBCHEM.COMPOUND:6005,6005
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:31100,31100
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:47811,47811
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:5073,5073
+openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:6005,6005
+biokg,Target vs. Carrier,DB00163,Vitamin_E,O76054,S14L2
+biokg,Target vs. Carrier,DB00163,Vitamin_E,Q9UDX4,S14L3
+biokg,Target vs. Carrier,DB01277,Mecasermin,P17936,IBP3
+biokg,Target vs. Carrier,DB09329,Antihemophilic_Factor__Recombinant___PEGylated,P04275,VWF
+biokg,Target vs. Enzyme,DB00134,Methionine,Q9H2M3,BHMT2
+biokg,Target vs. Enzyme,DB00143,Glutathione,P08263,GSTA1
+biokg,Target vs. Enzyme,DB00143,Glutathione,P09210,GSTA2
+biokg,Target vs. Enzyme,DB00150,Tryptophan,P23381,SYWC
+biokg,Target vs. Enzyme,DB00150,Tryptophan,Q9UGM6,SYWM
+biokg,Target vs. Enzyme,DB00152,Thiamine,Q9H3S4,TPK1
+biokg,Target vs. Enzyme,DB00157,NADH,P00325,ADH1B
+biokg,Target vs. Enzyme,DB00157,NADH,P07327,ADH1A
+biokg,Target vs. Enzyme,DB00157,NADH,P08319,ADH4
+biokg,Target vs. Enzyme,DB00157,NADH,P11766,ADHX
+biokg,Target vs. Enzyme,DB00157,NADH,P40394,ADH7
+biokg,Target vs. Enzyme,DB00161,Valine,P05166,PCCB
+biokg,Target vs. Enzyme,DB00161,Valine,P26640,SYVC
+biokg,Target vs. Enzyme,DB00161,Valine,P54687,BCAT1
+biokg,Target vs. Enzyme,DB00165,Pyridoxine,O00764,PDXK
+biokg,Target vs. Enzyme,DB00172,Proline,O43272,PROD
+biokg,Target vs. Enzyme,DB00179,Masoprocol,P09917,LOX5
+biokg,Target vs. Enzyme,DB00396,Progesterone,P05093,CP17A
+biokg,Target vs. Enzyme,DB00437,Allopurinol,P47989,XDH
+biokg,Target vs. Enzyme,DB00494,Entacapone,P21964,COMT
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,O15427,MOT4
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,O60669,MOT2
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,P53985,MOT1
+biokg,Target vs. Transporter,DB00415,Ampicillin,P46059,S15A1
+biokg,Target vs. Transporter,DB00415,Ampicillin,Q16348,S15A2
+biokg,Target vs. Transporter,DB00493,Cefotaxime,P46059,S15A1
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q16348,S15A2
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q4U2R8,S22A6
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q8TCC7,S22A8
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q9NSA0,S22AB
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q9Y694,S22A7
+biokg,Target vs. Transporter,DB00540,Nortriptyline,P23975,SC6A2
+biokg,Target vs. Transporter,DB00583,Levocarnitine,O76082,S22A5
+biokg,Target vs. Transporter,DB00583,Levocarnitine,Q9H015,S22A4
+biokg,Target vs. Transporter,DB00603,Medroxyprogesterone_acetate,P08183,MDR1
+biokg,Target vs. Transporter,DB00713,Oxacillin,P46059,S15A1
+biokg,Target vs. Transporter,DB00713,Oxacillin,Q16348,S15A2
+biokg,Target vs. Transporter,DB00721,Procaine,Q01959,SC6A3
+biokg,Target vs. Transporter,DB00761,Potassium_chloride,P55011,S12A2
+biokg,Target vs. Transporter,DB00761,Potassium_chloride,Q13621,S12A1
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00182,Amphetamine
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00231,Temazepam
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00264,Metoprolol
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00402,Eszopiclone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00404,Alprazolam
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00425,Zolpidem
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00486,Nabilone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00575,Clonidine
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00745,Modafinil
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00909,Zonisamide
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00962,Zaleplon
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00980,Ramelteon
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01198,Zopiclone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01273,Varenicline
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB06413,Armodafinil
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB08872,Gabapentin
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:119915,Fentanyl
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:6456,Lidocaine
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:7852,Oxycodone
+matrix,Treats vs. Contraindicated,100192,Liver failure,DB00186,Lorazepam
+matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:24261,glucocorticoid
+matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:87211,fluoroquinolone antibiotic
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB00048,Collagenase
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB00218,Moxifloxacin
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB01137,Levofloxacin
+matrix,Treats vs. Causes,100010,Disease of the tendon,MESH:D000305,Adrenal Cortex Hormones
+matrix,Treats vs. Causes,100010,Disease of the tendon,UMLS:C0013227,Pharmaceutical Preparations
+matrix,Treats vs. Causes,100010,Disease of the tendon,UMLS:C0243042,Inflammation Mediators
+matrix,Treats vs. Causes,100011,Tendinosis,MESH:D000305,Adrenal Cortex Hormones
+matrix,Treats vs. Causes,100017,Ldlrap1,UMLS:C0013227,Pharmaceutical Preparations
+matrix,Treats vs. Causes,100017,Ldlrap1,UMLS:C0243077,inhibitors
+matrix,Treats vs. Causes,100017,Ldlrap1,UNII:B72HH48FLU,Infliximab
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB00363,Clozapine
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB01184,Domperidone
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB01611,Hydroxychloroquine
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB11617,aclacinomycin A
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB13293,Ethanol
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB14500,potassium atom
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003195,Anti-Arrhythmia Agents
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003364,Antihypertensive Agents
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,CHEBI:4636,Diphenhydramine
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00043,Omalizumab
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00341,Cetirizine
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB01050,Ibuprofen
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00465,Ketorolac
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00635,Prednisone
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB01050,Ibuprofen
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB01137,Levofloxacin
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00177,Valsartan
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00178,Ramipril
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00264,Metoprolol
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00363,Clozapine
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00370,Mirtazapine
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00612,Bisoprolol
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00758,Clopidogrel
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00945,Aspirin
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB01136,Carvedilol
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:18248,iron atom
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:184381,Bacitracin
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:4470,Dextromethorphan
+matrix,Strict treats vs. Contraindicated,100078,Resistant hypertension,DB00622,Nicardipine
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,UMLS:C0657912,Pregabalin
+matrix,Strict treats vs. Contraindicated,10096,Tardive dyskinesia,DB04844,Tetrabenazine
+matrix,Strict treats vs. Contraindicated,10160,"FERM, ARHGEF and pleckstrin domain-containing protein 1 isoform h1 (human)",DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10161,lysophosphatidic acid receptor 6 isoform 1 (human),DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10162,lysophospholipid acyltransferase 5 isoform 1 (human),DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10191,Von willebrand disease 3,UMLS:C0011701,Desmopressin
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,UMLS:C0657912,Pregabalin
+matrix,Strict treats vs. Contraindicated,11057,"ABHD2 protein, human",DB06209,Prasugrel
+matrix,Strict treats vs. Contraindicated,1134,Essential hypertension,DB00622,Nicardipine
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,UMLS:C0657912,Pregabalin
+matrix,Increases vs. Decreases response,10018,Bcl-2-like protein 11 isoform BimABC (human),DB17023,ABT-737
+matrix,Increases vs. Decreases response,1019,CDK4,DB09073,Palbociclib
+matrix,Increases vs. Decreases response,1029,tumor suppressor smARF (human),DB09073,Palbociclib
+matrix,Increases vs. Decreases response,1051,CCAAT/enhancer-binding protein beta isoform h1 (human),DB00290,bleomycin
+matrix,Increases vs. Decreases response,114548,"NACHT, LRR and PYD domains-containing protein 3 isoform h6 (human)",DB11457,Rotenone
+matrix,Increases vs. Decreases response,120892,"LRRK2 protein, human",CHEBI:28786,Paraquat
+matrix,Increases vs. Decreases response,120892,"LRRK2 protein, human",DB11457,Rotenone
+matrix,Increases vs. Decreases response,13107,"dermatitis, atopic, 7",CHEBI:16482,naphthalene
+matrix,Increases vs. Decreases response,1317,Phlyctenulosis,DB00526,Oxaliplatin
+matrix,Increases vs. Decreases response,142,"PARP1 protein, human",CHEBI:21759,N-methyl-N'-nitro-N-nitrosoguanidine
+matrix,Increases vs. Decreases response,142,"PARP1 protein, human",DB11091,Hydrogen peroxide
+matrix,Increases vs. Decreases response,150,alpha-2A adrenergic receptor isoform 1 (human),DB00575,Clonidine
+matrix,Increases vs. Decreases response,1536,cytochrome b-245 heavy chain isoform 1 (human),MESH:D052638,Particulate Matter
+matrix,Increases vs. Decreases response,1544,Tibial nerve palsy,CHEBI:82284,"2-Amino-9H-pyrido[2,3-b]indole"
+matrix,Increases vs. Decreases response,1555,"CYP2B6 protein, human",CHEBI:50842,norflurazon
+matrix,Increases vs. Decreases response,1555,"CYP2B6 protein, human",CHEBI:6902,metolachlor
+matrix,Increases vs. Decreases response,1557,Olecranon bursitis,DB00758,Clopidogrel
+matrix,Increases vs. Decreases response,1559,Perineocele,DB00682,Warfarin
+matrix,Increases vs. Decreases response,1565,Abnormal retinal correspondence,DB00193,Tramadol
+matrix,Increases vs. Decreases response,1571,Gynecomastia disorder,CHEBI:17300,tetrachloroethylene
+matrix,Positive vs. Negative correlation,11565,Adss1,DB09407,magnesium atom
+matrix,Positive vs. Negative correlation,153,"ADRB1 protein, human",DB03054,Bromoform
+matrix,Positive vs. Negative correlation,2037,band 4.1-like protein 2 isoform h1 (human),CHEBI:46661,asbestos
+matrix,Positive vs. Negative correlation,2050,"EPHB4 protein, human",CHEBI:24527,herbicide
+matrix,Positive vs. Negative correlation,2050,"EPHB4 protein, human",UNII:24R8721A3S,2-Nonylphenol
+matrix,Positive vs. Negative correlation,2070,eyes absent homolog 4 isoform h3 (human),DB12510,ozone
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:17243,mono(2-ethylhexyl) phthalate
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:23115,chlorohydrocarbon
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:27563,arsenic atom
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:35546,perfluorodecanoic acid
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,DB14085,cadmium atom
+matrix,Positive vs. Negative correlation,24664,Pomc,MESH:D008670,Metals
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",CHEBI:15767,dichloromethane
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",CHEBI:27563,arsenic atom
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",DB11127,Selenious acid
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:17243,mono(2-ethylhexyl) phthalate
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:27744,glyphosate
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:28786,Paraquat
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:88522,Monobutylphthalate
+matrix,Positive vs. Negative correlation,4995,OR3A2,MESH:D052638,Particulate Matter
