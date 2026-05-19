@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are evaluated across 18 metrics spanning eight dimensions: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, generalisation, and embedding model comparison.
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. A supplementary notebook validates the embedding-model choice (TransE vs. RotatE).
 
 [**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html)
 
@@ -15,9 +15,12 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 | 05 | `05_stability` | Stability | Random dropout, peripheral dropout |
 | 06 | `06_task_performance` | Task performance | Link prediction, neighbourhood retrieval, multi-hop reasoning |
 | 07 | `07_generalization` | Generalisation | Data-sparse, cross-domain, prospective |
-| 08 | `08_embedding_validation` | Embedding models | TransE vs. RotatE comparison |
 
-Notebook `00_benchmark_summary` aggregates all checkpoints into the final summary. Run `01` through `08`, then `00`.
+**Supplementary notebooks** (not part of the 7-dimension aggregate):
+- `08_embedding_validation` — confirms TransE and RotatE produce concordant KG rankings.
+- `09_llm_integration` — exploratory KG-augmented LLM prompting for drug-disease plausibility (in development).
+
+Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
 ## Quick start
 
@@ -50,29 +53,28 @@ Run all notebooks:
 cd eval_notebooks
 for nb in 01_coverage 02_annotation_accuracy 03_trustworthiness \
           04_topology 05_stability 06_task_performance \
-          07_generalization 08_embedding_validation \
-          00_benchmark_summary; do
+          07_generalization 00_benchmark_summary; do
     jupyter nbconvert --to notebook --execute --inplace \
         --ExecutePreprocessor.timeout=3600 "${nb}.ipynb"
 done
 ```
 
-Notebook 08 reads embedding caches produced by `run_emb_model.py`. To regenerate: `python run_emb_model.py`.
+Notebook 08 reads embedding caches produced by `run_emb_model.py`. To regenerate: `python run_emb_model.py`, then `jupyter nbconvert --to notebook --execute --inplace 08_embedding_validation.ipynb`.
 
-Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, final table in `results/benchmark_summary.csv`.
+Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, tabular outputs in `results/tables/`, final summary in `results/benchmark_summary.csv`.
 
 ## Repository layout
 
 ```
-eval_notebooks/          9 Jupyter notebooks (00–08)
+eval_notebooks/          10 Jupyter notebooks (00–07 main, 08–09 supplementary)
 src/                     Shared modules: loaders, embeddings, evaluation, plotting
 run_emb_model.py         Standalone TransE/RotatE runner
 config.yaml              KG paths and analysis parameters
 results/
-  benchmark_summary.csv  18 metrics x 6 KGs
-  embedding_comparison.csv
-  relation_conflicts.csv
-  *.md                   Gold-standard vetting and replication reports
+  benchmark_summary.csv  18 metrics × 6 KGs (headline)
+  tables/                Per-notebook data outputs (.csv, .tsv, .md, .json)
+  figures/               Per-notebook charts (.pdf, .png)
+  checkpoints/           Per-notebook .pkl files consumed by nb00
 docs/dashboard.html      Interactive dashboard (GitHub Pages)
 environment.yml          Conda environment (Python 3.11)
 ```

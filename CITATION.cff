@@ -10,19 +10,21 @@ authors:
     given-names: Emily
     email: emilymolins@gmail.com
 version: "1.0.0"
-date-released: "2026-03-06"
+date-released: "2026-05-19"
 license: MIT
 repository-code: "https://github.com/emmolins/biokgsuite_dashboard"
 url: "https://github.com/emmolins/biokgsuite_dashboard"
 abstract: >
   BioKGSuite is a reproducible evaluation framework for assessing biomedical
-  knowledge graphs (KGs) across seven complementary dimensions and 18 individual
-  metrics: coverage, annotation accuracy, trustworthiness, topology, stability,
-  task performance (link prediction), and generalisation across domains and
-  sparse-entity settings. Five widely-used KGs are evaluated — PrimeKG,
-  Hetionet, DRKG, OpenBioLink, and BioKG — against curated gold standards from
-  DrugBank, UniProt, Disease Ontology, Reactome, Open Targets, and CTD, in the
-  context of drug-repurposing applications.
+  knowledge graphs (KGs) across seven complementary quality dimensions and 18
+  individual metrics: coverage, annotation accuracy, trustworthiness, topology,
+  stability, task performance (link prediction), and generalisation across
+  domains and sparse-entity settings. Six widely-used KGs are evaluated —
+  PrimeKG, Hetionet, DRKG, OpenBioLink, BioKG, and MATRIX (Every Cure) —
+  against curated gold standards from DrugBank, UniProt, Disease Ontology,
+  Reactome, Open Targets, and CTD, in the context of drug-repurposing
+  applications. A supplementary notebook validates the embedding-model choice
+  (TransE vs. RotatE).
 keywords:
   - biomedical knowledge graph
   - drug repurposing
@@ -32,6 +34,7 @@ keywords:
   - DRKG
   - OpenBioLink
   - BioKG
+  - MATRIX
   - link prediction
   - computational biomedicine
 references:
