@@ -56,3 +56,13 @@ skills/
 
 # ── Working documents (not part of the benchmark) ────────────────────────────
 *.docx
+
+# ── Backup files (manual patches, pre-restructure snapshots) ─────────────────
+*.bak
+*.pre_*.bak
+
+# ── Per-notebook output dirs (regenerable working files) ─────────────────────
+results/nb*/
+results/.pre_*/
+results/ddi_gap_audit*.json
+

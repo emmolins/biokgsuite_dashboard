@@ -139,3 +139,167 @@ openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:31100,3
 openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:47811,47811
 openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:5073,5073
 openbilink,Activation vs. Bind-Inhibit,NCBIGENE:152,152,PUBCHEM.COMPOUND:6005,6005
+biokg,Target vs. Carrier,DB00163,Vitamin_E,O76054,S14L2
+biokg,Target vs. Carrier,DB00163,Vitamin_E,Q9UDX4,S14L3
+biokg,Target vs. Carrier,DB01277,Mecasermin,P17936,IBP3
+biokg,Target vs. Carrier,DB09329,Antihemophilic_Factor__Recombinant___PEGylated,P04275,VWF
+biokg,Target vs. Enzyme,DB00134,Methionine,Q9H2M3,BHMT2
+biokg,Target vs. Enzyme,DB00143,Glutathione,P08263,GSTA1
+biokg,Target vs. Enzyme,DB00143,Glutathione,P09210,GSTA2
+biokg,Target vs. Enzyme,DB00150,Tryptophan,P23381,SYWC
+biokg,Target vs. Enzyme,DB00150,Tryptophan,Q9UGM6,SYWM
+biokg,Target vs. Enzyme,DB00152,Thiamine,Q9H3S4,TPK1
+biokg,Target vs. Enzyme,DB00157,NADH,P00325,ADH1B
+biokg,Target vs. Enzyme,DB00157,NADH,P07327,ADH1A
+biokg,Target vs. Enzyme,DB00157,NADH,P08319,ADH4
+biokg,Target vs. Enzyme,DB00157,NADH,P11766,ADHX
+biokg,Target vs. Enzyme,DB00157,NADH,P40394,ADH7
+biokg,Target vs. Enzyme,DB00161,Valine,P05166,PCCB
+biokg,Target vs. Enzyme,DB00161,Valine,P26640,SYVC
+biokg,Target vs. Enzyme,DB00161,Valine,P54687,BCAT1
+biokg,Target vs. Enzyme,DB00165,Pyridoxine,O00764,PDXK
+biokg,Target vs. Enzyme,DB00172,Proline,O43272,PROD
+biokg,Target vs. Enzyme,DB00179,Masoprocol,P09917,LOX5
+biokg,Target vs. Enzyme,DB00396,Progesterone,P05093,CP17A
+biokg,Target vs. Enzyme,DB00437,Allopurinol,P47989,XDH
+biokg,Target vs. Enzyme,DB00494,Entacapone,P21964,COMT
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,O15427,MOT4
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,O60669,MOT2
+biokg,Target vs. Transporter,DB00119,Pyruvic_acid,P53985,MOT1
+biokg,Target vs. Transporter,DB00415,Ampicillin,P46059,S15A1
+biokg,Target vs. Transporter,DB00415,Ampicillin,Q16348,S15A2
+biokg,Target vs. Transporter,DB00493,Cefotaxime,P46059,S15A1
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q16348,S15A2
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q4U2R8,S22A6
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q8TCC7,S22A8
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q9NSA0,S22AB
+biokg,Target vs. Transporter,DB00493,Cefotaxime,Q9Y694,S22A7
+biokg,Target vs. Transporter,DB00540,Nortriptyline,P23975,SC6A2
+biokg,Target vs. Transporter,DB00583,Levocarnitine,O76082,S22A5
+biokg,Target vs. Transporter,DB00583,Levocarnitine,Q9H015,S22A4
+biokg,Target vs. Transporter,DB00603,Medroxyprogesterone_acetate,P08183,MDR1
+biokg,Target vs. Transporter,DB00713,Oxacillin,P46059,S15A1
+biokg,Target vs. Transporter,DB00713,Oxacillin,Q16348,S15A2
+biokg,Target vs. Transporter,DB00721,Procaine,Q01959,SC6A3
+biokg,Target vs. Transporter,DB00761,Potassium_chloride,P55011,S12A2
+biokg,Target vs. Transporter,DB00761,Potassium_chloride,Q13621,S12A1
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00182,Amphetamine
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00231,Temazepam
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00264,Metoprolol
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00402,Eszopiclone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00404,Alprazolam
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00425,Zolpidem
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00486,Nabilone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00575,Clonidine
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00745,Modafinil
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00909,Zonisamide
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00962,Zaleplon
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB00980,Ramelteon
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01198,Zopiclone
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01273,Varenicline
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB06413,Armodafinil
+matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB08872,Gabapentin
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:119915,Fentanyl
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:6456,Lidocaine
+matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:7852,Oxycodone
+matrix,Treats vs. Contraindicated,100192,Liver failure,DB00186,Lorazepam
+matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:24261,glucocorticoid
+matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:87211,fluoroquinolone antibiotic
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB00048,Collagenase
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB00218,Moxifloxacin
+matrix,Treats vs. Causes,100010,Disease of the tendon,DB01137,Levofloxacin
+matrix,Treats vs. Causes,100010,Disease of the tendon,MESH:D000305,Adrenal Cortex Hormones
+matrix,Treats vs. Causes,100010,Disease of the tendon,UMLS:C0013227,Pharmaceutical Preparations
+matrix,Treats vs. Causes,100010,Disease of the tendon,UMLS:C0243042,Inflammation Mediators
+matrix,Treats vs. Causes,100011,Tendinosis,MESH:D000305,Adrenal Cortex Hormones
+matrix,Treats vs. Causes,100017,Ldlrap1,UMLS:C0013227,Pharmaceutical Preparations
+matrix,Treats vs. Causes,100017,Ldlrap1,UMLS:C0243077,inhibitors
+matrix,Treats vs. Causes,100017,Ldlrap1,UNII:B72HH48FLU,Infliximab
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB00363,Clozapine
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB01184,Domperidone
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB01611,Hydroxychloroquine
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB11617,aclacinomycin A
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB13293,Ethanol
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB14500,potassium atom
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003195,Anti-Arrhythmia Agents
+matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003364,Antihypertensive Agents
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,CHEBI:4636,Diphenhydramine
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00043,Omalizumab
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00341,Cetirizine
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB01050,Ibuprofen
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00465,Ketorolac
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00635,Prednisone
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB01050,Ibuprofen
+matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB01137,Levofloxacin
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00177,Valsartan
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00178,Ramipril
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00264,Metoprolol
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00363,Clozapine
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00370,Mirtazapine
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00612,Bisoprolol
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00758,Clopidogrel
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00945,Aspirin
+matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB01136,Carvedilol
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:18248,iron atom
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:184381,Bacitracin
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:4470,Dextromethorphan
+matrix,Strict treats vs. Contraindicated,100078,Resistant hypertension,DB00622,Nicardipine
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,UMLS:C0657912,Pregabalin
+matrix,Strict treats vs. Contraindicated,10096,Tardive dyskinesia,DB04844,Tetrabenazine
+matrix,Strict treats vs. Contraindicated,10160,"FERM, ARHGEF and pleckstrin domain-containing protein 1 isoform h1 (human)",DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10161,lysophosphatidic acid receptor 6 isoform 1 (human),DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10162,lysophospholipid acyltransferase 5 isoform 1 (human),DB00348,Nitisinone
+matrix,Strict treats vs. Contraindicated,10191,Von willebrand disease 3,UMLS:C0011701,Desmopressin
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,1098,CEACAMP10,UMLS:C0657912,Pregabalin
+matrix,Strict treats vs. Contraindicated,11057,"ABHD2 protein, human",DB06209,Prasugrel
+matrix,Strict treats vs. Contraindicated,1134,Essential hypertension,DB00622,Nicardipine
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB00186,Lorazepam
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB00404,Alprazolam
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,DB01156,Bupropion
+matrix,Strict treats vs. Contraindicated,11924,Panic disorder 2,UMLS:C0657912,Pregabalin
+matrix,Increases vs. Decreases response,10018,Bcl-2-like protein 11 isoform BimABC (human),DB17023,ABT-737
+matrix,Increases vs. Decreases response,1019,CDK4,DB09073,Palbociclib
+matrix,Increases vs. Decreases response,1029,tumor suppressor smARF (human),DB09073,Palbociclib
+matrix,Increases vs. Decreases response,1051,CCAAT/enhancer-binding protein beta isoform h1 (human),DB00290,bleomycin
+matrix,Increases vs. Decreases response,114548,"NACHT, LRR and PYD domains-containing protein 3 isoform h6 (human)",DB11457,Rotenone
+matrix,Increases vs. Decreases response,120892,"LRRK2 protein, human",CHEBI:28786,Paraquat
+matrix,Increases vs. Decreases response,120892,"LRRK2 protein, human",DB11457,Rotenone
+matrix,Increases vs. Decreases response,13107,"dermatitis, atopic, 7",CHEBI:16482,naphthalene
+matrix,Increases vs. Decreases response,1317,Phlyctenulosis,DB00526,Oxaliplatin
+matrix,Increases vs. Decreases response,142,"PARP1 protein, human",CHEBI:21759,N-methyl-N'-nitro-N-nitrosoguanidine
+matrix,Increases vs. Decreases response,142,"PARP1 protein, human",DB11091,Hydrogen peroxide
+matrix,Increases vs. Decreases response,150,alpha-2A adrenergic receptor isoform 1 (human),DB00575,Clonidine
+matrix,Increases vs. Decreases response,1536,cytochrome b-245 heavy chain isoform 1 (human),MESH:D052638,Particulate Matter
+matrix,Increases vs. Decreases response,1544,Tibial nerve palsy,CHEBI:82284,"2-Amino-9H-pyrido[2,3-b]indole"
+matrix,Increases vs. Decreases response,1555,"CYP2B6 protein, human",CHEBI:50842,norflurazon
+matrix,Increases vs. Decreases response,1555,"CYP2B6 protein, human",CHEBI:6902,metolachlor
+matrix,Increases vs. Decreases response,1557,Olecranon bursitis,DB00758,Clopidogrel
+matrix,Increases vs. Decreases response,1559,Perineocele,DB00682,Warfarin
+matrix,Increases vs. Decreases response,1565,Abnormal retinal correspondence,DB00193,Tramadol
+matrix,Increases vs. Decreases response,1571,Gynecomastia disorder,CHEBI:17300,tetrachloroethylene
+matrix,Positive vs. Negative correlation,11565,Adss1,DB09407,magnesium atom
+matrix,Positive vs. Negative correlation,153,"ADRB1 protein, human",DB03054,Bromoform
+matrix,Positive vs. Negative correlation,2037,band 4.1-like protein 2 isoform h1 (human),CHEBI:46661,asbestos
+matrix,Positive vs. Negative correlation,2050,"EPHB4 protein, human",CHEBI:24527,herbicide
+matrix,Positive vs. Negative correlation,2050,"EPHB4 protein, human",UNII:24R8721A3S,2-Nonylphenol
+matrix,Positive vs. Negative correlation,2070,eyes absent homolog 4 isoform h3 (human),DB12510,ozone
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:17243,mono(2-ethylhexyl) phthalate
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:23115,chlorohydrocarbon
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:27563,arsenic atom
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,CHEBI:35546,perfluorodecanoic acid
+matrix,Positive vs. Negative correlation,21100,Breast neoplasm,DB14085,cadmium atom
+matrix,Positive vs. Negative correlation,24664,Pomc,MESH:D008670,Metals
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",CHEBI:15767,dichloromethane
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",CHEBI:27563,arsenic atom
+matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",DB11127,Selenious acid
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:17243,mono(2-ethylhexyl) phthalate
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:27744,glyphosate
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:28786,Paraquat
+matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:88522,Monobutylphthalate
+matrix,Positive vs. Negative correlation,4995,OR3A2,MESH:D052638,Particulate Matter

@@ -73,6 +73,62 @@ knowledge_graphs:
       drug_disease: {relation: DRUG_DISEASE_ASSOCIATION}
       drug_drug:    {relation: DDI}
 
+  matrix:
+    # Every Cure MATRIX KG (Biolink-typed). Native files are very large
+    # (~5 GB nodes.tsv, ~14 GB edges.tsv); the loader streams + filters
+    # to the canonical entity-type subset declared in keep_categories.
+    nodes_path: data/matrix/nodes.tsv
+    edges_path: data/matrix/edges.tsv
+    # 'all' keeps every node category and every edge — full graph. Use a
+    # restricted list (e.g. [drug, disease, gene/protein, pathway,
+    # effect/phenotype]) to scope down for memory-constrained machines.
+    # Full-graph footprint at scale: ~44 M nodes / 87 M edges, ~10 GB RAM
+    # for the in-memory DataFrames; NetworkX graph in nb04 will be ~25 GB.
+    # 'all' was causing OOM (>150 GB) in nb01 + nb02. Restricted to the 5
+    # core categories used by every notebook (drops Matrix from ~87 M edges
+    # to ~10 M; ~250 MB resident vs ~10 GB).
+    keep_categories: [drug, disease, gene/protein, pathway, effect/phenotype]
+    # Disease ID bridges: when a disease lacks a direct MONDO ID, the loader
+    # falls back through these tables in order:
+    #   1. DOID -> MONDO          (do_diseases.csv from gold standards)
+    #   2. MESH -> DOID -> MONDO  (mesh_to_doid.csv from gold standards)
+    #   3. SSSOM ext-CURIE -> MONDO (mondo.sssom.tsv from MONDO GitHub;
+    #      run `bash scripts/download_mondo_sssom.sh` to fetch it once)
+    # The SSSOM bridge is what recovers the long tail of UMLS / OMIM /
+    # Orphanet / ICD9 / NCIT-only disease nodes.
+    doid_to_mondo_path: data/gold_standards/do_diseases.csv
+    mesh_to_doid_path: data/gold_standards/mesh_to_doid.csv
+    mondo_sssom_path: data/gold_standards/mondo.sssom.tsv
+    # Drug / gene crosswalks: rescue PubChem-only drugs and UniProt-only genes
+    # so they can join to DrugBank-keyed and Entrez-keyed gold standards.
+    pubchem_to_drugbank_path: data/openbilink/pubchem_to_drugbank.csv
+    uniprot_to_entrez_path: data/gold_standards/uniprot_genesproteins.csv
+    # Comprehensive DrugBank xref (UNII / RxCUI / ATC / KEGG.DRUG / ChEBI /
+    # ChEMBL / CAS / etc.). Build via:
+    #   python scripts/build_drugbank_xref.py
+    # which combines DrugBank's external_links.csv with the existing PubChem
+    # crosswalk. The loader degrades gracefully if this file is absent —
+    # only the smaller PubChem→DrugBank table will be used.
+    drugbank_xref_path: data/gold_standards/drugbank_xref.csv
+    entity_types:
+      Drug: drug
+      Disease: disease
+      Gene/Protein: gene/protein
+      Pathway: pathway
+    disease_id_scheme: mondo                 # canonicalised to bare MONDO numeric at load time via equivalent_identifiers crosswalk
+    pathway_ontology: reactome               # canonicalised to R-HSA-* at load time via equivalent_identifiers crosswalk
+    relations:
+      # Drug-target: binding predicates + biolink:affects. The strict-binding
+      # predicates only capture ~3 % of Matrix's authored drug-gene relationships;
+      # the rest flow through biolink:affects (which is what Every Cure's own
+      # repurposing scoring consumes). Including affects brings Matrix's
+      # drug-target count into the same order of magnitude as the other KGs.
+      drug_target:  {relations: [directly_physically_interacts_with, physically_interacts_with, interacts_with, affects]}
+      # Drug-disease: dominant indication predicate in MATRIX
+      drug_disease: {relation: treats_or_applied_or_studied_to_treat}
+      # Drug-drug interactions (clinical + structural)
+      drug_drug:    {relations: [interacts_with, directly_physically_interacts_with]}
+
 analysis_params:
   random_seed: 42        # used by all notebooks; controls all explicit RandomState objects
   neg_ratio: 5           # negative-to-positive ratio for link prediction sampling (nb06, nb07)

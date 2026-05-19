@@ -562,7 +562,32 @@ def load_kg(kg_name, config):
         hq = cfg.get('hq_filter', True)
         return load_openbilink(_resolve(cfg['path']), pc_path, hq_filter=hq)
     elif kg_name == 'matrix':
-        return load_matrix(_resolve(cfg['nodes_path']), _resolve(cfg['edges_path']))
+        kw = {}
+        if 'keep_categories' in cfg:
+            kc = cfg['keep_categories']
+            # YAML 'all' (string) means keep every category. Pass through verbatim.
+            if isinstance(kc, str):
+                kw['keep_categories'] = kc
+            else:
+                kw['keep_categories'] = tuple(kc)
+        if cfg.get('doid_to_mondo_path'):
+            kw['doid_to_mondo_path'] = _resolve(cfg['doid_to_mondo_path'])
+        if cfg.get('mesh_to_doid_path'):
+            kw['mesh_to_doid_path'] = _resolve(cfg['mesh_to_doid_path'])
+        if cfg.get('mondo_sssom_path'):
+            sssom = _resolve(cfg['mondo_sssom_path'])
+            if Path(sssom).exists():
+                kw['mondo_sssom_path'] = sssom
+        if cfg.get('pubchem_to_drugbank_path'):
+            kw['pubchem_to_drugbank_path'] = _resolve(cfg['pubchem_to_drugbank_path'])
+        if cfg.get('uniprot_to_entrez_path'):
+            kw['uniprot_to_entrez_path'] = _resolve(cfg['uniprot_to_entrez_path'])
+        if cfg.get('drugbank_xref_path'):
+            xref = _resolve(cfg['drugbank_xref_path'])
+            if Path(xref).exists():
+                kw['drugbank_xref_path'] = xref
+        return load_matrix(_resolve(cfg['nodes_path']),
+                           _resolve(cfg['edges_path']), **kw)
     elif kg_name == 'biokg':
         meta_dir = cfg.get('metadata_dir')
         if meta_dir:
@@ -601,26 +626,68 @@ def _build_node_table(kg):
     return nodes
 
 
-def load_matrix(nodes_path, edges_path):
-    """Load EveryCure MATRIX knowledge graph from TSV files.
+def load_matrix(nodes_path, edges_path,
+                keep_categories=('drug', 'disease', 'gene/protein',
+                                 'pathway', 'effect/phenotype'),
+                doid_to_mondo_path=None,
+                mesh_to_doid_path=None,
+                mondo_sssom_path=None,
+                pubchem_to_drugbank_path=None,
+                uniprot_to_entrez_path=None,
+                drugbank_xref_path=None,
+                trim_isolated_nodes=True,
+                use_cache=True,
+                cache_dir=None,
+                node_chunksize=500_000, edge_chunksize=2_000_000,
+                verbose=True):
+    """Load Every Cure MATRIX knowledge graph from TSV files (streaming).
+
+    The MATRIX KG is large (~5 GB nodes.tsv, ~14 GB edges.tsv at full scale,
+    ~44 M nodes / ~87 M edges). This loader streams both files in pandas
+    chunks and **filters to the canonical entity-type subset** declared in
+    ``keep_categories`` so the resulting DataFrame fits in memory and is
+    apples-to-apples with the other 5 BioKGSuite KGs (which only model
+    drug/disease/gene/pathway/phenotype).
+
+    The loader also **canonicalises primary IDs** so the standard
+    ``entity_set_from_kg`` / ``extract_pairs`` pipeline joins against gold
+    standards without Matrix-specific code paths:
+
+    * Drug   — bare DrugBank accession (e.g. ``'DB00001'``) extracted from
+               ``id`` or ``equivalent_identifiers``; falls back to original
+               CURIE when no DrugBank mapping exists.
+    * Disease — bare MONDO numeric (e.g. ``'5812'`` from ``'MONDO:0005812'``)
+               extracted from ``id`` or ``equivalent_identifiers``. When a
+               MONDO ID isn't directly available, the loader falls back to
+               DOID → MONDO and MESH → DOID → MONDO bridges (if the
+               corresponding gold-standard CSVs are passed in via
+               ``doid_to_mondo_path`` / ``mesh_to_doid_path``). Disease
+               nodes that still can't be canonicalised after both bridges
+               are dropped (consistent with ``disease_id_scheme: mondo``).
+    * Gene/Protein — bare NCBI gene id (e.g. ``'1234'``) from ``id`` /
+               ``equivalent_identifiers``; falls back to original CURIE.
+    * Pathway — Reactome ID (e.g. ``'R-HSA-1234'``) from ``id`` /
+               ``equivalent_identifiers``; falls back to original CURIE.
+    * Effect/Phenotype — original CURIE preserved (HP / MP / etc.).
+
+    Auxiliary CURIE-keyed columns (``drugbank_id``, ``ncbigene_id``,
+    ``reactome_id``, ``doid_id``) are retained on ``nodes_df`` for
+    downstream notebooks that need richer crosswalks.
 
     Expected file formats
     ---------------------
-    nodes_path (TSV) — columns from HuggingFace everycure/kg-nodes:
-        id                      : CURIE-style identifier, e.g. 'DRUGBANK:DB00001',
-                                  'MONDO:0005812', 'NCBIGene:1234', 'UniProtKB:P12345'
+    nodes_path (TSV) — columns from Every Cure ``kg-nodes``:
+        id                      : CURIE-style identifier, e.g. 'DRUGBANK:DB00001'
         name                    : human-readable label
         category                : Biolink category, e.g. 'biolink:SmallMolecule'
-        equivalent_identifiers  : list of alternate CURIEs (string repr of list)
-        upstream_data_source    : originating database(s)
-        (other columns ignored)
+        equivalent_identifiers  : repr-style list of alternate CURIEs
+        upstream_data_source    : originating database(s) (optional)
 
-    edges_path (TSV) — columns from HuggingFace everycure/kg-edges:
-        subject   : source node CURIE (matches nodes 'id')
-        predicate : Biolink predicate, e.g. 'biolink:treats'
-        object    : target node CURIE
+    edges_path (TSV) — columns from Every Cure ``kg-edges``:
+        subject                 : source node CURIE (matches nodes 'id')
+        predicate               : Biolink predicate, 'biolink:' prefix stripped
+        object                  : target node CURIE
         primary_knowledge_source / aggregator_knowledge_source (optional)
-        (column names are auto-detected; 'biolink:' prefix stripped from predicates)
 
     Biolink category → canonical type mapping (stored in nodes_df 'type' column):
         biolink:SmallMolecule / Drug / ChemicalEntity  → 'drug'
@@ -628,41 +695,90 @@ def load_matrix(nodes_path, edges_path):
         biolink:PhenotypicFeature                      → 'effect/phenotype'
         biolink:Gene / Protein / GeneOrGeneProduct     → 'gene/protein'
         biolink:GenomicEntity / NucleicAcidEntity      → 'gene/protein'
-        biolink:BiologicalProcess                      → 'biological_process'
-        biolink:MolecularActivity                      → 'molecular_function'
-        biolink:CellularComponent                      → 'cellular_component'
         biolink:Pathway                                → 'pathway'
-        biolink:AnatomicalEntity / Cell                → 'anatomy'
-        biolink:OrganismTaxon                          → 'organism'
-
-    ID format notes (CRITICAL)
-    --------------------------
-    * Drug IDs use CURIE format: 'DRUGBANK:DB00001'.  The regex r'(DB\\d{5,})'
-      in extract_drugbank_ids() correctly extracts the DrugBank accession.
-      Many nodes use CHEMBL / PUBCHEM as primary ID; look in
-      equivalent_identifiers for the DRUGBANK CURIE when needed.
-    * Disease IDs use CURIE format: 'MONDO:0005812', 'MESH:D000544'.
-      MONDO IDs normalise directly via mondo_to_doid; MESH IDs bridge via
-      mesh_to_doid.  No bare (prefix-free) IDs — unlike CKG.
-    * Gene/Protein IDs: 'NCBIGene:1234' (extract numeric part for Entrez
-      comparison) or 'UniProtKB:P12345' (bridge via uniprot_to_entrez).
-      Nodes with NCBIGene: prefix integrate with existing Entrez gold standards
-      without any accession bridging.
+        (other categories are dropped unless added to keep_categories)
 
     Relation predicates
     -------------------
-    All 'biolink:' prefixes are stripped so predicates are stored as bare
-    strings (e.g. 'treats', 'contraindicated_for', 'affects').
+    The 'biolink:' prefix is stripped so predicates are stored as bare
+    strings ('treats_or_applied_or_studied_to_treat',
+    'directly_physically_interacts_with', etc.).
 
     Parameters
     ----------
     nodes_path : str or Path
     edges_path : str or Path
+    keep_categories : iterable of str | str | None, default
+        ('drug', 'disease', 'gene/protein', 'pathway', 'effect/phenotype')
+        Canonical type values to retain. Edges are filtered to those whose
+        endpoints both map to a kept category — drops the long tail of
+        OrganismTaxon, Transcript, Procedure, Publication, etc. that has no
+        analog in the other BioKGSuite KGs. Pass ``'all'`` (string) or
+        ``None`` to disable filtering and retain every typed node and edge.
+        Warning: at full scale the unfiltered graph is ~44 M nodes / 87 M
+        edges and requires ~10 GB RAM for the DataFrames alone.
+    doid_to_mondo_path : str or Path, optional
+        Path to ``do_diseases.csv`` (gold-standard table with ``mondo_id``
+        and ``doid`` columns). When provided, disease nodes lacking a
+        direct MONDO ID are bridged via DOID → MONDO so they survive
+        ``disease_id_scheme: mondo`` filtering.
+    mesh_to_doid_path : str or Path, optional
+        Path to ``mesh_to_doid.csv``. When provided alongside
+        ``doid_to_mondo_path``, MESH-only disease nodes are bridged via
+        MESH → DOID → MONDO. Has no effect without ``doid_to_mondo_path``.
+    mondo_sssom_path : str or Path, optional
+        Path to MONDO's SSSOM crosswalk (``mondo.sssom.tsv`` from the MONDO
+        GitHub repo, fetched via ``scripts/download_mondo_sssom.sh``). When
+        provided, disease nodes whose primary CURIE is UMLS / OMIM /
+        Orphanet / ICD9 / NCIT / etc. are bridged to MONDO via this table —
+        recovers the long tail of non-MONDO diseases that the other two
+        bridges can't reach.
+    pubchem_to_drugbank_path : str or Path, optional
+        Path to a CSV with columns ``drugbank_id`` / ``pubchem_cid`` (the
+        same file used by load_openbilink). When provided, drug nodes that
+        have no DrugBank crosswalk in equivalent_identifiers but DO have a
+        PUBCHEM.COMPOUND ID get canonicalised to DrugBank via this table.
+        Significantly raises drug-coverage joins for Matrix.
+    drugbank_xref_path : str or Path, optional
+        Path to a multi-namespace DrugBank xref CSV with columns
+        ``drugbank_id`` / ``namespace`` / ``external_id``. Supported
+        namespaces: ``UNII`` / ``RxCUI`` / ``RXCUI`` / ``ATC`` /
+        ``KEGG.DRUG`` / ``ChEBI`` / ``CHEBI`` / ``ChEMBL`` /
+        ``CHEMBL.COMPOUND`` / ``CAS``. Generated by
+        ``scripts/build_drugbank_xref.py`` from DrugCentral and other
+        public sources. Recovers DrugBank-mappable drugs that don't have
+        a PubChem CID in the smaller pubchem_to_drugbank.csv.
+    uniprot_to_entrez_path : str or Path, optional
+        Path to ``uniprot_genesproteins.csv`` (gold standard). When provided,
+        gene/protein nodes that lack an NCBIGene crosswalk but have a
+        UniProtKB ID are bridged to Entrez gene IDs. Significantly raises
+        drug-target coverage joins for Matrix.
+    trim_isolated_nodes : bool, default True
+        Drop nodes from nodes_df that don't participate in any retained
+        edge. Matches the implicit behaviour of the other KG loaders and
+        prevents Matrix's huge typed-but-edgeless node tail (~3 M nodes at
+        full scale) from dominating topology metrics in nb04 (LCC fraction,
+        component count, clustering coefficient). Set False to keep every
+        canonical-type node — useful for entity-coverage diagnostics where
+        edgeless nodes still count.
+    use_cache : bool, default True
+        Cache the (kg, nodes_df) result as parquet under ``cache_dir`` so
+        repeat loads (e.g. across notebooks 01–08) take ~30 sec instead of
+        15-20 minutes. Cache is invalidated when (a) source files change
+        mtime, or (b) any of the loader parameters affecting output change.
+    cache_dir : str or Path, optional
+        Directory for cache files. Defaults to ``Path(nodes_path).parent``
+        (i.e. data/matrix/). Cache filenames embed a parameter-hash so
+        different configurations don't clobber each other.
+    node_chunksize, edge_chunksize : int
+        pandas read_csv chunk sizes. Defaults are tuned for ~16 GB RAM hosts.
+    verbose : bool
+        Print progress every chunk (default True).
 
     Returns
     -------
     kg : pd.DataFrame   (standardised BioKGSuite edge schema)
-    nodes : pd.DataFrame (columns: idx, id, type, name)
+    nodes : pd.DataFrame (columns: idx, id, type, name + crosswalk columns)
     """
     # ── Biolink category → BioKGSuite canonical type ──────────────────────────
     _BIOLINK_TO_CANONICAL = {
@@ -735,132 +851,459 @@ def load_matrix(nodes_path, edges_path):
                 return result
         return bare.lower()
 
-    # ── Load nodes ────────────────────────────────────────────────────────────
-    raw_nodes = pd.read_csv(nodes_path, sep='\t', dtype=str).fillna('')
-    raw_nodes['type'] = raw_nodes['category'].apply(_map_biolink)
-    raw_nodes['idx']  = range(len(raw_nodes))
-    id_to_idx = dict(zip(raw_nodes['id'], raw_nodes['idx']))
+    # ── Cache check (fast path for repeat loads) ─────────────────────────────
+    if use_cache:
+        import hashlib
+        # keep_categories may be None / 'all' / empty here (means keep-all);
+        # normalise to a hashable token for the cache key.
+        if (keep_categories is None or
+            (isinstance(keep_categories, str) and keep_categories.lower() == 'all') or
+            (hasattr(keep_categories, '__len__') and len(keep_categories) == 0)):
+            keep_token = '__ALL__'
+        else:
+            keep_token = sorted(keep_categories)
+        param_blob = repr((
+            keep_token,
+            str(doid_to_mondo_path) if doid_to_mondo_path else '',
+            str(mesh_to_doid_path) if mesh_to_doid_path else '',
+            str(mondo_sssom_path) if mondo_sssom_path else '',
+            str(pubchem_to_drugbank_path) if pubchem_to_drugbank_path else '',
+            str(uniprot_to_entrez_path) if uniprot_to_entrez_path else '',
+            str(drugbank_xref_path) if drugbank_xref_path else '',
+            bool(trim_isolated_nodes),
+        )).encode()
+        param_hash = hashlib.md5(param_blob).hexdigest()[:8]
+        _cache_dir = Path(cache_dir) if cache_dir else Path(nodes_path).parent
+        kg_cache    = _cache_dir / f"_cache_matrix_{param_hash}_kg.parquet"
+        nodes_cache = _cache_dir / f"_cache_matrix_{param_hash}_nodes.parquet"
 
-    # ── Extract normalised auxiliary IDs from equivalent_identifiers ──────────
-    # Drug nodes: primary IDs are often PUBCHEM/CHEBI/UNII; DrugBank accessions
-    #   are stored in equivalent_identifiers as 'DRUGBANK:DB*' entries.
-    # Pathway nodes: some nodes use SMPDB/PathWhiz as primary ID but list a
-    #   human Reactome ID ('REACT:R-HSA-*') in equivalent_identifiers.
-    _eq_col = 'equivalent_identifiers' if 'equivalent_identifiers' in raw_nodes.columns else None
-    if _eq_col:
-        _drug_mask    = raw_nodes['type'] == 'drug'
-        _pathway_mask = raw_nodes['type'] == 'pathway'
-        _gene_mask    = raw_nodes['type'] == 'gene/protein'
-        _disease_mask = raw_nodes['type'] == 'disease'
+        if kg_cache.exists() and nodes_cache.exists():
+            cache_mtime  = min(kg_cache.stat().st_mtime, nodes_cache.stat().st_mtime)
+            source_mtime = max(Path(nodes_path).stat().st_mtime,
+                               Path(edges_path).stat().st_mtime)
+            if cache_mtime > source_mtime:
+                if verbose:
+                    print(f"  matrix: loading from cache "
+                          f"{kg_cache.name} / {nodes_cache.name}")
+                kg       = pd.read_parquet(kg_cache)
+                nodes_df = pd.read_parquet(nodes_cache)
+                if verbose:
+                    print(f"  matrix: cached load — "
+                          f"{len(nodes_df):,} nodes, {len(kg):,} edges")
+                return kg, nodes_df
+            elif verbose:
+                print(f"  matrix: cache stale (source files newer) — rebuilding")
 
-        # Drug nodes: first DrugBank ID (backward-compat) + all DrugBank IDs
-        raw_nodes['drugbank_id'] = ''
-        raw_nodes['drugbank_ids_all'] = ''
-        if _drug_mask.any():
-            raw_nodes.loc[_drug_mask, 'drugbank_id'] = (
-                raw_nodes.loc[_drug_mask, _eq_col]
-                .str.extract(r'\b(DB\d{5})\b', expand=False)
-                .fillna('')
-            )
-            raw_nodes.loc[_drug_mask, 'drugbank_ids_all'] = (
-                raw_nodes.loc[_drug_mask, _eq_col]
-                .apply(lambda s: '|'.join(re.findall(r'\b(DB\d{5})\b', str(s))))
-            )
+    # ── Pre-compiled regexes for ID canonicalisation ─────────────────────────
+    DRUGBANK_RE = re.compile(r'\b(DB\d{5,})\b')
+    MONDO_RE    = re.compile(r'MONDO:(\d+)')
+    DOID_RE     = re.compile(r'DOID:(\d+)')
+    NCBIGENE_RE = re.compile(r'NCBIGene:(\d+)')
+    PUBCHEM_RE  = re.compile(r'PUBCHEM\.COMPOUND:(\d+)')
+    UNIPROT_RE  = re.compile(r'UniProtKB:([A-Z0-9\-]+)')
+    REACTOME_RE = re.compile(r'(R-HSA-\d+)')
+    MESH_RE     = re.compile(r'MESH:([CD]\w*)')
 
-        # Pathway nodes: Reactome ID from equivalent_identifiers
-        raw_nodes['reactome_id'] = ''
-        if _pathway_mask.any():
-            raw_nodes.loc[_pathway_mask, 'reactome_id'] = (
-                raw_nodes.loc[_pathway_mask, _eq_col]
-                .str.extract(r'\b(R-HSA-\d+)\b', expand=False)
-                .fillna('')
-            )
+    # 'all' / None / empty → keep every category (no node-type filter).
+    keep_all = (keep_categories is None or
+                (isinstance(keep_categories, str) and keep_categories.lower() == 'all') or
+                (hasattr(keep_categories, '__len__') and len(keep_categories) == 0))
+    keep_categories = None if keep_all else set(keep_categories)
+    if verbose and keep_all:
+        print(f"  matrix: keep_categories=all → retaining every typed node and edge")
 
-        # Gene/protein nodes: NCBIGene ID from equivalent_identifiers
-        # (bridges PR: and other non-NCBIGene/UniProtKB primary-ID nodes)
-        raw_nodes['ncbigene_id'] = ''
-        if _gene_mask.any():
-            raw_nodes.loc[_gene_mask, 'ncbigene_id'] = (
-                raw_nodes.loc[_gene_mask, _eq_col]
-                .str.extract(r'\bNCBIGene:(\d+)\b', expand=False)
-                .fillna('')
-            )
+    # ── Optional drug / gene crosswalks for canonicalising non-DrugBank /
+    #   non-Entrez node IDs (raises gold-standard join rates dramatically) ──
+    pubchem_to_drugbank: dict[str, str] = {}
+    if pubchem_to_drugbank_path:
+        _pc = pd.read_csv(pubchem_to_drugbank_path).dropna(subset=['drugbank_id', 'pubchem_cid'])
+        for r in _pc[['pubchem_cid', 'drugbank_id']].itertuples(index=False):
+            pubchem_to_drugbank.setdefault(str(r.pubchem_cid).strip(), str(r.drugbank_id).strip())
+        if verbose:
+            print(f"  matrix: loaded {len(pubchem_to_drugbank):,} PubChem→DrugBank bridges")
 
-        # Disease nodes: DOID from equivalent_identifiers
-        # (captures DOID CURIEs stored alongside MONDO/MESH primary IDs)
-        raw_nodes['doid_id'] = ''
-        if _disease_mask.any():
-            raw_nodes.loc[_disease_mask, 'doid_id'] = (
-                raw_nodes.loc[_disease_mask, _eq_col]
-                .str.extract(r'\bDOID:(\d+)\b', expand=False)
-                .fillna('')
-            )
-    else:
-        raw_nodes['drugbank_id'] = ''
-        raw_nodes['drugbank_ids_all'] = ''
-        raw_nodes['reactome_id'] = ''
-        raw_nodes['ncbigene_id'] = ''
-        raw_nodes['doid_id'] = ''
+    uniprot_to_entrez: dict[str, str] = {}
+    if uniprot_to_entrez_path:
+        _up = pd.read_csv(uniprot_to_entrez_path).dropna(subset=['Entry', 'GeneID'])
+        for r in _up[['Entry', 'GeneID']].itertuples(index=False):
+            entry = str(r.Entry).strip()
+            # GeneID can be multi-value semicolon-separated; take first numeric.
+            ids = re.findall(r'\d+', str(r.GeneID))
+            if ids:
+                uniprot_to_entrez.setdefault(entry, ids[0])
+        if verbose:
+            print(f"  matrix: loaded {len(uniprot_to_entrez):,} UniProt→Entrez bridges")
 
-    # Build fast metadata lookup: id → (canonical_type, name)
-    node_meta = dict(zip(
-        raw_nodes['id'],
-        zip(raw_nodes['type'], raw_nodes['name'])
-    ))
+    # Multi-namespace DrugBank xref: {namespace: {external_id: drugbank_id}}.
+    # Catches DrugBank drugs that don't have a PubChem CID in our PubChem
+    # crosswalk but DO have UNII / RxCUI / ATC / KEGG.DRUG / ChEBI / ChEMBL.
+    db_xref: dict[str, dict[str, str]] = {}
+    if drugbank_xref_path:
+        _xr = pd.read_csv(drugbank_xref_path).dropna(
+            subset=['drugbank_id', 'namespace', 'external_id'])
+        for r in _xr[['namespace', 'external_id', 'drugbank_id']].itertuples(index=False):
+            ns = str(r.namespace).strip().upper()
+            db_xref.setdefault(ns, {}).setdefault(
+                str(r.external_id).strip(), str(r.drugbank_id).strip())
+        if verbose:
+            n_total = sum(len(v) for v in db_xref.values())
+            print(f"  matrix: loaded {n_total:,} DrugBank xrefs across "
+                  f"{len(db_xref)} namespaces ({sorted(db_xref.keys())})")
 
-    # ── Load edges ────────────────────────────────────────────────────────────
-    raw_edges = pd.read_csv(edges_path, sep='\t', dtype=str).fillna('')
-    ecols = raw_edges.columns.tolist()
-
-    # Auto-detect subject / predicate / object column names
-    subj_col = next(
-        (c for c in ecols if c.lower() in ('subject', 'source', 'head', 'from')), None
-    )
-    obj_col  = next(
-        (c for c in ecols if c.lower() in ('object', 'target', 'tail', 'to')), None
-    )
-    pred_col = next(
-        (c for c in ecols if c.lower() in ('predicate', 'relation', 'edge_label', 'type')), None
-    )
-    if subj_col is None or obj_col is None or pred_col is None:
-        raise ValueError(
-            f"MATRIX edges: cannot detect subject/predicate/object columns. "
-            f"Found columns: {ecols}"
+    # ── Optional disease ID crosswalks (DOID→MONDO and MESH→DOID→MONDO) ──────
+    doid_to_mondo: dict[str, str] = {}
+    if doid_to_mondo_path:
+        _do = pd.read_csv(doid_to_mondo_path).dropna(subset=['mondo_id', 'doid'])
+        _do['mondo_num'] = (
+            _do['mondo_id'].astype(str)
+            .str.replace('MONDO:', '', regex=False).str.lstrip('0').replace('', '0')
         )
+        _do['doid_num'] = (
+            _do['doid'].astype(str)
+            .str.replace('DOID:', '', regex=False).str.lstrip('0').replace('', '0')
+        )
+        # First-wins: many DOIDs map to multiple MONDOs; the gold-standard pipeline
+        # uses the first match for compat with how doid_to_mondo is collapsed in nb01.
+        for r in _do[['doid_num', 'mondo_num']].itertuples(index=False):
+            doid_to_mondo.setdefault(r.doid_num, r.mondo_num)
+        if verbose:
+            print(f"  matrix: loaded {len(doid_to_mondo):,} DOID→MONDO bridges")
 
-    src_ids    = raw_edges[subj_col]
-    tgt_ids    = raw_edges[obj_col]
-    # Strip 'biolink:' prefix from predicates (store as bare strings, e.g. 'treats')
-    predicates = raw_edges[pred_col].str.replace('biolink:', '', regex=False)
+    mesh_to_mondo: dict[str, str] = {}
+    if mesh_to_doid_path and doid_to_mondo:
+        # mesh_to_doid.csv contains rows with unquoted commas inside annotation
+        # braces (e.g. ``{source="X", source="Y"}``). Skip those bad rows — same
+        # behaviour as nb01's gold-standard load.
+        _mh = (
+            pd.read_csv(mesh_to_doid_path, on_bad_lines='skip')
+            .dropna(subset=['mesh_id', 'doid'])
+        )
+        _mh['mesh_clean'] = (
+            _mh['mesh_id'].astype(str)
+            .str.replace('MESH:', '', regex=False).str.strip()
+        )
+        _mh['doid_num'] = (
+            _mh['doid'].astype(str)
+            .str.replace('DOID:', '', regex=False).str.lstrip('0').replace('', '0')
+        )
+        for r in _mh[['mesh_clean', 'doid_num']].itertuples(index=False):
+            m = doid_to_mondo.get(r.doid_num)
+            if m and r.mesh_clean not in mesh_to_mondo:
+                mesh_to_mondo[r.mesh_clean] = m
+        if verbose:
+            print(f"  matrix: loaded {len(mesh_to_mondo):,} MESH→MONDO bridges")
 
-    # ── Build standardised edge table ────────────────────────────────────────
-    kg = pd.DataFrame({
-        'relation': predicates,
-        'x_index':  src_ids.map(id_to_idx),
-        'x_id':     src_ids,
-        'x_type':   src_ids.map(lambda i: node_meta.get(i, ('', ''))[0]),
-        'x_name':   src_ids.map(lambda i: node_meta.get(i, ('', ''))[1]),
-        'y_index':  tgt_ids.map(id_to_idx),
-        'y_id':     tgt_ids,
-        'y_type':   tgt_ids.map(lambda i: node_meta.get(i, ('', ''))[0]),
-        'y_name':   tgt_ids.map(lambda i: node_meta.get(i, ('', ''))[1]),
-    })
+    # MONDO SSSOM crosswalk: external CURIE → MONDO numeric.
+    # Recovers UMLS / OMIM / Orphanet / ICD9 / NCIT-only disease nodes.
+    sssom_to_mondo: dict[str, str] = {}
+    if mondo_sssom_path:
+        # SSSOM TSVs start with a YAML metadata header (lines beginning with '#').
+        # Use comment='#' so pandas skips it; the table has columns
+        # subject_id / predicate_id / object_id / mapping_justification / ...
+        _ss = pd.read_csv(mondo_sssom_path, sep='\t', comment='#', dtype=str,
+                          low_memory=False).fillna('')
+        # Keep only equivalence-class mappings (close & exact). 'broadMatch' / 'narrowMatch'
+        # are intentionally excluded — they could collapse non-equivalent diseases.
+        equiv_predicates = {'skos:exactMatch', 'skos:closeMatch',
+                            'owl:equivalentClass'}
+        _ss = _ss[_ss['predicate_id'].isin(equiv_predicates)]
+        # Determine which side carries MONDO and pivot accordingly.
+        for r in _ss[['subject_id', 'object_id']].itertuples(index=False):
+            s, o = r.subject_id, r.object_id
+            if s.startswith('MONDO:') and not o.startswith('MONDO:'):
+                m = s.replace('MONDO:', '').lstrip('0') or '0'
+                sssom_to_mondo.setdefault(o, m)
+            elif o.startswith('MONDO:') and not s.startswith('MONDO:'):
+                m = o.replace('MONDO:', '').lstrip('0') or '0'
+                sssom_to_mondo.setdefault(s, m)
+        if verbose:
+            print(f"  matrix: loaded {len(sssom_to_mondo):,} SSSOM ext→MONDO bridges")
 
-    # Forward knowledge-source column for source-diversity analysis (nb03)
-    src_attr_col = next(
-        (c for c in ecols if 'knowledge_source' in c.lower() or 'data_source' in c.lower()),
-        None
-    )
-    if src_attr_col:
-        kg['x_source'] = raw_edges[src_attr_col].values
-        kg['y_source'] = raw_edges[src_attr_col].values
+    # ── Pass 1: stream nodes, filter by category, canonicalise IDs ───────────
+    if verbose:
+        print(f"  matrix: indexing nodes from {nodes_path} ...")
+    node_records: dict[str, tuple] = {}   # CURIE → (idx, canonical_id, type, name, drugbank_id, ncbigene_id, reactome_id, doid_id)
+    next_idx = 0
+    n_nodes_seen = 0
+    n_disease_no_mondo = 0
+    n_disease_doid_bridge = 0
+    n_disease_mesh_bridge = 0
+    n_disease_sssom_bridge = 0
 
-    # Drop edges where either endpoint is absent from the node table
-    kg = kg.dropna(subset=['x_index', 'y_index'])
+    node_cols = ['id', 'name', 'category', 'equivalent_identifiers',
+                 'upstream_data_source']
+    for chunk in pd.read_csv(nodes_path, sep='\t', dtype=str,
+                             usecols=lambda c: c in node_cols,
+                             chunksize=node_chunksize):
+        chunk = chunk.fillna('')
+        chunk['type'] = chunk['category'].map(_map_biolink)
+        if keep_categories is not None:
+            chunk = chunk[chunk['type'].isin(keep_categories)]
+        n_nodes_seen += len(chunk)
+
+        for row in chunk.itertuples(index=False):
+            curie    = row.id
+            ctype    = row.type
+            name     = row.name
+            haystack = curie + ' ' + (row.equivalent_identifiers or '')
+            # Per-NODE upstream pipeline (rtxkg2 / robokop / primekg / ...).
+            # This is true node-level provenance — distinct from the edge-level
+            # primary_knowledge_source carried by edge_source.
+            raw_node_upstream = getattr(row, 'upstream_data_source', '') or ''
+            node_upstream = '|'.join(re.findall(r"[a-zA-Z][\w-]*", raw_node_upstream))
+
+            # Crosswalk extraction (always recorded for downstream nb usage)
+            mb = DRUGBANK_RE.search(haystack)
+            mn = NCBIGENE_RE.search(haystack)
+            mr = REACTOME_RE.search(haystack)
+            md = DOID_RE.search(haystack)
+            mm = MONDO_RE.search(haystack)
+            drugbank_id = mb.group(1) if mb else ''
+            ncbigene_id = mn.group(1) if mn else ''
+            reactome_id = mr.group(1) if mr else ''
+            doid_id     = md.group(1) if md else ''
+            mondo_num   = str(int(mm.group(1))) if mm else ''   # strip leading zeros
+
+            # Canonicalise the primary ID for joinability with gold standards
+            if ctype == 'drug':
+                if drugbank_id:
+                    canonical_id = drugbank_id
+                else:
+                    # Cascade: PubChem first (most populated), then multi-namespace xref
+                    bridged = ''
+                    if pubchem_to_drugbank:
+                        pc_match = PUBCHEM_RE.search(haystack)
+                        if pc_match and pc_match.group(1) in pubchem_to_drugbank:
+                            bridged = pubchem_to_drugbank[pc_match.group(1)]
+                    if not bridged and db_xref:
+                        # Walk every CURIE in haystack, look up by namespace.
+                        for tok in re.findall(r'[A-Za-z][\w.]*:[\w.\-]+', haystack):
+                            ns, _, ext = tok.partition(':')
+                            ns_up = ns.strip().upper()
+                            ns_dict = db_xref.get(ns_up)
+                            if ns_dict and ext in ns_dict:
+                                bridged = ns_dict[ext]
+                                break
+                    if bridged:
+                        drugbank_id = bridged
+                        canonical_id = bridged
+                    else:
+                        canonical_id = curie
+            elif ctype == 'disease':
+                # Cascade: MONDO direct → DOID bridge → MESH bridge → SSSOM bridge
+                bridged = ''
+                if mondo_num:
+                    bridged = mondo_num
+                elif doid_id and doid_id in doid_to_mondo:
+                    bridged = doid_to_mondo[doid_id]
+                    n_disease_doid_bridge += 1
+                else:
+                    mesh_match = MESH_RE.search(haystack)
+                    mesh_key = mesh_match.group(1) if mesh_match else ''
+                    if mesh_key and mesh_key in mesh_to_mondo:
+                        bridged = mesh_to_mondo[mesh_key]
+                        n_disease_mesh_bridge += 1
+                    elif sssom_to_mondo:
+                        # Try SSSOM on primary CURIE first, then any CURIE in
+                        # equivalent_identifiers. First match wins.
+                        sssom_hit = sssom_to_mondo.get(curie, '')
+                        if not sssom_hit:
+                            for tok in re.findall(r'[A-Za-z][\w.]*:[\w.\-]+', haystack):
+                                hit = sssom_to_mondo.get(tok)
+                                if hit:
+                                    sssom_hit = hit
+                                    break
+                        if sssom_hit:
+                            bridged = sssom_hit
+                            n_disease_sssom_bridge += 1
+                if bridged:
+                    canonical_id = bridged
+                elif keep_all:
+                    # keep_categories=all: retain disease even without MONDO
+                    # bridge — it just won't join MONDO-keyed gold standards.
+                    canonical_id = curie
+                else:
+                    n_disease_no_mondo += 1
+                    continue   # disease_id_scheme: mondo requires a MONDO mapping
+            elif ctype == 'gene/protein':
+                if ncbigene_id:
+                    canonical_id = ncbigene_id
+                elif uniprot_to_entrez:
+                    # UniProt → Entrez: try primary id then equivalent_identifiers
+                    up_match = UNIPROT_RE.search(haystack)
+                    # Strip isoform suffix (P12345-2 → P12345) for the lookup
+                    if up_match:
+                        up_acc = up_match.group(1).split('-')[0]
+                        if up_acc in uniprot_to_entrez:
+                            ncbigene_id = uniprot_to_entrez[up_acc]
+                            canonical_id = ncbigene_id
+                        else:
+                            canonical_id = curie
+                    else:
+                        canonical_id = curie
+                else:
+                    canonical_id = curie
+            elif ctype == 'pathway':
+                canonical_id = reactome_id or curie
+            else:   # 'effect/phenotype' and any other kept category
+                canonical_id = curie
+
+            node_records[curie] = (
+                next_idx, canonical_id, ctype, name,
+                drugbank_id, ncbigene_id, reactome_id, doid_id,
+                node_upstream,
+            )
+            next_idx += 1
+
+        if verbose:
+            print(f"    ... {n_nodes_seen:,} typed candidates seen, "
+                  f"{len(node_records):,} kept")
+    if verbose:
+        if n_disease_doid_bridge or n_disease_mesh_bridge or n_disease_sssom_bridge:
+            print(f"  matrix: bridged {n_disease_doid_bridge:,} disease nodes via DOID→MONDO, "
+                  f"{n_disease_mesh_bridge:,} via MESH→DOID→MONDO, "
+                  f"{n_disease_sssom_bridge:,} via MONDO SSSOM")
+        if n_disease_no_mondo:
+            print(f"  matrix: dropped {n_disease_no_mondo:,} disease nodes "
+                  f"with no MONDO crosswalk (disease_id_scheme=mondo)")
+
+    # ── Pass 2: stream edges, filter to those joining two kept nodes ─────────
+    if verbose:
+        print(f"  matrix: streaming edges from {edges_path} ...")
+    node_id_set = set(node_records.keys())
+    kg_chunks: list[pd.DataFrame] = []
+    n_edges_seen = 0
+    n_edges_kept = 0
+    # Biolink knowledge_level → confidence-score ordinal mapping (used by nb03's
+    # uncertainty quantification). Higher = more trustworthy.
+    KL_TO_SCORE = {
+        'knowledge_assertion':     1.00,
+        'logical_entailment':      0.90,
+        'statistical_association': 0.60,
+        'observation':             0.50,
+        'prediction':              0.30,
+        'not_provided':            float('nan'),
+        '':                        float('nan'),
+    }
+    edge_cols = ['subject', 'predicate', 'object',
+                 'primary_knowledge_source', 'aggregator_knowledge_source',
+                 'upstream_data_source',
+                 'knowledge_level', 'agent_type', 'num_references']
+    for chunk in pd.read_csv(edges_path, sep='\t', dtype=str,
+                             usecols=lambda c: c in edge_cols,
+                             chunksize=edge_chunksize):
+        chunk = chunk.fillna('')
+        n_edges_seen += len(chunk)
+        mask = (chunk['subject'].isin(node_id_set) &
+                chunk['object'].isin(node_id_set))
+        if not mask.any():
+            if verbose:
+                print(f"    ... {n_edges_seen:,} edges seen, {n_edges_kept:,} kept")
+            continue
+        sub = chunk.loc[mask].copy()
+
+        # Vectorised lookup of canonical fields by mapping CURIE → record
+        sub['_s'] = sub['subject'].map(node_records)
+        sub['_t'] = sub['object'].map(node_records)
+        out = pd.DataFrame({
+            'relation':  sub['predicate'].str.replace('biolink:', '', regex=False),
+            'x_index':   sub['_s'].map(lambda r: r[0]),
+            'x_id':      sub['_s'].map(lambda r: r[1]),
+            'x_type':    sub['_s'].map(lambda r: r[2]),
+            'x_name':    sub['_s'].map(lambda r: r[3]),
+            # Per-NODE upstream pipeline (slot 8 in node_records). True
+            # node-level provenance — analogous to PrimeKG's x_source / y_source.
+            'x_source':  sub['_s'].map(lambda r: r[8]),
+            'y_index':   sub['_t'].map(lambda r: r[0]),
+            'y_id':      sub['_t'].map(lambda r: r[1]),
+            'y_type':    sub['_t'].map(lambda r: r[2]),
+            'y_name':    sub['_t'].map(lambda r: r[3]),
+            'y_source':  sub['_t'].map(lambda r: r[8]),
+        })
+        # ── Edge-level provenance (per-edge, NOT per-endpoint) ──────────────
+        if 'primary_knowledge_source' in sub.columns:
+            # Asserting database for the relationship — Biolink infores: CURIE.
+            # Lives in its own column so x_source/y_source remain pure node-level.
+            out['edge_source'] = sub['primary_knowledge_source'].values
+        if 'aggregator_knowledge_source' in sub.columns:
+            out['aggregator_source'] = sub['aggregator_knowledge_source'].values
+        if 'upstream_data_source' in sub.columns:
+            # Edge-level upstream (which Translator pipeline ingested the edge).
+            # Distinct from node-level x_source/y_source (which pipeline ingested
+            # each endpoint).
+            out['edge_upstream'] = sub['upstream_data_source'].values
+
+        # Provenance / uncertainty columns (Biolink-native, used by nb03).
+        if 'knowledge_level' in sub.columns:
+            out['knowledge_level'] = sub['knowledge_level'].values
+            # Numeric confidence_score derived from knowledge_level so nb03's
+            # keyword scan ('score') picks it up without Matrix-specific code.
+            out['confidence_score'] = (
+                sub['knowledge_level'].map(KL_TO_SCORE).astype(float).values
+            )
+        if 'agent_type' in sub.columns:
+            out['agent_type'] = sub['agent_type'].values
+        if 'num_references' in sub.columns:
+            # Numeric — count of supporting publications.
+            out['num_references'] = pd.to_numeric(
+                sub['num_references'], errors='coerce'
+            ).values
+
+        kg_chunks.append(out)
+        n_edges_kept += len(out)
+        if verbose:
+            print(f"    ... {n_edges_seen:,} edges seen, {n_edges_kept:,} kept")
+
+    if not kg_chunks:
+        kg = pd.DataFrame(columns=[
+            'relation','x_index','x_id','x_type','x_name',
+            'y_index','y_id','y_type','y_name'])
+    else:
+        kg = pd.concat(kg_chunks, ignore_index=True)
+        del kg_chunks
     kg['x_index'] = kg['x_index'].astype(int)
     kg['y_index'] = kg['y_index'].astype(int)
 
-    nodes_df = raw_nodes[['idx', 'id', 'type', 'name',
-                           'drugbank_id', 'drugbank_ids_all',
-                           'reactome_id', 'ncbigene_id', 'doid_id']].copy()
+    # ── Build node DataFrame from the dict ───────────────────────────────────
+    nodes_df = pd.DataFrame.from_records(
+        list(node_records.values()),
+        columns=['idx', 'id', 'type', 'name',
+                 'drugbank_id', 'ncbigene_id', 'reactome_id', 'doid_id',
+                 'upstream_pipeline'],
+    )
+    # Backward-compat with older notebook code that referenced drugbank_ids_all.
+    nodes_df['drugbank_ids_all'] = nodes_df['drugbank_id']
+
+    # ── Trim isolated nodes (default) ────────────────────────────────────────
+    # The other BioKGSuite loaders emit only nodes participating in edges —
+    # so for apples-to-apples topology / clustering / LCC metrics, drop Matrix
+    # nodes that ended up with zero edges in the retained edge set. Keeps
+    # x_index / y_index integer values intact (no re-indexing needed).
+    if trim_isolated_nodes:
+        n_before = len(nodes_df)
+        edge_node_set = set(kg['x_index'].astype(int)) | set(kg['y_index'].astype(int))
+        nodes_df = nodes_df[nodes_df['idx'].isin(edge_node_set)].reset_index(drop=True)
+        n_dropped = n_before - len(nodes_df)
+        if verbose and n_dropped:
+            print(f"  matrix: trimmed {n_dropped:,} isolated nodes "
+                  f"(no edges in kept-edge subset)")
+
+    if verbose:
+        print(f"  matrix: kept {len(nodes_df):,} nodes, {len(kg):,} edges")
+
+    # ── Write cache for next time ────────────────────────────────────────────
+    if use_cache:
+        try:
+            _cache_dir.mkdir(parents=True, exist_ok=True)
+            kg.to_parquet(kg_cache, index=False, compression='snappy')
+            nodes_df.to_parquet(nodes_cache, index=False, compression='snappy')
+            if verbose:
+                size_mb = (kg_cache.stat().st_size + nodes_cache.stat().st_size) / 1e6
+                print(f"  matrix: cached to {_cache_dir.name}/ "
+                      f"({size_mb:.0f} MB total)")
+        except Exception as e:
+            if verbose:
+                print(f"  matrix: cache write failed ({e}); "
+                      f"next load will re-stream from source")
+
     return kg, nodes_df

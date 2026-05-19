@@ -10,14 +10,18 @@ def build_graph(kg: pd.DataFrame, nodes: pd.DataFrame) -> nx.Graph:
     Parameters
     ----------
     kg : pd.DataFrame
-        Edge table with columns x_index, y_index (integer node indices).
+        Edge table with columns x_index, y_index, and (optionally) relation.
     nodes : pd.DataFrame
         Node table with columns idx, type, name.
 
     Returns
     -------
     nx.Graph
-        Undirected graph with node attributes 'node_type' and 'name'.
+        Undirected graph. Node attributes: 'node_type', 'name'. Edge
+        attribute (when the kg DataFrame has a 'relation' column):
+        'relation'. For multi-edges (same pair connected by multiple
+        relations — common in Matrix), the LAST relation wins; KGs where
+        all relations matter should use MultiGraph instead.
     """
     G = nx.Graph()
 
@@ -27,8 +31,19 @@ def build_graph(kg: pd.DataFrame, nodes: pd.DataFrame) -> nx.Graph:
         for row in nodes.itertuples(index=False)
     )
 
-    # Add edges in bulk
-    G.add_edges_from(zip(kg['x_index'].values, kg['y_index'].values))
+    # Add edges with 'relation' attribute when available — required for
+    # predicate-based retrieval (mechanistic_path, kgt, etc. in nb09).
+    if 'relation' in kg.columns:
+        G.add_edges_from(
+            (int(x), int(y), {'relation': r})
+            for x, y, r in zip(
+                kg['x_index'].values,
+                kg['y_index'].values,
+                kg['relation'].values,
+            )
+        )
+    else:
+        G.add_edges_from(zip(kg['x_index'].values, kg['y_index'].values))
 
     return G
 

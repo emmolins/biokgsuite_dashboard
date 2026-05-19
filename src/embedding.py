@@ -17,6 +17,8 @@ vanilla SGD with per-entity updates for speed on CPU.
 """
 
 import numpy as np
+from pathlib import Path
+import os
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -27,6 +29,19 @@ def _l2_normalize_rows(x, eps=1e-12):
     np.maximum(norms, eps, out=norms)
     x /= norms
     return x
+
+
+def _save_ckpt_atomic(path, **arrays):
+    """Atomic-rename save so a crash mid-write doesn't corrupt the checkpoint.
+
+    Note: np.savez auto-appends '.npz' to a *path string*; pass a binary
+    file object instead so the temp filename stays exactly what we set.
+    """
+    path = Path(path)
+    tmp  = path.with_suffix(path.suffix + ".tmp")
+    with open(tmp, "wb") as f:
+        np.savez(f, **arrays)           # uncompressed for speed; ~5 GB/30s on M4
+    os.replace(tmp, path)               # atomic on POSIX
 
 
 # ── TransE ───────────────────────────────────────────────────────────────────
@@ -77,13 +92,40 @@ class TransE:
             rel_idx = np.full(len(pairs), rel_idx, dtype=int)
         return self.score(h_idx, rel_idx, t_idx)
 
-    def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True):
-        """Train with margin ranking loss and direct SGD updates."""
+    def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True,
+            checkpoint_path=None, checkpoint_every=10):
+        """Train with margin ranking loss and direct SGD updates.
+
+        If ``checkpoint_path`` is set, the embedding state is saved after
+        every ``checkpoint_every`` epochs. If a matching checkpoint already
+        exists at that path with the same shapes, training resumes from the
+        epoch recorded there. A crash + restart therefore re-uses prior
+        progress instead of starting over from epoch 0.
+        """
         triples = np.asarray(triples, dtype=np.int32)
         n = len(triples)
         lr = self.lr
 
-        for epoch in range(n_epochs):
+        # Resume from checkpoint if compatible
+        start_epoch = 0
+        if checkpoint_path and Path(checkpoint_path).exists():
+            try:
+                ckpt = np.load(checkpoint_path)
+                if (ckpt["ent_emb"].shape == self.ent_emb.shape
+                    and ckpt["rel_emb"].shape == self.rel_emb.shape):
+                    self.ent_emb = ckpt["ent_emb"].astype(np.float32, copy=True)
+                    self.rel_emb = ckpt["rel_emb"].astype(np.float32, copy=True)
+                    start_epoch = int(ckpt["epoch_completed"])
+                    if verbose:
+                        print(f"  Resumed from checkpoint at epoch {start_epoch}/{n_epochs}")
+                else:
+                    if verbose:
+                        print("  Checkpoint shape mismatch — starting fresh")
+            except Exception as e:
+                if verbose:
+                    print(f"  Checkpoint load failed ({e}) — starting fresh")
+
+        for epoch in range(start_epoch, n_epochs):
             perm = self.rng.permutation(n)
             epoch_loss = 0.0
             n_batches = 0
@@ -149,6 +191,13 @@ class TransE:
                 avg = epoch_loss / max(n_batches, 1)
                 print(f'  Epoch {epoch+1:>4d}/{n_epochs}  loss={avg:.4f}')
 
+            # Periodic checkpoint
+            if checkpoint_path and (epoch + 1) % checkpoint_every == 0:
+                _save_ckpt_atomic(checkpoint_path,
+                                  ent_emb=self.ent_emb,
+                                  rel_emb=self.rel_emb,
+                                  epoch_completed=np.int32(epoch + 1))
+
 
 # ── RotatE ───────────────────────────────────────────────────────────────────
 
@@ -207,13 +256,40 @@ class RotatE:
             rel_idx = np.full(len(pairs), rel_idx, dtype=int)
         return self.score(h_idx, rel_idx, t_idx)
 
-    def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True):
-        """Train with margin ranking loss and direct SGD updates."""
+    def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True,
+            checkpoint_path=None, checkpoint_every=10):
+        """Train with margin ranking loss and direct SGD updates.
+
+        If ``checkpoint_path`` is set, the complex embedding state
+        (ent_re, ent_im, rel_phase) is saved every ``checkpoint_every``
+        epochs and auto-resumed on a matching restart.
+        """
         triples = np.asarray(triples, dtype=np.int32)
         n = len(triples)
         lr = self.lr
 
-        for epoch in range(n_epochs):
+        # Resume from checkpoint if compatible
+        start_epoch = 0
+        if checkpoint_path and Path(checkpoint_path).exists():
+            try:
+                ckpt = np.load(checkpoint_path)
+                if (ckpt["ent_re"].shape == self.ent_re.shape
+                    and ckpt["ent_im"].shape == self.ent_im.shape
+                    and ckpt["rel_phase"].shape == self.rel_phase.shape):
+                    self.ent_re    = ckpt["ent_re"].astype(np.float32, copy=True)
+                    self.ent_im    = ckpt["ent_im"].astype(np.float32, copy=True)
+                    self.rel_phase = ckpt["rel_phase"].astype(np.float32, copy=True)
+                    start_epoch = int(ckpt["epoch_completed"])
+                    if verbose:
+                        print(f"  Resumed from checkpoint at epoch {start_epoch}/{n_epochs}")
+                else:
+                    if verbose:
+                        print("  Checkpoint shape mismatch — starting fresh")
+            except Exception as e:
+                if verbose:
+                    print(f"  Checkpoint load failed ({e}) — starting fresh")
+
+        for epoch in range(start_epoch, n_epochs):
             perm = self.rng.permutation(n)
             epoch_loss = 0.0
             n_batches = 0
@@ -305,6 +381,14 @@ class RotatE:
             if verbose and (epoch + 1) % max(1, n_epochs // 10) == 0:
                 avg = epoch_loss / max(n_batches, 1)
                 print(f'  Epoch {epoch+1:>4d}/{n_epochs}  loss={avg:.4f}')
+
+            # Periodic checkpoint
+            if checkpoint_path and (epoch + 1) % checkpoint_every == 0:
+                _save_ckpt_atomic(checkpoint_path,
+                                  ent_re=self.ent_re,
+                                  ent_im=self.ent_im,
+                                  rel_phase=self.rel_phase,
+                                  epoch_completed=np.int32(epoch + 1))
 
 
 # ── Triple preparation ───────────────────────────────────────────────────────
@@ -446,6 +530,11 @@ def compute_embedding_metrics(model, test_pairs, neg_pairs, rel_idx,
     results['mrr'] = float(np.mean(reciprocal_ranks))
     for k in ks:
         results[f'hits@{k}'] = float(np.mean(hits_at_k[k]))
+
+    # Expose per-pair (y_true, y_score) so downstream bootstrap CIs can
+    # resample test pairs without retraining the embedding model.
+    results['scores'] = scores.astype(float).tolist()
+    results['labels'] = labels.astype(int).tolist()
 
     return results
 

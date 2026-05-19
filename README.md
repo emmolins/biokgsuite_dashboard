@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Five public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, and **BioKG** — are evaluated across 18 metrics spanning eight dimensions: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, generalisation, and embedding model comparison.
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are evaluated across 18 metrics spanning eight dimensions: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, generalisation, and embedding model comparison.
 
 [**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html)
 
@@ -35,7 +35,12 @@ Download each KG to the path declared in `config.yaml`:
 data/primekg/primekg.csv        data/drkg/drkg.tsv
 data/hetionet/nodes.tsv         data/openbilink/edges.csv
 data/hetionet/edges.tsv         data/biokg/biokg.links.tsv
+data/matrix/nodes.tsv           data/matrix/edges.tsv
 ```
+
+Note: MATRIX is large (~5 GB nodes, ~14 GB edges). The loader streams in chunks and filters to the canonical drug/disease/gene/pathway/phenotype subset declared in `config.yaml :: matrix.keep_categories` to stay apples-to-apples with the other KGs.
+
+MATRIX disease nodes are heterogeneously identified (UMLS, OMIM, Orphanet, ICD9, NCIT, MONDO, DOID, MESH, ...). With `disease_id_scheme: mondo`, the loader bridges through three crosswalks in cascade — DOID→MONDO (`do_diseases.csv`), MESH→DOID→MONDO (`mesh_to_doid.csv`), and the broad MONDO SSSOM mapping table for the long-tail UMLS/OMIM/Orphanet/ICD9/NCIT cases. Run `bash scripts/download_mondo_sssom.sh` once to fetch the SSSOM file (~30 MB) into `data/gold_standards/`; the loader degrades gracefully if it isn't present.
 
 Gold-standard references go under `data/gold_standards/` (sources in [Data availability](#data-availability)).
 
@@ -64,7 +69,7 @@ src/                     Shared modules: loaders, embeddings, evaluation, plotti
 run_emb_model.py         Standalone TransE/RotatE runner
 config.yaml              KG paths and analysis parameters
 results/
-  benchmark_summary.csv  18 metrics x 5 KGs
+  benchmark_summary.csv  18 metrics x 6 KGs
   embedding_comparison.csv
   relation_conflicts.csv
   *.md                   Gold-standard vetting and replication reports
@@ -83,6 +88,7 @@ Tested on macOS 14 (Apple Silicon) and Ubuntu 22.04. Python 3.10–3.12 expected
 | DRKG | [GitHub](https://github.com/gnn4dr/DRKG) | 2020-09 |
 | OpenBioLink | [GitHub](https://github.com/openbiolink/openbiolink) | HQ, 2020 |
 | BioKG | [GitHub](https://github.com/dsi-bdi/biokg) | 2021 |
+| MATRIX | [Every Cure / Hugging Face](https://huggingface.co/datasets/everycure/matrix-kg) | 2025 |
 | DrugBank | [DrugBank](https://go.drugbank.com/releases/latest) | v5.1.12 |
 | UniProt | [UniProt](https://www.uniprot.org/proteomes/UP000005640) | 2024-06 |
 | Disease Ontology | [DO](https://disease-ontology.org/) | 2024-04 |
