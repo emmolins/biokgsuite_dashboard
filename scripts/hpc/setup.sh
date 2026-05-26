@@ -43,8 +43,11 @@ source .venv/bin/activate
 # ── 3. Deps ──────────────────────────────────────────────────────────
 echo
 echo "[3/4] Installing dependencies..."
-# Core biokgsuite (editable install picks up pyproject.toml + environment.yml deps)
-uv pip install -e .
+# Note: we deliberately do NOT `uv pip install -e .` because the project's
+# pyproject.toml uses a legacy setuptools build backend that fails under uv.
+# The notebooks don't need biokgsuite to be installed as a package — they
+# add src/ to sys.path directly via sys.path.insert(0, str(_root)).
+#
 # Notebook execution. Papermill streams cell outputs to stdout in real-time
 # (much friendlier for `tail -f` on Slurm logs than nbconvert's silent mode).
 uv pip install jupyter nbconvert ipykernel papermill
@@ -52,8 +55,8 @@ uv pip install jupyter nbconvert ipykernel papermill
 uv pip install torch transformers sentence-transformers
 # HF auth helper
 uv pip install huggingface_hub[cli]
-# Make sure scientific stack is in (in case pyproject didn't pull them)
-uv pip install numpy pandas scipy scikit-learn matplotlib pyarrow tqdm pyyaml
+# Scientific stack (don't rely on the legacy pyproject.toml pulling these in)
+uv pip install numpy pandas scipy scikit-learn matplotlib pyarrow tqdm pyyaml requests
 
 echo "      installed: $(pip list 2>/dev/null | grep -iE '^(torch|transformers|sentence|numpy|pandas|scipy|matplotlib|jupyter)' | wc -l) key packages"
 
