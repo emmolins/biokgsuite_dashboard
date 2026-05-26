@@ -45,8 +45,9 @@ echo
 echo "[3/4] Installing dependencies..."
 # Core biokgsuite (editable install picks up pyproject.toml + environment.yml deps)
 uv pip install -e .
-# Notebook execution
-uv pip install jupyter nbconvert ipykernel
+# Notebook execution. Papermill streams cell outputs to stdout in real-time
+# (much friendlier for `tail -f` on Slurm logs than nbconvert's silent mode).
+uv pip install jupyter nbconvert ipykernel papermill
 # Gemma stack
 uv pip install torch transformers sentence-transformers
 # HF auth helper

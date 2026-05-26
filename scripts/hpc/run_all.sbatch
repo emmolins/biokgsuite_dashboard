@@ -61,6 +61,17 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 # Make sure cached HF token is on PATH (huggingface-cli login wrote it here)
 export HF_HOME="$HOME/.cache/huggingface"
 
+# ── Progress-bar friendliness for Slurm log files ──────────────────
+# Slurm captures stdout to a flat log file — carriage-return-overwrite
+# progress bars (tqdm default) render as garbled lines. These flags
+# make tqdm write a periodic NEW LINE instead, so `tail -f` shows
+# clean progress updates every ~30s.
+export PYTHONUNBUFFERED=1        # flush prints immediately
+export TQDM_MININTERVAL=30       # only emit a line every 30 sec at most
+export TQDM_DISABLE_RICH=1       # plain-text bars, not rich
+# Disable the matplotlib interactive backend (we're headless)
+export MPLBACKEND=Agg
+
 # ── Run nb08 end-to-end ─────────────────────────────────────────────
 echo "Executing eval_notebooks/08_embedding_validation.ipynb ..."
 echo "This runs ALL sections:"
@@ -68,13 +79,27 @@ echo "  - existing single-run TransE/RotatE + bootstrap CIs"
 echo "  - Gemma word-priors encoding (uses GPU) + scoring"
 echo "  - resampling: 5 reruns × 6 KGs × 2 models = 60 training runs"
 echo "  - aggregation, figures, bootstrap-vs-rerun comparison"
-echo "Progress streams to this log file."
+echo
+echo "Cell outputs (print statements, progress bars) stream to this log"
+echo "in real time. Cell outputs + matplotlib figures are ALSO saved into"
+echo "the .ipynb file (--inplace), and standalone PDF/PNG figures are"
+echo "saved to results/figures/ by the save_fig() calls in the cells."
 echo "================================================================="
+echo
 
-# 86,400s = 24h timeout (matches Slurm wall time)
-jupyter nbconvert --to notebook --execute --inplace \
-        --ExecutePreprocessor.timeout=86400 \
-        eval_notebooks/08_embedding_validation.ipynb
+# papermill streams cell outputs to stdout (--log-output), which is what
+# you actually see in `tail -f`. The notebook itself is overwritten with
+# all executed cell outputs (text + inline figures).
+#
+# --execution-timeout 86400 = 24h per-cell timeout (matches Slurm wall time)
+# --log-level INFO          = announce each cell as it starts ("Executing Cell 12...")
+papermill \
+    --log-output \
+    --log-level INFO \
+    --execution-timeout 86400 \
+    --progress-bar \
+    eval_notebooks/08_embedding_validation.ipynb \
+    eval_notebooks/08_embedding_validation.ipynb
 
 echo
 echo "================================================================="
