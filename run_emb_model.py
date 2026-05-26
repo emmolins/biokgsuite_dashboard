@@ -6,7 +6,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src.embedding import (TransE, RotatE, build_train_triples, kg_to_triples,
+from src.embedding import (TransE, RotatE, GemmaNameEmbedder,
+                           build_train_triples, kg_to_triples,
                            compute_embedding_metrics)
 from src.negative_sampling import generate_negatives
 
@@ -80,10 +81,91 @@ def prepare_kg(kg_name, seed=42, neg_ratio=5):
     return prep
 
 
+def _run_gemma(kg_name, p, dim=768, batch_size=64, seed=42):
+    """Gemma branch: encode entity names with EmbeddingGemma, score pairs by
+    cosine similarity. No training. Reuses prepare_kg's test/neg splits so
+    metrics are directly comparable to TransE/RotatE.
+
+    Caches the (n_entities × dim) embedding matrix to disk so re-runs across
+    negative-sampling strategies don't re-encode.
+    """
+    from src.loading import load_config, load_kg
+    config = load_config(str(ROOT / 'config.yaml'))
+    _, nodes_df = load_kg(kg_name, config)
+
+    n_ent = p['n_ent']
+    # Build name list in idx order; missing idx → '' (rare, but possible)
+    name_by_idx = dict(zip(nodes_df['idx'].astype(int), nodes_df['name']))
+    names = [name_by_idx.get(i, '') for i in range(n_ent)]
+    # Audit: how many names look like opaque IDs?
+    import re
+    id_like = sum(1 for n in names if not n or re.fullmatch(r'[A-Z0-9:_.\-]+', str(n)))
+    pct_id = 100.0 * id_like / max(n_ent, 1)
+    print(f'{kg_name}/Gemma: {n_ent} entities | ~{pct_id:.1f}% look ID-only '
+          f'(opaque alphanumerics)', flush=True)
+    if pct_id > 50:
+        print(f'  WARNING: majority of names look like IDs, not human-readable.\n'
+              f'  Word-priors result for this KG will be near-noise without '
+              f'external name resolution.', flush=True)
+
+    # Cache the embedding matrix per (kg, model, dim) so repeated runs don't
+    # re-encode (encoding is the slow part).
+    emb_cache = ROOT / 'results' / 'cache' / f'gemma_emb_{kg_name}_d{dim}.npz'
+    model = GemmaNameEmbedder(n_entities=n_ent, n_relations=p['n_rels'],
+                              dim=dim, batch_size=batch_size, seed=seed)
+
+    t0 = time.time()
+    if emb_cache.exists():
+        try:
+            model.load_embeddings(emb_cache)
+            print(f'  Loaded cached embeddings from {emb_cache.name}', flush=True)
+        except Exception as e:
+            print(f'  Cache load failed ({e}) — re-encoding', flush=True)
+            model.encode_entities(names)
+            model.save_embeddings(emb_cache)
+    else:
+        model.encode_entities(names)
+        model.save_embeddings(emb_cache)
+    ts = time.time() - t0
+    print(f'Gemma encoded in {ts:.1f}s', flush=True)
+    return model, ts
+
+
 def run_model(kg_name, model_name, n_epochs=5, dim=32, seed=42):
     p = prepare_kg(kg_name, seed=seed)
     print(f'{kg_name}/{model_name}: {len(p["train_triples"])} triples, '
           f'{p["n_ent"]} entities, {p["n_rels"]} rels', flush=True)
+
+    if model_name == 'Gemma':
+        # Use 768-d by default for Gemma (full Matryoshka). Override via CLI.
+        gemma_dim = 768 if dim in (32, 0) else dim
+        model, ts = _run_gemma(kg_name, p, dim=gemma_dim, seed=seed)
+        m = compute_embedding_metrics(model, p['test_pos'], p['neg_pairs'],
+                                      p['rel_idx'], rel_idx_inv=None)
+        m['train_time_s'] = ts
+        m['n_epochs'] = 0
+        m['dim'] = gemma_dim
+        print(f'AUROC={m["auroc"]:.4f} AUPRC={m["auprc"]:.4f} MRR={m["mrr"]:.4f} '
+              f'H@10={m["hits@10"]:.4f} H@50={m["hits@50"]:.4f} '
+              f'H@100={m["hits@100"]:.4f}', flush=True)
+        # Save into the same per-KG JSON the KGE models use, under 'Gemma' key
+        out = ROOT / 'results' / 'cache' / f'embedding_{kg_name}.json'
+        data = {}
+        if out.exists():
+            with open(out) as f:
+                data = json.load(f)
+        data.setdefault('kg', kg_name)
+        data.setdefault('models', {})
+        data['models']['Gemma'] = m
+        data['n_test'] = len(p['test_pos'])
+        data['n_neg'] = len(p['neg_pairs'])
+        data['n_entities'] = p['n_ent']
+        data['n_relations'] = p['n_rels']
+        data['n_train_triples'] = len(p['train_triples'])
+        with open(out, 'w') as f:
+            json.dump(data, f, indent=2)
+        print(f'Saved to {out}', flush=True)
+        return m
 
     Cls = TransE if model_name == 'TransE' else RotatE
     kw = dict(n_entities=p['n_ent'], n_relations=p['n_rels'],

@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. A supplementary notebook validates the embedding-model choice (TransE vs. RotatE).
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook (TransE vs. RotatE vs. EmbeddingGemma word-priors, with multi-rerun resampling for stability) and a KG-augmented LLM prompting notebook (five literature-grounded prompting strategies).
 
 [**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html)
 
@@ -17,8 +17,8 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 | 07 | `07_generalization` | Generalisation | Data-sparse, cross-domain, prospective |
 
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
-- `08_embedding_validation` — confirms TransE and RotatE produce concordant KG rankings.
-- `09_llm_integration` — exploratory KG-augmented LLM prompting for drug-disease plausibility (in development).
+- `08_embedding_validation` — compares TransE, RotatE, and the EmbeddingGemma-300m word-priors baseline on drug–disease link prediction; reports stability under multi-rerun resampling (`N_RERUNS=5`). See [`docs/resampling_methodology.md`](docs/resampling_methodology.md).
+- `09_llm_integration` — KG-augmented LLM prompting for drug–disease plausibility; evaluates five literature-grounded strategies (2 restricted + 3 unrestricted: `zero_shot_direct`, `structured_json`, `zero_shot_cot`, `multi_expert_rot`, `cisc`). See [`docs/llm_prompting_strategies.md`](docs/llm_prompting_strategies.md).
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
@@ -59,7 +59,30 @@ for nb in 01_coverage 02_annotation_accuracy 03_trustworthiness \
 done
 ```
 
-Notebook 08 reads embedding caches produced by `run_emb_model.py`. To regenerate: `python run_emb_model.py`, then `jupyter nbconvert --to notebook --execute --inplace 08_embedding_validation.ipynb`.
+**Notebook 08** reads embedding caches produced by `run_emb_model.py`. To regenerate the full embedding analysis (TransE + RotatE + EmbeddingGemma word-priors + 5-rerun resampling stability):
+
+```bash
+# 1. Train TransE / RotatE (the original analysis)
+python run_emb_model.py
+
+# 2. (Optional) Generate the EmbeddingGemma word-priors baseline
+#    Requires: pip install torch transformers sentence-transformers
+#    Requires: export HF_TOKEN=hf_...  (EmbeddingGemma is gated)
+bash scripts/run_gemma_benchmark.sh
+
+# 3. Execute the notebook end-to-end (includes the resampling section)
+bash scripts/run_resampled_nb08.sh
+```
+
+**Notebook 09** requires a local Ollama server with `llama3.1:8b` pulled. To run the prompting-strategy pilot:
+
+```bash
+ollama serve &
+ollama pull llama3.1:8b
+bash scripts/run_prompting_pilot.sh
+```
+
+Both notebooks resume from per-row / per-rerun caches if interrupted.
 
 Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, tabular outputs in `results/tables/`, final summary in `results/benchmark_summary.csv`.
 
@@ -67,15 +90,31 @@ Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in 
 
 ```
 eval_notebooks/          10 Jupyter notebooks (00–07 main, 08–09 supplementary)
-src/                     Shared modules: loaders, embeddings, evaluation, plotting
-run_emb_model.py         Standalone TransE/RotatE runner
+src/
+  embedding.py           TransE, RotatE, and GemmaNameEmbedder
+  prompting_strategies.py  9 LLM prompting strategies for nb09
+  loading.py, graph_utils.py, plotting.py, scoring.py, …
+run_emb_model.py         Standalone TransE / RotatE / Gemma runner
 config.yaml              KG paths and analysis parameters
+scripts/
+  run_gemma_benchmark.sh   Word-priors baseline for the 5 small KGs (nb08)
+  run_gemma_matrix.py      Word-priors for MATRIX (subsampled or full)
+  run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
+  run_prompting_pilot.sh   Prompting-strategy pilot via Ollama (nb09)
+  _inject_*.py             Internal build scripts (regenerate nb08 / nb09 cells from clean upstream)
 results/
   benchmark_summary.csv  18 metrics × 6 KGs (headline)
+  embedding_comparison.csv             Single-run TransE / RotatE / Gemma (nb08)
+  embedding_comparison_resampled.csv   Multi-rerun stability (nb08)
   tables/                Per-notebook data outputs (.csv, .tsv, .md, .json)
   figures/               Per-notebook charts (.pdf, .png)
   checkpoints/           Per-notebook .pkl files consumed by nb00
-docs/dashboard.html      Interactive dashboard (GitHub Pages)
+docs/
+  dashboard.html         Interactive dashboard (GitHub Pages)
+  llm_prompting_strategies.md      Per-strategy rationale + literature
+  llm_prompting_analysis_outline.md  How to read nb09 pilot results
+  resampling_methodology.md        Why N=5 reruns instead of bootstrap CIs
+  gemma_name_resolution_followup.md  KGs where Gemma needs external name lookups
 environment.yml          Conda environment (Python 3.11)
 ```
 

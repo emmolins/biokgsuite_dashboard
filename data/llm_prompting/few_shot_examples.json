@@ -1,0 +1,51 @@
+{
+  "_note": "Curated few-shot examples for nb09 prompting strategies. These pairs are NOT drawn from the Open Targets sampling code in nb09 cell 4, so they don't leak into the test pool. Mix is intentionally 2 positives + 1 negative to reflect base rate without anchoring on Yes.",
+  "_source": "Textbook examples; no KG-specific provenance",
+  "_version": "v1 (2026-05-26)",
+  "plain": [
+    {
+      "drug": "Metformin",
+      "disease": "Type 2 diabetes mellitus",
+      "answer": "Yes",
+      "confidence": 5,
+      "rationale_for_inclusion": "Canonical positive: WHO first-line treatment, indisputable evidence."
+    },
+    {
+      "drug": "Penicillin",
+      "disease": "Alzheimer disease",
+      "answer": "No",
+      "confidence": 5,
+      "rationale_for_inclusion": "Clean negative: antibiotic with no plausible CNS-neurodegenerative mechanism."
+    },
+    {
+      "drug": "Sildenafil",
+      "disease": "Pulmonary arterial hypertension",
+      "answer": "Yes",
+      "confidence": 4,
+      "rationale_for_inclusion": "Classic repurposing case: shows positive can arise from non-obvious mechanism (PDE5 inhibition → selective pulmonary vasodilation)."
+    }
+  ],
+  "with_reasoning": [
+    {
+      "drug": "Metformin",
+      "disease": "Type 2 diabetes mellitus",
+      "reasoning": "Metformin is a biguanide that decreases hepatic glucose production and increases insulin sensitivity. It is the WHO-recommended first-line oral therapy for type 2 diabetes.",
+      "answer": "Yes",
+      "confidence": 5
+    },
+    {
+      "drug": "Penicillin",
+      "disease": "Alzheimer disease",
+      "reasoning": "Penicillin is a beta-lactam antibiotic targeting bacterial cell-wall synthesis. Alzheimer disease is a neurodegenerative disorder of the central nervous system with no known bacterial aetiology that penicillin would treat. No plausible mechanism.",
+      "answer": "No",
+      "confidence": 5
+    },
+    {
+      "drug": "Sildenafil",
+      "disease": "Pulmonary arterial hypertension",
+      "reasoning": "Sildenafil is a PDE5 inhibitor originally developed for angina, repurposed for erectile dysfunction, then approved for pulmonary arterial hypertension because PDE5 inhibition causes selective pulmonary vasodilation.",
+      "answer": "Yes",
+      "confidence": 4
+    }
+  ]
+}

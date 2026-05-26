@@ -539,9 +539,171 @@ def compute_embedding_metrics(model, test_pairs, neg_pairs, rel_idx,
     return results
 
 
+# ── Text-embedding baseline: EmbeddingGemma (word-priors only) ───────────────
+
+class GemmaNameEmbedder:
+    """Score drug-disease pairs using ONLY a text encoder's prior over entity names.
+
+    This is intentionally NOT a KG embedding method. It exists to answer a
+    specific question: "how much of the drug-disease indication signal is
+    already latent in a pretrained language model's word priors, with zero
+    knowledge of the graph?"
+
+    The model embeds each entity's bare name (no type prefix, no task prefix,
+    no neighborhood context) and scores a (drug, disease) pair by cosine
+    similarity of their two embeddings. There are no relation parameters.
+
+    Designed to plug into the same eval harness as TransE/RotatE — exposes
+    `score_pairs(pairs, rel_idx)` (rel_idx is ignored) and a `name` attr,
+    so ``compute_embedding_metrics`` works unchanged.
+
+    Parameters
+    ----------
+    n_entities : int
+        Size of the entity space (so we can allocate the embedding matrix).
+    n_relations : int
+        Accepted but ignored — keeps the constructor signature symmetric
+        with TransE/RotatE.
+    dim : int
+        Matryoshka-truncated embedding dimension (EmbeddingGemma supports
+        128, 256, 512, 768). Lower = less RAM, slightly lower fidelity.
+    model_name : str
+        HuggingFace model id. Default 'google/embeddinggemma-300m'.
+    batch_size : int
+        Encoding batch size on CPU/GPU.
+    seed : int
+        Accepted for interface parity; the encoder itself is deterministic.
+    """
+
+    name = 'EmbeddingGemma-300m'
+
+    def __init__(self, n_entities, n_relations=0, dim=768,
+                 model_name='google/embeddinggemma-300m',
+                 batch_size=64, seed=42, token=None):
+        """
+        token : str or None
+            HuggingFace token for accessing gated models. If None, the
+            sentence-transformers library falls back to env vars
+            ``HF_TOKEN`` / ``HUGGING_FACE_HUB_TOKEN`` or the cached
+            credential at ``~/.cache/huggingface/token``.
+        """
+        self.n_entities = n_entities
+        self.n_relations = n_relations  # ignored
+        self.dim = dim
+        self.model_name = model_name
+        self.batch_size = batch_size
+        self.seed = seed
+        self.token = token
+        self._encoder = None
+        # Lazy-allocate; encode_entities fills this in
+        self.ent_emb = None  # (n_entities, dim) float32, L2-normalized
+
+    def _load_encoder(self):
+        if self._encoder is not None:
+            return
+        import os
+        from sentence_transformers import SentenceTransformer
+        import torch
+        device = ('cuda' if torch.cuda.is_available()
+                  else 'mps' if getattr(torch.backends, 'mps', None)
+                                  and torch.backends.mps.is_available()
+                  else 'cpu')
+        # truncate_dim uses Matryoshka representation if dim < 768
+        kwargs = {}
+        if self.dim < 768:
+            kwargs['truncate_dim'] = self.dim
+        # Resolve token: explicit arg → env var → cached credential (default)
+        token = (self.token
+                 or os.environ.get('HF_TOKEN')
+                 or os.environ.get('HUGGING_FACE_HUB_TOKEN'))
+        if token is not None:
+            kwargs['token'] = token
+        self._encoder = SentenceTransformer(self.model_name, device=device, **kwargs)
+        # Set static seed for any internal stochasticity (none expected, but safe)
+        try:
+            torch.manual_seed(self.seed)
+        except Exception:
+            pass
+
+    def encode_entities(self, names, verbose=True):
+        """Encode an ordered list of names into self.ent_emb.
+
+        Parameters
+        ----------
+        names : list of str
+            Length must equal n_entities. Order corresponds to entity idx.
+            Empty / NaN names are replaced with the literal "" to keep
+            indices aligned (those entities will get the model's default
+            "empty string" embedding — distinguishable from missing).
+
+        Returns
+        -------
+        self.ent_emb : np.ndarray of shape (n_entities, dim), L2-normalized.
+        """
+        assert len(names) == self.n_entities, (
+            f"got {len(names)} names but n_entities={self.n_entities}")
+        self._load_encoder()
+        # Normalize input — never pass NaN/None to the encoder
+        clean = [('' if (n is None or (isinstance(n, float) and np.isnan(n)))
+                  else str(n)) for n in names]
+        if verbose:
+            print(f'  Encoding {len(clean)} names with {self.model_name} '
+                  f'(dim={self.dim}, batch={self.batch_size})...', flush=True)
+        emb = self._encoder.encode(
+            clean,
+            batch_size=self.batch_size,
+            show_progress_bar=verbose,
+            convert_to_numpy=True,
+            normalize_embeddings=True,  # so cosine = dot product
+        ).astype(np.float32)
+        self.ent_emb = emb
+        return self.ent_emb
+
+    def score(self, h_idx, r_idx, t_idx):
+        """Higher = more plausible. Ignores r_idx (no relation concept)."""
+        if self.ent_emb is None:
+            raise RuntimeError("Call encode_entities(names) before scoring.")
+        h = self.ent_emb[h_idx]
+        t = self.ent_emb[t_idx]
+        # Embeddings are L2-normalized; cosine sim = elementwise dot.
+        return (h * t).sum(axis=-1)
+
+    def score_pairs(self, pairs, rel_idx):
+        """Score a list of (head, tail) pairs. rel_idx is accepted but ignored."""
+        pairs = np.asarray(pairs)
+        return self.score(pairs[:, 0], None, pairs[:, 1])
+
+    def fit(self, *args, **kwargs):
+        """No-op: there's nothing to train. encode_entities() does the work."""
+        return self
+
+    # ── Cache helpers ──────────────────────────────────────────────────────
+    def save_embeddings(self, path):
+        """Save self.ent_emb to disk (atomic)."""
+        if self.ent_emb is None:
+            raise RuntimeError("Nothing to save — encode_entities first.")
+        _save_ckpt_atomic(path, ent_emb=self.ent_emb,
+                          dim=np.int32(self.dim),
+                          n_entities=np.int32(self.n_entities))
+
+    def load_embeddings(self, path):
+        """Load self.ent_emb from a prior save_embeddings() call."""
+        ckpt = np.load(path)
+        if int(ckpt['n_entities']) != self.n_entities:
+            raise ValueError(
+                f"cache n_entities={int(ckpt['n_entities'])} != "
+                f"current n_entities={self.n_entities}")
+        if int(ckpt['dim']) != self.dim:
+            raise ValueError(
+                f"cache dim={int(ckpt['dim'])} != current dim={self.dim}")
+        self.ent_emb = ckpt['ent_emb'].astype(np.float32, copy=True)
+        return self.ent_emb
+
+
 # ── Model registry ───────────────────────────────────────────────────────────
 
 MODELS = {
     'TransE': TransE,
     'RotatE': RotatE,
+    'Gemma':  GemmaNameEmbedder,
 }
