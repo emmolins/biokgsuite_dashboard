@@ -1,6 +1,8 @@
-"""Lightweight TransE and RotatE implementations for KG link prediction.
+"""TransE and RotatE implementations for KG link prediction.
 
-Pure NumPy implementations that mirror the standard formulations:
+PyTorch implementations that mirror the standard formulations and are
+GPU-native (auto-detects CUDA > MPS > CPU). The class interfaces, checkpoint
+formats, and all downstream code are unchanged from the original NumPy version.
 
 TransE:
     Bordes, A. et al. "Translating embeddings for modeling multi-relational
@@ -12,19 +14,37 @@ RotatE:
     in Complex Space." ICLR 2019.
     Score: -||h o r - t||  (complex Hadamard product)
 
-Both use margin-based ranking loss with uniform negative sampling and
-vanilla SGD with per-entity updates for speed on CPU.
+Both use margin-based ranking loss (hinge) with uniform negative sampling
+and vanilla SGD with sparse gradient updates (only touched entity rows are
+updated each step), identical in spirit to the original per-entity SGD.
 """
 
-import numpy as np
-from pathlib import Path
+import math
 import os
 
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from pathlib import Path
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+
+# ── Device selection ──────────────────────────────────────────────────────────
+
+def _get_device() -> torch.device:
+    """Auto-detect the best available device: CUDA > MPS > CPU."""
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _l2_normalize_rows(x, eps=1e-12):
-    """L2-normalise each row of x in-place."""
+    """L2-normalise each row of a numpy array in-place (kept for callers outside
+    this module that may still import it)."""
     norms = np.linalg.norm(x, axis=1, keepdims=True)
     np.maximum(norms, eps, out=norms)
     x /= norms
@@ -34,20 +54,34 @@ def _l2_normalize_rows(x, eps=1e-12):
 def _save_ckpt_atomic(path, **arrays):
     """Atomic-rename save so a crash mid-write doesn't corrupt the checkpoint.
 
-    Note: np.savez auto-appends '.npz' to a *path string*; pass a binary
-    file object instead so the temp filename stays exactly what we set.
+    Accepts numpy arrays as kwargs and writes them with np.savez (uncompressed).
+    Uses a temp file + os.replace so the checkpoint is never half-written.
     """
     path = Path(path)
-    tmp  = path.with_suffix(path.suffix + ".tmp")
+    tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "wb") as f:
-        np.savez(f, **arrays)           # uncompressed for speed; ~5 GB/30s on M4
-    os.replace(tmp, path)               # atomic on POSIX
+        np.savez(f, **arrays)
+    os.replace(tmp, path)
 
 
-# ── TransE ───────────────────────────────────────────────────────────────────
+def _normalize_emb_inplace(emb: nn.Embedding):
+    """L2-normalise entity embedding rows in-place (no gradient tracking)."""
+    with torch.no_grad():
+        F.normalize(emb.weight.data, p=2, dim=1, out=emb.weight.data)
+
+
+# ── TransE ────────────────────────────────────────────────────────────────────
 
 class TransE:
-    """TransE with vanilla SGD and per-entity updates.
+    """TransE with sparse SGD on the best available device (CUDA / MPS / CPU).
+
+    The public interface is identical to the original NumPy version:
+      - ``score(h_idx, r_idx, t_idx)``  → numpy array
+      - ``score_pairs(pairs, rel_idx)``  → numpy array
+      - ``fit(triples, ...)``
+      - ``ent_emb`` / ``rel_emb`` properties return float32 numpy arrays
+      - checkpoint files use the same .npz keys (ent_emb, rel_emb,
+        epoch_completed) so existing checkpoints are loaded transparently.
 
     Parameters
     ----------
@@ -56,342 +90,412 @@ class TransE:
         Embedding dimension.
     margin : float
     lr : float
-        Learning rate.
+        Learning rate for vanilla SGD.
     seed : int
     """
 
-    name = 'TransE'
+    name = "TransE"
 
     def __init__(self, n_entities, n_relations, dim=128, margin=1.0,
                  lr=0.01, seed=42):
         self.dim = dim
-        self.margin = margin
+        self.margin = float(margin)
         self.lr = lr
-        self.rng = np.random.RandomState(seed)
         self.n_entities = n_entities
         self.n_relations = n_relations
+        self._device = _get_device()
+        self._rng = np.random.RandomState(seed)
 
-        bound = 6.0 / np.sqrt(dim)
-        self.ent_emb = self.rng.uniform(-bound, bound,
-                                        (n_entities, dim)).astype(np.float32)
-        self.rel_emb = self.rng.uniform(-bound, bound,
-                                        (n_relations, dim)).astype(np.float32)
-        _l2_normalize_rows(self.ent_emb)
+        # Initialise embeddings with the same Xavier-uniform distribution as
+        # the original NumPy version.
+        bound = 6.0 / math.sqrt(dim)
+        ent_w = torch.from_numpy(
+            self._rng.uniform(-bound, bound, (n_entities, dim)).astype(np.float32))
+        ent_w = F.normalize(ent_w, p=2, dim=1)
+        rel_w = torch.from_numpy(
+            self._rng.uniform(-bound, bound, (n_relations, dim)).astype(np.float32))
 
-    def score(self, h_idx, r_idx, t_idx):
-        """Higher = more plausible."""
-        h = self.ent_emb[h_idx]
-        r = self.rel_emb[r_idx]
-        t = self.ent_emb[t_idx]
-        return -np.linalg.norm(h + r - t, axis=-1)
+        # sparse=True → SGD only touches the rows that appear in each batch,
+        # which is crucial for large entity tables (e.g. Matrix at 4.8M ents).
+        self._ent = nn.Embedding(n_entities, dim, sparse=True, _weight=ent_w.clone())
+        self._rel = nn.Embedding(n_relations, dim, sparse=True, _weight=rel_w.clone())
+        self._ent.to(self._device)
+        self._rel.to(self._device)
 
-    def score_pairs(self, pairs, rel_idx):
+        self._opt = torch.optim.SGD(
+            list(self._ent.parameters()) + list(self._rel.parameters()), lr=lr)
+
+    # ── Numpy-compatible properties ──────────────────────────────────────────
+
+    @property
+    def ent_emb(self) -> np.ndarray:
+        """Entity embedding matrix as a (n_entities, dim) float32 numpy array."""
+        return self._ent.weight.detach().cpu().numpy()
+
+    @property
+    def rel_emb(self) -> np.ndarray:
+        """Relation embedding matrix as a (n_relations, dim) float32 numpy array."""
+        return self._rel.weight.detach().cpu().numpy()
+
+    # ── Scoring ──────────────────────────────────────────────────────────────
+
+    def score(self, h_idx, r_idx, t_idx) -> np.ndarray:
+        """Return -||h + r - t||₂  (higher = more plausible)."""
+        with torch.no_grad():
+            dev = self._device
+            h = self._ent.weight[torch.as_tensor(np.asarray(h_idx, dtype=np.int64), device=dev)]
+            r = self._rel.weight[torch.as_tensor(np.asarray(r_idx, dtype=np.int64), device=dev)]
+            t = self._ent.weight[torch.as_tensor(np.asarray(t_idx, dtype=np.int64), device=dev)]
+            return -(h + r - t).norm(p=2, dim=-1).cpu().numpy()
+
+    def score_pairs(self, pairs, rel_idx) -> np.ndarray:
         pairs = np.asarray(pairs)
         h_idx, t_idx = pairs[:, 0], pairs[:, 1]
         if np.isscalar(rel_idx):
-            rel_idx = np.full(len(pairs), rel_idx, dtype=int)
+            rel_idx = np.full(len(pairs), rel_idx, dtype=np.int64)
         return self.score(h_idx, rel_idx, t_idx)
+
+    # ── Training ─────────────────────────────────────────────────────────────
 
     def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True,
             checkpoint_path=None, checkpoint_every=10):
-        """Train with margin ranking loss and direct SGD updates.
+        """Train with hinge (margin) ranking loss and sparse SGD.
 
-        If ``checkpoint_path`` is set, the embedding state is saved after
-        every ``checkpoint_every`` epochs. If a matching checkpoint already
-        exists at that path with the same shapes, training resumes from the
-        epoch recorded there. A crash + restart therefore re-uses prior
-        progress instead of starting over from epoch 0.
+        Semantics are identical to the original NumPy ``fit()``:
+          - Uniform negative sampling (corrupt head or tail 50/50).
+          - Only violated triplets contribute to the loss (F.relu clamps
+            non-violated samples to zero, so their gradient is 0).
+          - Entity embeddings are L2-normalised after every epoch.
+          - Checkpoint resume: if a .npz checkpoint with matching shapes
+            exists at ``checkpoint_path``, training resumes from the saved
+            epoch.
         """
+        if verbose:
+            print(f"  [{self.name}] device={self._device}  "
+                  f"entities={self.n_entities:,}  dim={self.dim}  "
+                  f"epochs={n_epochs}  batch={batch_size}", flush=True)
+
         triples = np.asarray(triples, dtype=np.int32)
         n = len(triples)
-        lr = self.lr
+        dev = self._device
 
-        # Resume from checkpoint if compatible
+        # ── Resume from checkpoint ──────────────────────────────────────────
         start_epoch = 0
         if checkpoint_path and Path(checkpoint_path).exists():
             try:
                 ckpt = np.load(checkpoint_path)
-                if (ckpt["ent_emb"].shape == self.ent_emb.shape
-                    and ckpt["rel_emb"].shape == self.rel_emb.shape):
-                    self.ent_emb = ckpt["ent_emb"].astype(np.float32, copy=True)
-                    self.rel_emb = ckpt["rel_emb"].astype(np.float32, copy=True)
+                if (ckpt["ent_emb"].shape == (self.n_entities, self.dim) and
+                        ckpt["rel_emb"].shape == (self.n_relations, self.dim)):
+                    self._ent.weight.data.copy_(
+                        torch.from_numpy(ckpt["ent_emb"].astype(np.float32)))
+                    self._rel.weight.data.copy_(
+                        torch.from_numpy(ckpt["rel_emb"].astype(np.float32)))
                     start_epoch = int(ckpt["epoch_completed"])
                     if verbose:
-                        print(f"  Resumed from checkpoint at epoch {start_epoch}/{n_epochs}")
+                        print(f"  Resumed from checkpoint at epoch "
+                              f"{start_epoch}/{n_epochs}", flush=True)
                 else:
                     if verbose:
-                        print("  Checkpoint shape mismatch — starting fresh")
+                        print("  Checkpoint shape mismatch — starting fresh",
+                              flush=True)
             except Exception as e:
                 if verbose:
-                    print(f"  Checkpoint load failed ({e}) — starting fresh")
+                    print(f"  Checkpoint load failed ({e}) — starting fresh",
+                          flush=True)
 
+        # ── Training loop ───────────────────────────────────────────────────
         for epoch in range(start_epoch, n_epochs):
-            perm = self.rng.permutation(n)
+            perm = self._rng.permutation(n)
             epoch_loss = 0.0
             n_batches = 0
 
             for start in range(0, n, batch_size):
                 batch = triples[perm[start:start + batch_size]]
                 bs = len(batch)
-                heads, rels, tails = batch[:, 0], batch[:, 1], batch[:, 2]
+                heads = batch[:, 0].astype(np.int64)
+                rels  = batch[:, 1].astype(np.int64)
+                tails = batch[:, 2].astype(np.int64)
 
-                # Corrupt head or tail
+                # Corrupt head or tail (50/50)
                 neg_heads = heads.copy()
                 neg_tails = tails.copy()
-                flip = self.rng.random(bs) < 0.5
+                flip = self._rng.random(bs) < 0.5
                 n_h = flip.sum()
                 if n_h > 0:
-                    neg_heads[flip] = self.rng.randint(0, self.n_entities, n_h)
+                    neg_heads[flip] = self._rng.randint(0, self.n_entities, n_h)
                 if bs - n_h > 0:
-                    neg_tails[~flip] = self.rng.randint(
+                    neg_tails[~flip] = self._rng.randint(
                         0, self.n_entities, bs - n_h)
 
-                # Forward
-                h = self.ent_emb[heads]
-                r = self.rel_emb[rels]
-                t = self.ent_emb[tails]
-                nh = self.ent_emb[neg_heads]
-                nt = self.ent_emb[neg_tails]
+                # Transfer index tensors to device
+                heads_t     = torch.as_tensor(heads,     device=dev)
+                rels_t      = torch.as_tensor(rels,      device=dev)
+                tails_t     = torch.as_tensor(tails,     device=dev)
+                neg_heads_t = torch.as_tensor(neg_heads, device=dev)
+                neg_tails_t = torch.as_tensor(neg_tails, device=dev)
 
-                dp = h + r - t
-                dn = nh + r - nt
-                d_pos = np.linalg.norm(dp, axis=1)
-                d_neg = np.linalg.norm(dn, axis=1)
+                # Forward — embeddings (with gradient tracking via nn.Embedding)
+                h  = self._ent(heads_t)
+                r  = self._rel(rels_t)
+                t  = self._ent(tails_t)
+                nh = self._ent(neg_heads_t)
+                nt = self._ent(neg_tails_t)
 
-                violation = self.margin + d_pos - d_neg
-                mask = violation > 0
-                n_active = mask.sum()
-                if n_active == 0:
-                    n_batches += 1
-                    continue
+                d_pos = (h + r - t).norm(p=2, dim=1)
+                d_neg = (nh + r - nt).norm(p=2, dim=1)
+                # F.relu gives zero gradient for non-violated pairs,
+                # matching the original ``mask = violation > 0`` logic.
+                # NOTE: .sum() — NOT .mean(). The validated NumPy reference
+                # applies a per-sample update of scale ~lr to each touched
+                # entity. With .mean(), autograd divides every entity's
+                # gradient by batch_size, shrinking the effective step
+                # ~batch_size× and badly undertraining the model (AUROC
+                # collapses toward / below chance on the harder KGs). Do not
+                # "simplify" this back to .mean() without rescaling lr by bs.
+                loss = F.relu(self.margin + d_pos - d_neg).sum()
 
-                epoch_loss += violation[mask].mean()
+                self._opt.zero_grad()
+                loss.backward()
+                self._opt.step()
+
+                epoch_loss += loss.item()
                 n_batches += 1
 
-                # Gradient direction (unit vectors)
-                dp_norm = d_pos[mask, None] + 1e-12
-                dn_norm = d_neg[mask, None] + 1e-12
-                gp = dp[mask] / dp_norm  # d(d_pos)/d(h+r-t)
-                gn = dn[mask] / dn_norm
-
-                # Direct SGD updates on touched entities only
-                # Positive: push h+r closer to t
-                self.ent_emb[heads[mask]] -= lr * gp
-                self.ent_emb[tails[mask]] += lr * gp
-                # Negative: push nh+r away from nt
-                self.ent_emb[neg_heads[mask]] += lr * gn
-                self.ent_emb[neg_tails[mask]] -= lr * gn
-                # Relation
-                self.rel_emb[rels[mask]] -= lr * (gp - gn)
-
             # Re-normalise entity embeddings once per epoch
-            _l2_normalize_rows(self.ent_emb)
+            _normalize_emb_inplace(self._ent)
 
             if verbose and (epoch + 1) % max(1, n_epochs // 10) == 0:
                 avg = epoch_loss / max(n_batches, 1)
-                print(f'  Epoch {epoch+1:>4d}/{n_epochs}  loss={avg:.4f}')
+                print(f"  Epoch {epoch + 1:>4d}/{n_epochs}  loss={avg:.4f}",
+                      flush=True)
 
-            # Periodic checkpoint
+            # Periodic checkpoint (same .npz format as original)
             if checkpoint_path and (epoch + 1) % checkpoint_every == 0:
-                _save_ckpt_atomic(checkpoint_path,
-                                  ent_emb=self.ent_emb,
-                                  rel_emb=self.rel_emb,
-                                  epoch_completed=np.int32(epoch + 1))
+                _save_ckpt_atomic(
+                    checkpoint_path,
+                    ent_emb=self.ent_emb,
+                    rel_emb=self.rel_emb,
+                    epoch_completed=np.int32(epoch + 1),
+                )
 
 
-# ── RotatE ───────────────────────────────────────────────────────────────────
+# ── RotatE ────────────────────────────────────────────────────────────────────
 
 class RotatE:
-    """RotatE with vanilla SGD and per-entity updates.
+    """RotatE with sparse SGD on the best available device (CUDA / MPS / CPU).
+
+    Complex-space rotational embeddings: each entity is a complex vector of
+    dimension ``dim`` (stored as real and imaginary parts separately) and each
+    relation is a phase vector that rotates entity embeddings via Hadamard
+    product in C^dim.
+
+    The public interface and checkpoint format (.npz with keys ent_re, ent_im,
+    rel_phase, epoch_completed) are identical to the original NumPy version.
 
     Parameters
     ----------
     n_entities, n_relations : int
     dim : int
-        Complex embedding dimension (each entity has 2*dim float params).
+        Complex embedding dimension. Each entity has 2*dim float parameters.
     margin : float
     lr : float
     seed : int
     """
 
-    name = 'RotatE'
+    name = "RotatE"
 
     def __init__(self, n_entities, n_relations, dim=64, margin=6.0,
                  lr=0.01, seed=42):
         self.dim = dim
-        self.margin = margin
+        self.margin = float(margin)
         self.lr = lr
-        self.rng = np.random.RandomState(seed)
         self.n_entities = n_entities
         self.n_relations = n_relations
+        self._device = _get_device()
+        self._rng = np.random.RandomState(seed)
 
-        bound = 6.0 / np.sqrt(dim)
-        self.ent_re = self.rng.uniform(-bound, bound,
-                                       (n_entities, dim)).astype(np.float32)
-        self.ent_im = self.rng.uniform(-bound, bound,
-                                       (n_entities, dim)).astype(np.float32)
-        self.rel_phase = self.rng.uniform(-np.pi, np.pi,
-                                          (n_relations, dim)).astype(np.float32)
+        bound = 6.0 / math.sqrt(dim)
+        ent_re_w = torch.from_numpy(
+            self._rng.uniform(-bound, bound, (n_entities, dim)).astype(np.float32))
+        ent_im_w = torch.from_numpy(
+            self._rng.uniform(-bound, bound, (n_entities, dim)).astype(np.float32))
+        rel_ph_w = torch.from_numpy(
+            self._rng.uniform(-math.pi, math.pi, (n_relations, dim)).astype(np.float32))
 
-    def _dist(self, h_re, h_im, r_phase, t_re, t_im):
-        """||h o r - t|| in complex space."""
-        r_re = np.cos(r_phase)
-        r_im = np.sin(r_phase)
+        self._ent_re  = nn.Embedding(n_entities, dim, sparse=True,
+                                     _weight=ent_re_w.clone())
+        self._ent_im  = nn.Embedding(n_entities, dim, sparse=True,
+                                     _weight=ent_im_w.clone())
+        self._rel_ph  = nn.Embedding(n_relations, dim, sparse=True,
+                                     _weight=rel_ph_w.clone())
+        self._ent_re.to(self._device)
+        self._ent_im.to(self._device)
+        self._rel_ph.to(self._device)
+
+        self._opt = torch.optim.SGD(
+            list(self._ent_re.parameters()) +
+            list(self._ent_im.parameters()) +
+            list(self._rel_ph.parameters()),
+            lr=lr)
+
+    # ── Numpy-compatible properties ──────────────────────────────────────────
+
+    @property
+    def ent_re(self) -> np.ndarray:
+        return self._ent_re.weight.detach().cpu().numpy()
+
+    @property
+    def ent_im(self) -> np.ndarray:
+        return self._ent_im.weight.detach().cpu().numpy()
+
+    @property
+    def rel_phase(self) -> np.ndarray:
+        return self._rel_ph.weight.detach().cpu().numpy()
+
+    # ── Internal distance helper ─────────────────────────────────────────────
+
+    @staticmethod
+    def _dist_tensors(h_re, h_im, r_phase, t_re, t_im) -> torch.Tensor:
+        """||h ∘ r - t||₂ in complex space (all inputs are tensors)."""
+        r_re = torch.cos(r_phase)
+        r_im = torch.sin(r_phase)
         hr_re = h_re * r_re - h_im * r_im
         hr_im = h_re * r_im + h_im * r_re
         d_re = hr_re - t_re
         d_im = hr_im - t_im
-        return np.sqrt((d_re ** 2 + d_im ** 2).sum(axis=-1) + 1e-12)
+        return torch.sqrt((d_re ** 2 + d_im ** 2).sum(dim=-1) + 1e-12)
 
-    def score(self, h_idx, r_idx, t_idx):
-        return -self._dist(
-            self.ent_re[h_idx], self.ent_im[h_idx],
-            self.rel_phase[r_idx],
-            self.ent_re[t_idx], self.ent_im[t_idx])
+    # ── Scoring ──────────────────────────────────────────────────────────────
 
-    def score_pairs(self, pairs, rel_idx):
+    def score(self, h_idx, r_idx, t_idx) -> np.ndarray:
+        """Return -||h ∘ r - t||₂  (higher = more plausible)."""
+        with torch.no_grad():
+            dev = self._device
+            hi = torch.as_tensor(np.asarray(h_idx, dtype=np.int64), device=dev)
+            ri = torch.as_tensor(np.asarray(r_idx, dtype=np.int64), device=dev)
+            ti = torch.as_tensor(np.asarray(t_idx, dtype=np.int64), device=dev)
+            dist = self._dist_tensors(
+                self._ent_re.weight[hi], self._ent_im.weight[hi],
+                self._rel_ph.weight[ri],
+                self._ent_re.weight[ti], self._ent_im.weight[ti])
+            return -dist.cpu().numpy()
+
+    def score_pairs(self, pairs, rel_idx) -> np.ndarray:
         pairs = np.asarray(pairs)
         h_idx, t_idx = pairs[:, 0], pairs[:, 1]
         if np.isscalar(rel_idx):
-            rel_idx = np.full(len(pairs), rel_idx, dtype=int)
+            rel_idx = np.full(len(pairs), rel_idx, dtype=np.int64)
         return self.score(h_idx, rel_idx, t_idx)
+
+    # ── Training ─────────────────────────────────────────────────────────────
 
     def fit(self, triples, n_epochs=50, batch_size=16384, verbose=True,
             checkpoint_path=None, checkpoint_every=10):
-        """Train with margin ranking loss and direct SGD updates.
+        """Train with hinge (margin) ranking loss and sparse SGD.
 
-        If ``checkpoint_path`` is set, the complex embedding state
-        (ent_re, ent_im, rel_phase) is saved every ``checkpoint_every``
-        epochs and auto-resumed on a matching restart.
+        Checkpoint format: .npz with keys ent_re, ent_im, rel_phase,
+        epoch_completed — identical to the original NumPy version.
         """
+        if verbose:
+            print(f"  [{self.name}] device={self._device}  "
+                  f"entities={self.n_entities:,}  dim={self.dim}  "
+                  f"epochs={n_epochs}  batch={batch_size}", flush=True)
+
         triples = np.asarray(triples, dtype=np.int32)
         n = len(triples)
-        lr = self.lr
+        dev = self._device
 
-        # Resume from checkpoint if compatible
+        # ── Resume from checkpoint ──────────────────────────────────────────
         start_epoch = 0
         if checkpoint_path and Path(checkpoint_path).exists():
             try:
                 ckpt = np.load(checkpoint_path)
-                if (ckpt["ent_re"].shape == self.ent_re.shape
-                    and ckpt["ent_im"].shape == self.ent_im.shape
-                    and ckpt["rel_phase"].shape == self.rel_phase.shape):
-                    self.ent_re    = ckpt["ent_re"].astype(np.float32, copy=True)
-                    self.ent_im    = ckpt["ent_im"].astype(np.float32, copy=True)
-                    self.rel_phase = ckpt["rel_phase"].astype(np.float32, copy=True)
+                if (ckpt["ent_re"].shape    == (self.n_entities,  self.dim) and
+                        ckpt["ent_im"].shape    == (self.n_entities,  self.dim) and
+                        ckpt["rel_phase"].shape == (self.n_relations, self.dim)):
+                    self._ent_re.weight.data.copy_(
+                        torch.from_numpy(ckpt["ent_re"].astype(np.float32)))
+                    self._ent_im.weight.data.copy_(
+                        torch.from_numpy(ckpt["ent_im"].astype(np.float32)))
+                    self._rel_ph.weight.data.copy_(
+                        torch.from_numpy(ckpt["rel_phase"].astype(np.float32)))
                     start_epoch = int(ckpt["epoch_completed"])
                     if verbose:
-                        print(f"  Resumed from checkpoint at epoch {start_epoch}/{n_epochs}")
+                        print(f"  Resumed from checkpoint at epoch "
+                              f"{start_epoch}/{n_epochs}", flush=True)
                 else:
                     if verbose:
-                        print("  Checkpoint shape mismatch — starting fresh")
+                        print("  Checkpoint shape mismatch — starting fresh",
+                              flush=True)
             except Exception as e:
                 if verbose:
-                    print(f"  Checkpoint load failed ({e}) — starting fresh")
+                    print(f"  Checkpoint load failed ({e}) — starting fresh",
+                          flush=True)
 
+        # ── Training loop ───────────────────────────────────────────────────
         for epoch in range(start_epoch, n_epochs):
-            perm = self.rng.permutation(n)
+            perm = self._rng.permutation(n)
             epoch_loss = 0.0
             n_batches = 0
 
             for start in range(0, n, batch_size):
                 batch = triples[perm[start:start + batch_size]]
                 bs = len(batch)
-                heads, rels, tails = batch[:, 0], batch[:, 1], batch[:, 2]
+                heads = batch[:, 0].astype(np.int64)
+                rels  = batch[:, 1].astype(np.int64)
+                tails = batch[:, 2].astype(np.int64)
 
                 neg_heads = heads.copy()
                 neg_tails = tails.copy()
-                flip = self.rng.random(bs) < 0.5
+                flip = self._rng.random(bs) < 0.5
                 n_h = flip.sum()
                 if n_h > 0:
-                    neg_heads[flip] = self.rng.randint(0, self.n_entities, n_h)
+                    neg_heads[flip] = self._rng.randint(0, self.n_entities, n_h)
                 if bs - n_h > 0:
-                    neg_tails[~flip] = self.rng.randint(
+                    neg_tails[~flip] = self._rng.randint(
                         0, self.n_entities, bs - n_h)
 
-                # Forward
-                h_re = self.ent_re[heads]; h_im = self.ent_im[heads]
-                t_re = self.ent_re[tails]; t_im = self.ent_im[tails]
-                nh_re = self.ent_re[neg_heads]; nh_im = self.ent_im[neg_heads]
-                nt_re = self.ent_re[neg_tails]; nt_im = self.ent_im[neg_tails]
-                rp = self.rel_phase[rels]
+                heads_t     = torch.as_tensor(heads,     device=dev)
+                rels_t      = torch.as_tensor(rels,      device=dev)
+                tails_t     = torch.as_tensor(tails,     device=dev)
+                neg_heads_t = torch.as_tensor(neg_heads, device=dev)
+                neg_tails_t = torch.as_tensor(neg_tails, device=dev)
 
-                d_pos = self._dist(h_re, h_im, rp, t_re, t_im)
-                d_neg = self._dist(nh_re, nh_im, rp, nt_re, nt_im)
+                h_re  = self._ent_re(heads_t);  h_im  = self._ent_im(heads_t)
+                t_re  = self._ent_re(tails_t);  t_im  = self._ent_im(tails_t)
+                nh_re = self._ent_re(neg_heads_t); nh_im = self._ent_im(neg_heads_t)
+                nt_re = self._ent_re(neg_tails_t); nt_im = self._ent_im(neg_tails_t)
+                rp    = self._rel_ph(rels_t)
 
-                violation = self.margin + d_pos - d_neg
-                mask = violation > 0
-                n_active = mask.sum()
-                if n_active == 0:
-                    n_batches += 1
-                    continue
+                d_pos = self._dist_tensors(h_re,  h_im,  rp, t_re,  t_im)
+                d_neg = self._dist_tensors(nh_re, nh_im, rp, nt_re, nt_im)
+                # .sum() not .mean() — see TransE.fit: .mean() divides each
+                # entity's gradient by batch_size and undertrains the model.
+                loss  = F.relu(self.margin + d_pos - d_neg).sum()
 
-                epoch_loss += violation[mask].mean()
+                self._opt.zero_grad()
+                loss.backward()
+                self._opt.step()
+
+                epoch_loss += loss.item()
                 n_batches += 1
-
-                # Compute rotation components for active samples
-                m = mask
-                r_re_m = np.cos(rp[m]); r_im_m = np.sin(rp[m])
-
-                # Positive triple
-                hr_re_p = h_re[m]*r_re_m - h_im[m]*r_im_m
-                hr_im_p = h_re[m]*r_im_m + h_im[m]*r_re_m
-                diff_re_p = hr_re_p - t_re[m]
-                diff_im_p = hr_im_p - t_im[m]
-                dp = d_pos[m, None] + 1e-12
-
-                # Negative triple
-                hr_re_n = nh_re[m]*r_re_m - nh_im[m]*r_im_m
-                hr_im_n = nh_re[m]*r_im_m + nh_im[m]*r_re_m
-                diff_re_n = hr_re_n - nt_re[m]
-                diff_im_n = hr_im_n - nt_im[m]
-                dn = d_neg[m, None] + 1e-12
-
-                # Positive gradients -> push d_pos down
-                g_h_re = (diff_re_p * r_re_m + diff_im_p * r_im_m) / dp
-                g_h_im = (-diff_re_p * r_im_m + diff_im_p * r_re_m) / dp
-                g_t_re = -diff_re_p / dp
-                g_t_im = -diff_im_p / dp
-
-                self.ent_re[heads[m]] -= lr * g_h_re
-                self.ent_im[heads[m]] -= lr * g_h_im
-                self.ent_re[tails[m]] -= lr * g_t_re
-                self.ent_im[tails[m]] -= lr * g_t_im
-
-                # Negative gradients -> push d_neg up
-                g_nh_re = (diff_re_n * r_re_m + diff_im_n * r_im_m) / dn
-                g_nh_im = (-diff_re_n * r_im_m + diff_im_n * r_re_m) / dn
-                g_nt_re = -diff_re_n / dn
-                g_nt_im = -diff_im_n / dn
-
-                self.ent_re[neg_heads[m]] += lr * g_nh_re
-                self.ent_im[neg_heads[m]] += lr * g_nh_im
-                self.ent_re[neg_tails[m]] += lr * g_nt_re
-                self.ent_im[neg_tails[m]] += lr * g_nt_im
-
-                # Relation phase gradient
-                g_r_p = (diff_re_p*(-h_re[m]*r_im_m - h_im[m]*r_re_m)
-                         + diff_im_p*(h_re[m]*r_re_m - h_im[m]*r_im_m)
-                         ) / dp
-                g_r_n = (diff_re_n*(-nh_re[m]*r_im_m - nh_im[m]*r_re_m)
-                         + diff_im_n*(nh_re[m]*r_re_m - nh_im[m]*r_im_m)
-                         ) / dn
-                self.rel_phase[rels[m]] -= lr * (g_r_p - g_r_n)
 
             if verbose and (epoch + 1) % max(1, n_epochs // 10) == 0:
                 avg = epoch_loss / max(n_batches, 1)
-                print(f'  Epoch {epoch+1:>4d}/{n_epochs}  loss={avg:.4f}')
+                print(f"  Epoch {epoch + 1:>4d}/{n_epochs}  loss={avg:.4f}",
+                      flush=True)
 
-            # Periodic checkpoint
             if checkpoint_path and (epoch + 1) % checkpoint_every == 0:
-                _save_ckpt_atomic(checkpoint_path,
-                                  ent_re=self.ent_re,
-                                  ent_im=self.ent_im,
-                                  rel_phase=self.rel_phase,
-                                  epoch_completed=np.int32(epoch + 1))
+                _save_ckpt_atomic(
+                    checkpoint_path,
+                    ent_re=self.ent_re,
+                    ent_im=self.ent_im,
+                    rel_phase=self.rel_phase,
+                    epoch_completed=np.int32(epoch + 1),
+                )
 
 
-# ── Triple preparation ───────────────────────────────────────────────────────
+# ── Triple preparation ────────────────────────────────────────────────────────
 
 def kg_to_triples(kg_df, add_inverse=True):
     """Convert a BioKGSuite edge DataFrame to integer-indexed triples.
@@ -502,12 +606,9 @@ def compute_embedding_metrics(model, test_pairs, neg_pairs, rel_idx,
     all_pairs = np.array(test_pairs + neg_pairs)
     labels = np.array([1] * len(test_pairs) + [0] * len(neg_pairs))
 
-    # Score in forward direction: (drug, rel, disease)
     scores_fwd = model.score_pairs(all_pairs, rel_idx)
 
     if rel_idx_inv is not None:
-        # Also score (drug, rel_inv, disease) — the inverse relation was
-        # learned from reversed triples so it captures the other direction.
         scores_inv = model.score_pairs(all_pairs, rel_idx_inv)
         scores = np.maximum(scores_fwd, scores_inv)
     else:
@@ -531,8 +632,6 @@ def compute_embedding_metrics(model, test_pairs, neg_pairs, rel_idx,
     for k in ks:
         results[f'hits@{k}'] = float(np.mean(hits_at_k[k]))
 
-    # Expose per-pair (y_true, y_score) so downstream bootstrap CIs can
-    # resample test pairs without retraining the embedding model.
     results['scores'] = scores.astype(float).tolist()
     results['labels'] = labels.astype(int).tolist()
 
@@ -601,25 +700,21 @@ class GemmaNameEmbedder:
     def _load_encoder(self):
         if self._encoder is not None:
             return
-        import os
         from sentence_transformers import SentenceTransformer
         import torch
         device = ('cuda' if torch.cuda.is_available()
                   else 'mps' if getattr(torch.backends, 'mps', None)
                                   and torch.backends.mps.is_available()
                   else 'cpu')
-        # truncate_dim uses Matryoshka representation if dim < 768
         kwargs = {}
         if self.dim < 768:
             kwargs['truncate_dim'] = self.dim
-        # Resolve token: explicit arg → env var → cached credential (default)
         token = (self.token
                  or os.environ.get('HF_TOKEN')
                  or os.environ.get('HUGGING_FACE_HUB_TOKEN'))
         if token is not None:
             kwargs['token'] = token
         self._encoder = SentenceTransformer(self.model_name, device=device, **kwargs)
-        # Set static seed for any internal stochasticity (none expected, but safe)
         try:
             torch.manual_seed(self.seed)
         except Exception:
@@ -643,7 +738,6 @@ class GemmaNameEmbedder:
         assert len(names) == self.n_entities, (
             f"got {len(names)} names but n_entities={self.n_entities}")
         self._load_encoder()
-        # Normalize input — never pass NaN/None to the encoder
         clean = [('' if (n is None or (isinstance(n, float) and np.isnan(n)))
                   else str(n)) for n in names]
         if verbose:
@@ -654,7 +748,7 @@ class GemmaNameEmbedder:
             batch_size=self.batch_size,
             show_progress_bar=verbose,
             convert_to_numpy=True,
-            normalize_embeddings=True,  # so cosine = dot product
+            normalize_embeddings=True,
         ).astype(np.float32)
         self.ent_emb = emb
         return self.ent_emb
@@ -665,7 +759,6 @@ class GemmaNameEmbedder:
             raise RuntimeError("Call encode_entities(names) before scoring.")
         h = self.ent_emb[h_idx]
         t = self.ent_emb[t_idx]
-        # Embeddings are L2-normalized; cosine sim = elementwise dot.
         return (h * t).sum(axis=-1)
 
     def score_pairs(self, pairs, rel_idx):
@@ -700,7 +793,7 @@ class GemmaNameEmbedder:
         return self.ent_emb
 
 
-# ── Model registry ───────────────────────────────────────────────────────────
+# ── Model registry ────────────────────────────────────────────────────────────
 
 MODELS = {
     'TransE': TransE,
