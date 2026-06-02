@@ -188,7 +188,15 @@ def main():
     print(f"Resampling: reruns={args.reruns} seeds={rerun_seeds} batch={args.batch} "
           f"epochs={args.epochs}\nKGs: {kgs}  Gemma: {args.gemma}")
 
-    rows = []
+    # Resume: load any existing CSV and skip (kg, model, rerun) combos already done,
+    # so e.g. `--kgs matrix` appends to the existing rows instead of overwriting them.
+    rows, done = [], set()
+    if OUT_CSV.exists():
+        _prev = pd.read_csv(OUT_CSV)
+        rows = _prev.to_dict("records")
+        done = {(r["kg"], r["model"], int(r["rerun"])) for r in rows}
+        print(f"Resuming — {len(rows)} existing rows "
+              f"({len(done)} kg/model/rerun combos) in {OUT_CSV.name}")
 
     def flush():
         pd.DataFrame(rows).to_csv(OUT_CSV, index=False)
@@ -199,6 +207,9 @@ def main():
             prep = prepare_kg_resampled(kg, rerun_idx, rerun_seeds)
             seed = rerun_seeds[rerun_idx]
             for model_name in ("TransE", "RotatE"):
+                if (kg, model_name, rerun_idx) in done:
+                    print(f"  {kg}/{model_name}/rerun{rerun_idx}: cached, skip", flush=True)
+                    continue
                 model, train_s = train_one(model_name, prep, seed, args.epochs, args.batch)
                 rs = eval_rows(model, prep, kg, model_name, rerun_idx, seed, train_s)
                 rows.extend(rs)
@@ -208,7 +219,7 @@ def main():
                 del model
 
             # Gemma — guarded: only if an encoding cache exists for this KG
-            if args.gemma:
+            if args.gemma and (kg, "Gemma", rerun_idx) not in done:
                 emb_cache = CACHE / f"gemma_emb_{kg}_d{GEMMA_DIM}.npz"
                 if emb_cache.exists():
                     try:
