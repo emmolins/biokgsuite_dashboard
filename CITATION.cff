@@ -19,12 +19,14 @@ abstract: >
   knowledge graphs (KGs) across seven complementary quality dimensions and 18
   individual metrics: coverage, annotation accuracy, trustworthiness, topology,
   stability, task performance (link prediction), and generalisation across
-  domains and sparse-entity settings. Six widely-used KGs are evaluated —
-  PrimeKG, Hetionet, DRKG, OpenBioLink, BioKG, and MATRIX (Every Cure) —
+  domains and sparse-entity settings. Six widely-used KGs are evaluated
+  (PrimeKG, Hetionet, DRKG, OpenBioLink, BioKG, and MATRIX from Every Cure)
   against curated gold standards from DrugBank, UniProt, Disease Ontology,
   Reactome, Open Targets, and CTD, in the context of drug-repurposing
-  applications. A supplementary notebook validates the embedding-model choice
-  (TransE vs. RotatE).
+  applications. Two supplementary notebooks extend the analysis: one validates
+  the embedding-model choice (TransE vs. RotatE vs. an EmbeddingGemma name
+  prior) with multi-rerun resampling, and one probes whether knowledge-graph
+  context improves a local LLM's drug-disease plausibility judgments.
 keywords:
   - biomedical knowledge graph
   - drug repurposing
@@ -79,6 +81,6 @@ references:
     authors:
       - family-names: Ioannidis
         given-names: Vassilis N.
-    title: "DRKG — Drug Repurposing Knowledge Graph"
+    title: "DRKG, Drug Repurposing Knowledge Graph"
     year: 2020
     url: "https://github.com/gnn4dr/DRKG"
