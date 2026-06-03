@@ -55,8 +55,9 @@ uv pip install jupyter nbconvert ipykernel papermill
 uv pip install torch transformers sentence-transformers
 # HF auth helper
 uv pip install huggingface_hub[cli]
-# Scientific stack (don't rely on the legacy pyproject.toml pulling these in)
-uv pip install numpy pandas scipy scikit-learn matplotlib pyarrow tqdm pyyaml requests
+# Scientific stack (don't rely on the legacy pyproject.toml pulling these in).
+# networkx is needed by the main notebooks 00-07 (topology + community detection).
+uv pip install numpy pandas scipy scikit-learn networkx matplotlib pyarrow tqdm pyyaml requests
 
 echo "      installed: $(pip list 2>/dev/null | grep -iE '^(torch|transformers|sentence|numpy|pandas|scipy|matplotlib|jupyter)' | wc -l) key packages"
 
