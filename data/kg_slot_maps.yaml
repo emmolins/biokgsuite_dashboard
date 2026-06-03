@@ -1,0 +1,201 @@
+# Semantic slot map for nb09's layered KG extraction.
+#
+# Each KG's native edge predicates are mapped to a small set of canonical
+# semantic slots used by the layered extraction pipeline (nb09 §4). Unmapped
+# predicates are dropped at extraction time — so missing a slot here means
+# that signal won't reach the LLM.
+#
+# Canonical slots (7 total):
+#   drug_disease       — drug treats / indicated for / contraindicated in disease
+#   drug_target        — drug binds / inhibits / activates a gene or protein
+#   target_disease     — gene/protein implicated in or causally linked to disease
+#   drug_pathway       — drug modulates a pathway directly
+#   target_pathway     — gene/protein participates in a pathway OR functional annotation
+#                        (incl. GO biological process / molecular function — broad sense)
+#   disease_phenotype  — disease presents with symptom or has phenotype
+#   drug_effect        — drug causes side effect / adverse event (negative-evidence signal)
+#
+# Validate via nb09 cell 14 (slot-map auditor) on each KG: aim for ≥10–15%
+# absolute mechanistic coverage; the unmapped tail in any biomedical KG is
+# mostly anatomy/expression, ontology hierarchies, and DDI — those don't
+# belong in any of the 7 canonical slots and should be left unmapped.
+
+primekg:
+  drug_disease:
+    - indication
+    - contraindication
+    - off-label use
+  drug_target:
+    - drug_protein
+  target_disease:
+    - disease_protein
+    - phenotype_protein                # phenotype → gene treated as target-disease evidence
+  drug_pathway:
+    []
+  target_pathway:
+    - pathway_protein
+    - bioprocess_protein               # GO BP — broad-sense functional annotation
+    - molfunc_protein                  # GO MF — broad-sense functional annotation
+  disease_phenotype:
+    - disease_phenotype_positive
+    - disease_phenotype_negative
+  drug_effect:
+    - drug_effect
+
+hetionet:
+  drug_disease:
+    - CtD                              # Compound-treats-Disease
+    - CpD                              # Compound-palliates-Disease
+  drug_target:
+    - CbG                              # Compound-binds-Gene
+    - CuG                              # Compound-upregulates-Gene
+    - CdG                              # Compound-downregulates-Gene
+  target_disease:
+    - DaG                              # Disease-associates-Gene
+    - DuG                              # Disease-upregulates-Gene
+    - DdG                              # Disease-downregulates-Gene
+  drug_pathway:
+    []
+  target_pathway:
+    - GpPW                             # Gene-participates-Pathway
+    - GpBP                             # Gene-participates-BiologicalProcess
+    - GpMF                             # Gene-participates-MolecularFunction
+    - GpCC                             # Gene-participates-CellularComponent
+  disease_phenotype:
+    - DpS                              # Disease-presents-Symptom
+  drug_effect:
+    - CcSE                             # Compound-causes-SideEffect
+
+drkg:
+  drug_disease:
+    - "DRUGBANK::treats::Compound:Disease"
+    - "Hetionet::CtD::Compound:Disease"
+    - "Hetionet::CpD::Compound:Disease"
+    - "GNBR::T::Compound:Disease"      # T = treatment
+    - "GNBR::Pa::Compound:Disease"     # Pa = prevents/suppresses
+  drug_target:
+    - "DRUGBANK::target::Compound:Gene"
+    - "DGIDB::INHIBITOR::Gene:Compound"
+    - "DGIDB::AGONIST::Gene:Compound"
+    - "DGIDB::ANTAGONIST::Gene:Compound"
+    - "DGIDB::ACTIVATOR::Gene:Compound"
+    - "DGIDB::BINDER::Gene:Compound"
+    - "Hetionet::CbG::Compound:Gene"
+    - "Hetionet::CuG::Compound:Gene"
+    - "Hetionet::CdG::Compound:Gene"
+    - "GNBR::E::Compound:Gene"          # E = activation
+    - "bioarx::DrugHumGen:Compound:Gene"  # text-mined drug-gene
+  target_disease:
+    - "Hetionet::DaG::Disease:Gene"
+    - "Hetionet::DuG::Disease:Gene"
+    - "Hetionet::DdG::Disease:Gene"
+    - "GNBR::J::Gene:Disease"          # J = causal/role
+    - "GNBR::U::Gene:Disease"          # U = causes
+    - "GNBR::L::Gene:Disease"          # L = localization / disease association
+  drug_pathway:
+    []
+  target_pathway:
+    - "Hetionet::GpPW::Gene:Pathway"
+    - "Hetionet::GpBP::Gene:Biological Process"
+    - "Hetionet::GpMF::Gene:Molecular Function"
+    - "Hetionet::GpCC::Gene:Cellular Component"
+  disease_phenotype:
+    - "Hetionet::DpS::Disease:Symptom"
+  drug_effect:
+    - "Hetionet::CcSE::Compound:Side Effect"
+    - "GNBR::Sa::Compound:Disease"      # Sa = side-effect of disease type
+
+openbilink:
+  drug_disease:
+    - DIS_DRUG
+  drug_target:
+    - DRUG_BINDING_GENE
+    - DRUG_BINDACT_GENE
+    - DRUG_BINDINH_GENE
+    - DRUG_ACTIVATION_GENE
+    - DRUG_INHIBITION_GENE
+    - DRUG_CATALYSIS_GENE
+    - DRUG_REACTION_GENE
+    - GENE_DRUG                        # reverse direction of DRUG_*_GENE
+  target_disease:
+    - GENE_DIS                         # gene → disease association
+    - GENE_PHENOTYPE                   # gene → phenotype (disease-feature link)
+  drug_pathway:
+    []
+  target_pathway:
+    - PROT_PATHWAY
+    - GENE_PATHWAY
+    - GENE_GO
+    - PROT_GO
+  disease_phenotype:
+    - DIS_PHENOTYPE
+  drug_effect:
+    - DRUG_PHENOTYPE                   # in OpenBioLink, drug→phenotype is a side-effect annotation
+
+biokg:
+  drug_disease:
+    - DRUG_DISEASE_ASSOCIATION
+  drug_target:
+    - DPI                              # drug-protein interaction (aggregated)
+    - "DRUGBANK::target::Compound:Gene"
+    - "DRUGBANK::enzyme::Compound:Gene"
+    - "DRUGBANK::carrier::Compound:Gene"
+    - "DRUGBANK::transporter::Compound:Gene"
+    - DRUG_TARGET                      # biokg literal drug-target
+    - DRUG_ENZYME
+    - DRUG_TRANSPORTER
+    - DRUG_CARRIER
+  target_disease:
+    - DISEASE_GENETIC_DISORDER
+    - DISEASE_PROTEIN
+    - PROTEIN_DISEASE_ASSOCIATION      # 109K — main protein-disease link
+    - RELATED_GENETIC_DISORDER
+  drug_pathway:
+    - DRUG_PATHWAY_ASSOCIATION         # fixed — biokg uses _ASSOCIATION suffix
+  target_pathway:
+    - PROTEIN_PATHWAY_ASSOCIATION      # fixed — was PROTEIN_PATHWAY; 250K edges
+    - COMPLEX_TOP_LEVEL_PATHWAY
+    - PROTEIN_GO_BIOPROCESS
+    - PROTEIN_GO_MOLFUNC
+    - MEMBER_OF_COMPLEX                # 87K — protein in complex (pathway-adjacent)
+    - COMPLEX_IN_PATHWAY               # 21K — complex participates in pathway
+  disease_phenotype:
+    []                                 # biokg appears not to encode disease phenotypes
+  drug_effect:
+    []                                 # biokg appears not to encode drug side effects in top predicates
+
+matrix:
+  drug_disease:
+    - treats_or_applied_or_studied_to_treat
+    - treats
+    - contraindicated_in               # negative indication is still drug-disease info
+    - preventative_for_condition       # prevention is a form of indication
+  drug_target:
+    - directly_physically_interacts_with
+    - physically_interacts_with
+    - interacts_with
+    - affects
+  target_disease:
+    - gene_associated_with_condition
+    - associated_with_likelihood_of
+    - contributes_to
+    - causes
+    - associated_with
+    - predisposes_to_condition         # 216K — gene predisposes to disease
+    - genetically_associated_with      # 98K
+  drug_pathway:
+    - participates_in
+  target_pathway:
+    - participates_in
+    - actively_involved_in
+    - enables                          # GO MF predicate (biolink)
+    - has_participant                  # 3.7M — pathway has gene participant (reverse of participates_in)
+  disease_phenotype:
+    - has_phenotype
+    - has_symptom
+    - manifestation_of                 # 141K — phenotype is manifestation of disease
+  drug_effect:
+    - causes_adverse_event
+    - has_adverse_event
+    - causes                           # drug→effect (some causes edges are drug-side)
+    - has_side_effect                  # 101K — explicit side effect predicate

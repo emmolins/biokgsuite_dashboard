@@ -96,12 +96,14 @@ src/
   loading.py, graph_utils.py, plotting.py, scoring.py, …
 run_emb_model.py         Standalone TransE / RotatE / Gemma runner
 config.yaml              KG paths and analysis parameters
+data/kg_slot_maps.yaml   Semantic slot → relation maps per KG (nb09)
 scripts/
   run_gemma_benchmark.sh   Word-priors baseline for the 5 small KGs (nb08)
   run_gemma_matrix.py      Word-priors for MATRIX (subsampled or full)
   run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
   run_prompting_pilot.sh   Prompting-strategy pilot via Ollama (nb09)
-  _inject_*.py             Internal build scripts (regenerate nb08 / nb09 cells from clean upstream)
+  pilot_kg_block.py, pilot_packaging.py  nb09 pilot helpers
+  hpc/                     SLURM batch scripts for the HPC runs
 results/
   benchmark_summary.csv  18 metrics × 6 KGs (headline)
   embedding_comparison.csv             Single-run TransE / RotatE / Gemma (nb08)
@@ -112,7 +114,6 @@ results/
 docs/
   dashboard.html         Interactive dashboard (GitHub Pages)
   llm_prompting_strategies.md      Per-strategy rationale + literature
-  llm_prompting_analysis_outline.md  How to read nb09 pilot results
   resampling_methodology.md        Why N=5 reruns instead of bootstrap CIs
   gemma_name_resolution_followup.md  KGs where Gemma needs external name lookups
 environment.yml          Conda environment (Python 3.11)
