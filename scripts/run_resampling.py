@@ -7,7 +7,7 @@ single-run + Gemma encode every time and dies on any one fragile cell after hour
 losing all the resampling work because the CSV is only written at the very end.
 
 This script does ONLY the resampling, using the FIXED src/embedding.py
-(.sum() loss). It writes results/embedding_comparison_resampled.csv after every
+(.sum() loss). It writes results/tables/08_embedding_comparison_resampled.csv after every
 KG, so a crash/timeout never costs more than the KG in progress. Gemma is
 optional and guarded — it only runs for KGs whose encoding cache already exists,
 and per-KG failures are caught, never aborting the run.
@@ -41,7 +41,7 @@ from src.negative_sampling import generate_negatives
 
 CACHE = BASE / "results" / "cache"
 CACHE.mkdir(parents=True, exist_ok=True)
-OUT_CSV = BASE / "results" / "embedding_comparison_resampled.csv"
+OUT_CSV = BASE / "results" / "tables" / "08_embedding_comparison_resampled.csv"
 
 # ── Hyperparameters (match nb08 cell 6) ──────────────────────────────────────
 EMB_DIM       = 128

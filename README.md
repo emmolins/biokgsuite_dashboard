@@ -84,7 +84,7 @@ bash scripts/run_prompting_pilot.sh
 
 Both notebooks resume from per-row / per-rerun caches if interrupted.
 
-Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, tabular outputs in `results/tables/`, final summary in `results/benchmark_summary.csv`.
+Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, tabular outputs in `results/tables/`, final summary in `results/tables/00_benchmark_summary.csv`.
 
 ## Repository layout
 
@@ -105,10 +105,10 @@ scripts/
   pilot_kg_block.py, pilot_packaging.py  nb09 pilot helpers
   hpc/                     SLURM batch scripts for the HPC runs
 results/
-  benchmark_summary.csv  18 metrics × 6 KGs (headline)
-  embedding_comparison.csv             Single-run TransE / RotatE / Gemma (nb08)
-  embedding_comparison_resampled.csv   Multi-rerun stability (nb08)
-  tables/                Per-notebook data outputs (.csv, .tsv, .md, .json)
+  tables/                Per-notebook data outputs (.csv, .tsv, .md, .json), prefixed by notebook number
+    00_benchmark_summary.csv              18 metrics × 6 KGs (headline)
+    08_embedding_comparison.csv           Single-run TransE / RotatE / Gemma (nb08)
+    08_embedding_comparison_resampled.csv Multi-rerun stability (nb08)
   figures/               Per-notebook charts (.pdf, .png)
   checkpoints/           Per-notebook .pkl files consumed by nb00
 docs/

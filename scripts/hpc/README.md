@@ -121,7 +121,7 @@ rsync -avz hpc-iad-core-001-login:biokgsuite/eval_notebooks/08_embedding_validat
 ```
 
 That brings down:
-- `results/embedding_comparison_resampled.csv` — the long-form numbers (one row per rerun)
+- `results/tables/08_embedding_comparison_resampled.csv` — the long-form numbers (one row per rerun)
 - `results/figures/08_resampled_*.{pdf,png}` — the new resampling figures
 - `results/figures/08_gemma_vs_kge_auroc.{pdf,png}` — TransE/RotatE/Gemma comparison
 - `eval_notebooks/08_embedding_validation.ipynb` — the executed notebook with all cell outputs

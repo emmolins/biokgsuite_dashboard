@@ -62,7 +62,7 @@ echo
 echo "Done."
 echo
 echo "Resampled outputs:"
-echo "  - results/embedding_comparison_resampled.csv         (long-form, one row per rerun)"
+echo "  - results/tables/08_embedding_comparison_resampled.csv         (long-form, one row per rerun)"
 echo "  - results/figures/08_resampled_headline.{pdf,png}    (bars w/ empirical CIs)"
 echo "  - results/figures/08_resampled_stability_boxplot.{pdf,png}  (per-KG/model spread)"
 echo

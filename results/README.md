@@ -1,15 +1,17 @@
 # results/
 
-Outputs from the BioKGSuite benchmark notebooks. Two persisted, three regenerable.
+Outputs from the BioKGSuite benchmark notebooks. `tables/` and `figures/` are
+tracked in git; `checkpoints/` and `cache/` are gitignored and regenerable.
 
 ## Layout
 
 ```
 results/
-├── benchmark_summary.csv      ← headline benchmark scores (from nb00)
-├── tables/                    ← all tabular outputs (.csv, .tsv, .md, .json, .parquet)
-│   ├── NN_*.{csv,md,tsv,json} ← per-notebook outputs, prefixed by notebook number
-│   └── 09_llm_runs/           ← nb09 multi-tier output bundle (pilot / small / medium / full1llm)
+├── README.md
+├── tables/                       ← all tabular outputs (.csv, .tsv, .md, .json, .parquet)
+│   ├── 00_benchmark_summary.csv  ← headline benchmark scores (from nb00)
+│   ├── NN_*.{csv,md,tsv,json}    ← per-notebook outputs, prefixed by notebook number
+│   └── 09_llm_runs/              ← nb09 pair + response tables (pairs, responses_layered, ranking)
 ├── figures/                   ← all charts (.pdf, .png), prefixed by NN_*
 ├── checkpoints/               ← per-notebook .pkl files consumed by nb00 for the headline summary
 └── cache/                     ← gitignored intermediates (regenerable from the source KGs)

@@ -40,7 +40,7 @@ The original analysis is unchanged — the new section is **additive**.
 The notebook now runs in this order:
 
 1. Existing cells (single-run TransE/RotatE + Gemma + bootstrap CIs).
-   Same as before; produces `embedding_comparison.csv`.
+   Same as before; produces `results/tables/08_embedding_comparison.csv`.
 2. **NEW resampling section** (after Word-priors prose, before cleanup):
    - `prepare_kg_resampled(kg, rerun_idx)`: rerun-aware prep, different
      held-out 10% per rerun. Cached per `(kg, rerun_idx)`.

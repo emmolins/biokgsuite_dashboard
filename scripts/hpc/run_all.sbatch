@@ -87,24 +87,24 @@ echo "saved to results/figures/ by the save_fig() calls in the cells."
 echo "================================================================="
 echo
 
-# papermill streams cell outputs to stdout (--log-output), which is what
-# you actually see in `tail -f`. The notebook itself is overwritten with
-# all executed cell outputs (text + inline figures).
+# jupyter nbconvert is quieter than papermill but more reliable.
+# Cell outputs are saved into the .ipynb via --inplace, and we use
+# --log-level=INFO to get a "Executing notebook..." marker at start.
 #
-# --execution-timeout 86400 = 24h per-cell timeout (matches Slurm wall time)
-# --log-level INFO          = announce each cell as it starts ("Executing Cell 12...")
-papermill \
-    --log-output \
-    --log-level INFO \
-    --execution-timeout 86400 \
-    --progress-bar \
-    eval_notebooks/08_embedding_validation.ipynb \
+# To monitor progress while running, in another SSH session:
+#   ls -la ~/biokgsuite/results/cache/   # cache files grow as cells finish
+#   ls -la ~/biokgsuite/eval_notebooks/08_embedding_validation.ipynb   # mtime updates as cells finish
+#   ls -la ~/biokgsuite/results/figures/  # new figures appear as cells finish
+jupyter nbconvert \
+    --to notebook --execute --inplace \
+    --log-level=INFO \
+    --ExecutePreprocessor.timeout=86400 \
     eval_notebooks/08_embedding_validation.ipynb
 
 echo
 echo "================================================================="
 echo "Done. Outputs:"
-echo "  - results/embedding_comparison_resampled.csv       (long-form)"
+echo "  - results/tables/08_embedding_comparison_resampled.csv       (long-form)"
 echo "  - results/figures/08_resampled_headline.{pdf,png}"
 echo "  - results/figures/08_resampled_stability_boxplot.{pdf,png}"
 echo "  - results/figures/08_gemma_vs_kge_auroc.{pdf,png}"
