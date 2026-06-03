@@ -19,7 +19,7 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
 
 - `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC. See [`docs/resampling_methodology.md`](docs/resampling_methodology.md).
-- `09_llm_integration` asks whether grounding a local LLM (`llama3.1:8b`) in KG context improves drug-disease plausibility judgments. Each stratified pair is posed under three KG-context conditions (C0 no-KG, C1 direct edges, C2 mechanistic paths) and the notebook reports per-(KG, condition) AUROC. KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`. See [`docs/llm_prompting_strategies.md`](docs/llm_prompting_strategies.md).
+- `09_llm_integration` asks whether grounding a local LLM (`llama3.1:8b`) in KG context improves drug-disease plausibility judgments. Each stratified pair is posed under three KG-context conditions (C0 no-KG, C1 direct edges, C2 mechanistic paths) and the notebook reports per-(KG, condition) AUROC with analytic 95% confidence intervals (Hanley-McNeil). KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`. See [`docs/llm_prompting_strategies.md`](docs/llm_prompting_strategies.md).
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 

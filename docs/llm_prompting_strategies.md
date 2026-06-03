@@ -1,7 +1,9 @@
 # LLM prompting for drug-disease plausibility (nb09)
 
 nb09 poses each stratified drug-disease pair to a local LLM (`llama3.1:8b` via
-Ollama) under three KG-context conditions and reports per-(KG, condition) AUROC.
+Ollama) under three KG-context conditions and reports per-(KG, condition) AUROC
+with analytic 95% confidence intervals (Hanley-McNeil; the data is a single run,
+so cross-run resampling is not available and bootstrap is avoided).
 The headline question is whether knowledge-graph context (direct edges, then
 mechanistic paths) improves the model's plausibility judgments, and which KG
 helps most. See the nb09 notebook header for the full design.
