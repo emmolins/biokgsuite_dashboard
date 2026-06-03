@@ -46,7 +46,7 @@ for KG in hetionet biokg drkg primekg openbilink ; do
     echo "===================================================="
     echo "Running EmbeddingGemma on $KG  (dim=$DIM)"
     echo "===================================================="
-    python run_emb_model.py "$KG" Gemma 0 "$DIM"
+    python scripts/run_emb_model.py "$KG" Gemma 0 "$DIM"
 done
 
 echo

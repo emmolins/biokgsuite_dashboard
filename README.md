@@ -63,7 +63,7 @@ done
 **Notebook 08** is idempotent. It loads embedding caches if present and only retrains when they are missing, so a clean run reuses committed results and is skipped where possible. The single-run Gemma metrics are reused from `results/tables/08_embedding_comparison.csv` by default; to re-encode the gated `google/embeddinggemma-300m` model, set `GEMMA_FORCE_REENCODE = True` and `export HF_TOKEN=hf_...`. Helper scripts to regenerate from scratch:
 
 ```bash
-python run_emb_model.py                  # train TransE / RotatE single-run
+python scripts/run_emb_model.py TransE   # train one model on one KG (CLI: <kg> <model> [epochs] [dim])
 bash scripts/run_gemma_benchmark.sh      # optional Gemma name-prior baseline (needs HF_TOKEN)
 bash scripts/run_resampled_nb08.sh       # execute nb08 end-to-end, including resampling
 ```
@@ -88,10 +88,10 @@ src/
   embedding.py           TransE, RotatE, and GemmaNameEmbedder
   prompting_strategies.py  Prompting strategies used by the nb09 generation loop
   loading.py, graph_utils.py, plotting.py, scoring.py, and more
-run_emb_model.py         Standalone TransE / RotatE / Gemma runner
 config.yaml              KG paths and analysis parameters
 data/kg_slot_maps.yaml   Semantic slot to relation maps per KG (nb09)
 scripts/
+  run_emb_model.py         Standalone single-model / single-KG embedding runner
   run_gemma_benchmark.sh   Name-prior baseline for the 5 small KGs (nb08)
   run_gemma_matrix.py      Name-prior for MATRIX (subsampled or full)
   run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)

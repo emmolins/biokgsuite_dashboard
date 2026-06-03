@@ -3,7 +3,7 @@
 import json, sys, time, numpy as np, pickle
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent   # repo root (this file lives in scripts/)
 sys.path.insert(0, str(ROOT))
 
 from src.embedding import (TransE, RotatE, GemmaNameEmbedder,
