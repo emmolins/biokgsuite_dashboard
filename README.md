@@ -107,7 +107,7 @@ results/
   checkpoints/           Per-notebook .pkl files consumed by nb00
 docs/
   dashboard.html         Interactive dashboard (GitHub Pages)
-  llm_prompting_strategies.md      Prompting-strategy module reference and rationale
+  llm_prompting_strategies.md      The nb09 prompt design (single llm_prompt strategy)
   resampling_methodology.md        Why multi-rerun resampling, not bootstrap CIs
   gemma_name_resolution_followup.md  KGs where Gemma needs external name lookups
 environment.yml          Conda environment (Python 3.11)
