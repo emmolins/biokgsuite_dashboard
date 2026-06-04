@@ -25,7 +25,7 @@ git add . && git commit -m "HPC scripts" && git push
 If your repo isn't on GitHub yet, skip the push and use rsync in Step 2 instead:
 ```bash
 rsync -avz --exclude .venv --exclude results/cache --exclude '*.ipynb_checkpoints' \
-    ~/biokgsuite/ hpc-iad-core-001-login:biokgsuite/
+    ~/biokgsuite/ ashburn-login:biokgsuite/
 ```
 
 ## Step 2, On HPC (~10 min, mostly waiting for `uv pip install`)
@@ -62,7 +62,7 @@ huggingface-cli login        # paste your hf_... token, say "y" to git credentia
 On your **Mac** (separate terminal):
 
 ```bash
-rsync -avz --progress ~/biokgsuite/data/ hpc-iad-core-001-login:biokgsuite/data/
+rsync -avz --progress ~/biokgsuite/data/ ashburn-login:biokgsuite/data/
 ```
 
 Expected size: ~30 GB (mostly MATRIX). Transfer time depends on your home internet, typically 15-60 min on a decent connection. The login node has fast network to the compute nodes, so once it's there, the job runs fast.
@@ -113,8 +113,8 @@ When `squeue -u $USER` shows your job is gone (= completed):
 On your **Mac**:
 
 ```bash
-rsync -avz hpc-iad-core-001-login:biokgsuite/results/ ~/biokgsuite/results/
-rsync -avz hpc-iad-core-001-login:biokgsuite/eval_notebooks/08_embedding_validation.ipynb \
+rsync -avz ashburn-login:biokgsuite/results/ ~/biokgsuite/results/
+rsync -avz ashburn-login:biokgsuite/eval_notebooks/08_embedding_validation.ipynb \
        ~/biokgsuite/eval_notebooks/
 ```
 

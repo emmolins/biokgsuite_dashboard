@@ -39,7 +39,7 @@ python -c "import jupyterlab" 2>/dev/null || uv pip install jupyterlab
 
 PORT=$(shuf -i 8888-8999 -n 1)
 NODE=$(hostname)
-LOGIN="hpc-iad-core-001-login"   # change to your login-node ssh alias if different
+LOGIN="ashburn-login"   # change to your login-node ssh alias if different
 
 cat <<EOF
 

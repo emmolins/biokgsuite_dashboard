@@ -68,6 +68,6 @@ echo "Done. Outputs in results/figures, results/tables, results/checkpoints,"
 echo "and the executed notebooks (00-07) with inline cell outputs."
 echo
 echo "Pull results back to your Mac:"
-echo "  rsync -avz hpc-iad-core-001-login:biokgsuite/results/ ~/biokgsuite/results/"
-echo "  rsync -avz hpc-iad-core-001-login:biokgsuite/eval_notebooks/ ~/biokgsuite/eval_notebooks/"
+echo "  rsync -avz ashburn-login:biokgsuite/results/ ~/biokgsuite/results/"
+echo "  rsync -avz ashburn-login:biokgsuite/eval_notebooks/ ~/biokgsuite/eval_notebooks/"
 echo "================================================================="

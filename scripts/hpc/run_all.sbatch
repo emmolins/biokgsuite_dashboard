@@ -111,5 +111,5 @@ echo "  - results/figures/08_gemma_vs_kge_auroc.{pdf,png}"
 echo "  - results/checkpoints/08_embedding_validation.pkl"
 echo
 echo "To pull results back to your Mac:"
-echo "  rsync -avz hpc-iad-core-001-login:biokgsuite/results/ ~/biokgsuite/results/"
+echo "  rsync -avz ashburn-login:biokgsuite/results/ ~/biokgsuite/results/"
 echo "================================================================="
