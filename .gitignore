@@ -70,3 +70,10 @@ results/ddi_gap_audit*.json
 
 # nb09 pilot helper outputs (regenerable via scripts/pilot_*.py)
 results/tables/09_llm_runs/09_pilot_*.csv
+
+# ── HPC / run artifacts (logs, lockfile, stale root-level result CSVs) ───────
+logs/
+*.log
+uv.lock
+/results/*.csv
+/results/*.BACKUP.csv
