@@ -44,7 +44,7 @@ data/validation_cache.json
 data/mesh_area_cache.json
 
 # ── Generated results (reproducible by running notebooks) ────────────────────
-results/figures/
+# figures/ ARE tracked (final outputs the README + dashboard link to)
 results/checkpoints/
 results/cache/
 
@@ -57,6 +57,7 @@ skills/
 # ── Working documents (not part of the benchmark) ────────────────────────────
 *.docx
 *.pptx
+slide-*.jpg
 
 # ── Backup files (manual patches, pre-restructure snapshots) ─────────────────
 *.bak

@@ -199,10 +199,10 @@ matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01198,Zopiclone
 matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB01273,Varenicline
 matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB06413,Armodafinil
 matrix,Treats vs. Contraindicated,100081,Sleep disorder,DB08872,Gabapentin
-matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:119915,Fentanyl
-matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:6456,Lidocaine
-matrix,Treats vs. Contraindicated,100192,Liver failure,CHEBI:7852,Oxycodone
 matrix,Treats vs. Contraindicated,100192,Liver failure,DB00186,Lorazepam
+matrix,Treats vs. Contraindicated,100192,Liver failure,DB00193,Tramadol
+matrix,Treats vs. Contraindicated,100192,Liver failure,DB00238,Nevirapine
+matrix,Treats vs. Contraindicated,100192,Liver failure,DB00281,Lidocaine
 matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:24261,glucocorticoid
 matrix,Treats vs. Causes,100010,Disease of the tendon,CHEBI:87211,fluoroquinolone antibiotic
 matrix,Treats vs. Causes,100010,Disease of the tendon,DB00048,Collagenase
@@ -223,10 +223,10 @@ matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB13293,Ethanol
 matrix,Treats vs. Causes,100042,Cardiac conduction defect,DB14500,potassium atom
 matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003195,Anti-Arrhythmia Agents
 matrix,Treats vs. Causes,100042,Cardiac conduction defect,UMLS:C0003364,Antihypertensive Agents
-matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,CHEBI:4636,Diphenhydramine
 matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00043,Omalizumab
 matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB00341,Cetirizine
 matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB01050,Ibuprofen
+matrix,Treats vs. Has-adverse-event,100004,Mast cell activation syndrome,DB01075,Diphenhydramine
 matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00465,Ketorolac
 matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB00635,Prednisone
 matrix,Treats vs. Has-adverse-event,100010,Disease of the tendon,DB01050,Ibuprofen
@@ -240,9 +240,9 @@ matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00612,Bis
 matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00758,Clopidogrel
 matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB00945,Aspirin
 matrix,Treats vs. Has-adverse-event,100042,Cardiac conduction defect,DB01136,Carvedilol
-matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:18248,iron atom
-matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:184381,Bacitracin
-matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,CHEBI:4470,Dextromethorphan
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,DB00002,"Methyl 4,7,10,13,16-docosapentaenoate"
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,DB00009,"9,10-Bis[N,N-di-(p-tolyl)-amino]anthracene"
+matrix,Treats vs. Has-adverse-event,100053,Anaphylaxis,DB00030,Insulin human
 matrix,Strict treats vs. Contraindicated,100078,Resistant hypertension,DB00622,Nicardipine
 matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00186,Lorazepam
 matrix,Strict treats vs. Contraindicated,100081,Sleep disorder,DB00404,Alprazolam
@@ -299,7 +299,7 @@ matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mit
 matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",CHEBI:27563,arsenic atom
 matrix,Positive vs. Negative correlation,4976,"dynamin-like 120 kDa protein, mitochondrial isoform 2 (human)",DB11127,Selenious acid
 matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:17243,mono(2-ethylhexyl) phthalate
-matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:27744,glyphosate
 matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:28786,Paraquat
 matrix,Positive vs. Negative correlation,4979,Asthma,CHEBI:88522,Monobutylphthalate
+matrix,Positive vs. Negative correlation,4979,Asthma,DB04539,glyphosate
 matrix,Positive vs. Negative correlation,4995,OR3A2,MESH:D052638,Particulate Matter

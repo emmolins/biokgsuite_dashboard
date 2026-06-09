@@ -42,9 +42,7 @@ import pandas as pd
 import requests
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-BASE = Path('/Users/shil6661/biokgsuite')
-if not BASE.exists():
-    BASE = Path(__file__).resolve().parent.parent
+BASE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE / 'src'))
 
 from loading import load_kg, load_config, find_config            # noqa: E402

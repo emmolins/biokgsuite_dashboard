@@ -19,7 +19,6 @@ Re-running is idempotent — safe to invoke after each DrugBank refresh.
 from __future__ import annotations
 import argparse
 import csv
-import io
 import sys
 import urllib.request
 import zipfile
@@ -146,9 +145,8 @@ def main() -> None:
         writer = csv.writer(fo)
         writer.writerow(["drugbank_id", "namespace", "external_id"])
 
-        # We re-route through a dedup buffer to avoid duplicate rows when the
-        # same (db, namespace, external_id) appears in multiple sources.
-        buf_writer = csv.writer(io.StringIO())   # placeholder; not used
+        # Wrap the writer so duplicate rows are dropped when the same
+        # (drugbank_id, namespace, external_id) appears in multiple sources.
         class DedupWriter:
             def __init__(self, real):
                 self.real = real
