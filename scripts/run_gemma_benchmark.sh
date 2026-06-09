@@ -23,9 +23,8 @@
 # Caveat for DRKG / OpenBioLink / BioKG:
 #   These KGs' loaders return opaque ID strings (e.g. "2157", "DB00001",
 #   "0001234") instead of human-readable names. EmbeddingGemma will embed
-#   those literal strings, producing near-noise. See
-#   docs/gemma_name_resolution_followup.md for what's needed to make them
-#   meaningful. Run them anyway — the contrast (high signal on
+#   those literal strings, producing near-noise; they need external name
+#   resolution to be meaningful. Run them anyway — the contrast (high signal on
 #   Hetionet/PrimeKG, low signal on the others) confirms the experimental
 #   hypothesis that the signal lives in word priors, not arbitrary IDs.
 

@@ -402,7 +402,7 @@ def mock_rank(candidates, seed):
 
 
 # ── KG evidence block (real mode; reuses repo loaders) ───────────────────────
-# Implements docs/kg_block_design.md, BALANCED DUAL-DOSSIER version. Instead of
+# BALANCED DUAL-DOSSIER version. Instead of
 # extracting the drug->disease bridge (which pre-computes the answer == leakage +
 # cherry-picking), we extract two neutral, query-INDEPENDENT profiles a pharma
 # analyst would actually pull:

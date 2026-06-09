@@ -18,8 +18,8 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
 
-- `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC. See [`docs/resampling_methodology.md`](docs/resampling_methodology.md).
-- `09_llm_integration` asks whether grounding a local LLM (`llama3.1:8b`) in KG context improves drug-disease plausibility judgments. Each stratified pair is posed under three KG-context conditions (C0 no-KG, C1 direct edges, C2 mechanistic paths) and the notebook reports per-(KG, condition) AUROC with analytic 95% confidence intervals (Hanley-McNeil). KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`. See [`docs/llm_prompting_strategies.md`](docs/llm_prompting_strategies.md).
+- `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC.
+- `09_llm_integration` asks whether grounding a local LLM (`llama3.1:8b`) in KG context improves drug-disease plausibility judgments. Each stratified pair is posed under three KG-context conditions (C0 no-KG, C1 direct edges, C2 mechanistic paths) and the notebook reports per-(KG, condition) AUROC with analytic 95% confidence intervals (Hanley-McNeil). KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`.
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
@@ -96,7 +96,7 @@ scripts/
   run_gemma_matrix.py      Name-prior for MATRIX (subsampled or full)
   run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
   run_prompting_pilot.sh   nb09 pilot run via Ollama
-  pilot_ranking.py         nb09 ranking pilot (KG-quality -> LLM repurposing; see docs/kg_block_design.md)
+  pilot_ranking.py         nb09 ranking pilot (KG-quality -> LLM repurposing)
   pilot_packaging.py       KG-dossier builders + crosswalk resolvers used by pilot_ranking.py
   ddi_gap_audit.py         One-off audit behind results/tables/09_ddi_gap_audit.json
   hpc/                     SLURM batch scripts for the HPC runs
@@ -109,9 +109,6 @@ results/
   checkpoints/           Per-notebook .pkl files consumed by nb00
 docs/
   dashboard.html         Interactive dashboard (GitHub Pages)
-  llm_prompting_strategies.md      The nb09 prompt design (single llm_prompt strategy)
-  resampling_methodology.md        Why multi-rerun resampling, not bootstrap CIs
-  gemma_name_resolution_followup.md  KGs where Gemma needs external name lookups
 environment.yml          Conda environment (Python 3.11)
 ```
 
