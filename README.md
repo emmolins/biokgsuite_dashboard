@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs (**PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** from Every Cure) are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook (TransE vs. RotatE vs. an EmbeddingGemma name-prior baseline, with multi-rerun resampling for stability) and a KG-augmented LLM notebook (does knowledge-graph context improve an LLM's drug-disease plausibility judgments, and which KG helps most).
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs (**PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** from Every Cure) are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook (TransE vs. RotatE vs. an EmbeddingGemma name-prior baseline, with multi-rerun resampling for stability) and a KG-augmented LLM notebook (does knowledge-graph context help an LLM rank the true repurposing candidate higher, and which KG helps most).
 
 [**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html)
 
@@ -19,7 +19,7 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
 
 - `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC.
-- `09_llm_integration` asks whether grounding a local LLM (`llama3.1:8b`) in KG context improves drug-disease plausibility judgments. Each stratified pair is posed under three KG-context conditions (C0 no-KG, C1 direct edges, C2 mechanistic paths) and the notebook reports per-(KG, condition) AUROC with analytic 95% confidence intervals (Hanley-McNeil). KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`.
+- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself (no pre-computed drug→disease bridge). It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it), across a slate of local Ollama models and hosted APIs. KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`.
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
@@ -68,11 +68,12 @@ bash scripts/run_gemma_benchmark.sh      # optional Gemma name-prior baseline (n
 bash scripts/run_resampled_nb08.sh       # execute nb08 end-to-end, including resampling
 ```
 
-**Notebook 09** needs a local Ollama server with `llama3.1:8b` pulled. The generation loop is idempotent: it resumes from / is skipped when `results/tables/09_llm_runs/responses_layered.parquet` already exists, and the figure is computed from that file.
+**Notebook 09** runs the ranking task across a configurable model slate. It defaults to `MODE = 'mock'` (no Ollama, no KG load) so the whole pipeline — pools, prompt, shuffles, parsing, scoring — runs anywhere as a smoke test. Set `MODE = 'real'` and edit the `MODELS` list to use local Ollama models (pull them first) and/or hosted APIs (each provider reads its key from the matching env var: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `GEMINI_API_KEY`). The loop is idempotent: results are cached to `results/tables/09_llm_runs/09_ranking.csv` and reused unless `FORCE_RERUN = True`.
 
 ```bash
+# local models (optional — APIs work without these)
 ollama serve &
-ollama pull llama3.1:8b
+ollama pull llama3.3:70b
 jupyter nbconvert --to notebook --execute --inplace eval_notebooks/09_llm_integration.ipynb
 ```
 
@@ -86,7 +87,7 @@ Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in 
 eval_notebooks/          10 Jupyter notebooks (00 to 07 main, 08 and 09 supplementary)
 src/
   embedding.py           TransE, RotatE, and GemmaNameEmbedder
-  prompting_strategies.py  Prompting strategies used by the nb09 generation loop
+  prompting_strategies.py  LLMPrompt strategy used by the nb09 pilot scripts
   loading.py, graph_utils.py, plotting.py, scoring.py, and more
 config.yaml              KG paths and analysis parameters
 data/kg_slot_maps.yaml   Semantic slot to relation maps per KG (nb09)
