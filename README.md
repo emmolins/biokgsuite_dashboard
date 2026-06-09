@@ -96,7 +96,9 @@ scripts/
   run_gemma_matrix.py      Name-prior for MATRIX (subsampled or full)
   run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
   run_prompting_pilot.sh   nb09 pilot run via Ollama
-  pilot_kg_block.py, pilot_packaging.py  nb09 pilot helpers
+  pilot_ranking.py         nb09 ranking pilot (KG-quality -> LLM repurposing; see docs/kg_block_design.md)
+  pilot_packaging.py       KG-dossier builders + crosswalk resolvers used by pilot_ranking.py
+  ddi_gap_audit.py         One-off audit behind results/tables/09_ddi_gap_audit.json
   hpc/                     SLURM batch scripts for the HPC runs
 results/
   tables/                Per-notebook data outputs (.csv, .tsv, .md, .json), prefixed by notebook number

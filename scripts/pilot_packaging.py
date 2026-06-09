@@ -104,7 +104,7 @@ def assert_ollama_up():
     print(f'Ollama up — {LLM_TAG} ✓')
 
 
-# ── Crosswalks (subset from pilot_kg_block.py) ──────────────────────────────
+# ── Crosswalks ──────────────────────────────────────────────────────────────
 _BARE_MESH = re.compile(r'^[DC]\d+$')
 
 
