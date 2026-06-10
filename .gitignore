@@ -78,3 +78,9 @@ logs/
 uv.lock
 /results/*.csv
 /results/*.BACKUP.csv
+
+# ── Work-in-progress notebooks 09/10 (not published yet) ──
+eval_notebooks/09_llm_integration.ipynb
+eval_notebooks/10_kg_diagnostics.ipynb
+results/figures/09_*
+results/tables/09_llm_runs/09_ranking*.csv

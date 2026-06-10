@@ -1,6 +1,6 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs (**PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** from Every Cure) are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook and a KG + LLM integration notebook).
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs — **PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** (Every Cure) — are scored across **18 metrics in seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. A supplementary notebook validates KG embeddings (TransE vs. RotatE vs. an EmbeddingGemma name-prior baseline, with multi-rerun resampling).
 
 [**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html) - Last updated: May 2026.
 
@@ -16,12 +16,7 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 | 06 | `06_task_performance` | Task performance | Link prediction, neighbourhood retrieval, multi-hop reasoning |
 | 07 | `07_generalization` | Generalisation | Data-sparse, cross-domain, prospective |
 
-**Supplementary notebooks** (not part of the 7-dimension aggregate):
-
-- `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC.
-- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself. It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it).
-
-Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
+`00_benchmark_summary` aggregates the seven dimensions into the headline summary — run `01`–`07`, then `00`. `08_embedding_validation` is an independent supplement comparing TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug–disease link prediction, with stability across resampled reruns (`N_RERUNS`, default 3).
 
 ## Quick start
 
@@ -42,11 +37,9 @@ data/hetionet/edges.tsv         data/biokg/biokg.links.tsv
 data/matrix/nodes.tsv           data/matrix/edges.tsv
 ```
 
-Note: MATRIX is large (~5 GB nodes, ~14 GB edges). The loader streams in chunks and filters to the canonical drug/disease/gene/pathway/phenotype subset declared in `config.yaml` (`matrix.keep_categories`) to stay apples-to-apples with the other KGs.
+MATRIX is large (~5 GB nodes, ~14 GB edges); the loader streams it in chunks and filters to the canonical drug/disease/gene/pathway/phenotype subset (`matrix.keep_categories`). Its disease nodes use mixed schemes (UMLS, OMIM, Orphanet, MONDO, DOID, MESH, …); with `disease_id_scheme: mondo` the loader bridges them via DO/MESH crosswalks and the MONDO SSSOM table — run `bash scripts/download_mondo_sssom.sh` once to fetch the SSSOM file (~30 MB) into `data/gold_standards/` (optional; the loader degrades gracefully without it). Gold-standard references live in `data/gold_standards/` (sources below).
 
-Gold-standard references go under `data/gold_standards/` (sources in [Data availability](#data-availability)).
-
-Run the main benchmark:
+Run the benchmark:
 
 ```bash
 cd eval_notebooks
@@ -58,58 +51,32 @@ for nb in 01_coverage 02_annotation_accuracy 03_trustworthiness \
 done
 ```
 
-**Notebook 08** is idempotent. It loads embedding caches if present and only retrains when they are missing, so a clean run reuses committed results and is skipped where possible. The single-run Gemma metrics are reused from `results/tables/08_embedding_comparison.csv` by default; to re-encode the gated `google/embeddinggemma-300m` model, set `GEMMA_FORCE_REENCODE = True` and `export HF_TOKEN=hf_...`. Helper scripts to regenerate from scratch:
+**Notebook 08** is idempotent: it reuses committed embedding caches and the committed Gemma metrics (`results/tables/08_embedding_comparison.csv`) by default. To re-encode the gated `google/embeddinggemma-300m`, set `GEMMA_FORCE_REENCODE = True` and `export HF_TOKEN=hf_...`. To regenerate from scratch:
 
 ```bash
-python scripts/run_emb_model.py TransE   # train one model on one KG (CLI: <kg> <model> [epochs] [dim])
-bash scripts/run_gemma_benchmark.sh      # optional Gemma name-prior baseline (needs HF_TOKEN)
-bash scripts/run_resampled_nb08.sh       # execute nb08 end-to-end, including resampling
+python scripts/run_emb_model.py TransE   # one model, one KG (CLI: <kg> <model> [epochs] [dim])
+bash scripts/run_gemma_benchmark.sh      # Gemma name-prior baseline (needs HF_TOKEN)
+bash scripts/run_resampled_nb08.sh       # nb08 end-to-end, including resampling
 ```
 
-**Notebook 09** runs the ranking task across a configurable model slate. It defaults to `MODE = 'mock'`so the whole pipeline — pools, prompt, shuffles, parsing, scoring — runs anywhere as a smoke test. Set `MODE = 'real'` and edit the `MODELS` list to use local Ollama models (pull them first) and/or hosted APIs (each provider reads its key from the matching env var: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `GEMINI_API_KEY`). The loop is idempotent: results are cached to `results/tables/09_llm_runs/09_ranking.csv` and reused unless `FORCE_RERUN = True`.
-
-```bash
-# local models (optional — APIs work without these)
-ollama serve &
-ollama pull llama3.3:70b
-jupyter nbconvert --to notebook --execute --inplace eval_notebooks/09_llm_integration.ipynb
-```
-
-Both supplementary notebooks resume from per-row and per-rerun caches if interrupted.
-
-Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in `results/checkpoints/`, tabular outputs in `results/tables/`, final summary in `results/tables/00_benchmark_summary.csv`.
+Outputs: figures in `results/figures/` (PDF+PNG), checkpoints in `results/checkpoints/`, tables in `results/tables/`, headline summary in `results/tables/00_benchmark_summary.csv`.
 
 ## Repository layout
 
 ```
-eval_notebooks/          10 Jupyter notebooks (00 to 07 main, 08 and 09 supplementary)
-src/
-  embedding.py           TransE, RotatE, and GemmaNameEmbedder
-  prompting_strategies.py  LLMPrompt strategy helper (nb09)
-  loading.py, graph_utils.py, plotting.py, scoring.py, and more
-config.yaml              KG paths and analysis parameters
-scripts/
-  run_emb_model.py         Standalone single-model / single-KG embedding runner
-  run_gemma_benchmark.sh   Name-prior baseline for the 5 small KGs (nb08)
-  run_gemma_matrix.py      Name-prior for MATRIX (subsampled or full)
-  run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
-  run_prompting_pilot.sh   nb09 pilot run via Ollama
-  pilot_packaging.py       KG-dossier builders + crosswalk resolvers (nb09 helper)
-  ddi_gap_audit.py         One-off audit behind results/tables/09_ddi_gap_audit.json
-  hpc/                     SLURM batch scripts for the HPC runs
-results/
-  tables/                Per-notebook data outputs (.csv, .tsv, .md, .json), prefixed by notebook number
-    00_benchmark_summary.csv              18 metrics x 6 KGs (headline)
-    08_embedding_comparison.csv           Single-run TransE / RotatE / Gemma (nb08)
-    08_embedding_comparison_resampled.csv Multi-rerun stability (nb08)
-  figures/               Per-notebook charts (.pdf, .png)
-  checkpoints/           Per-notebook .pkl files consumed by nb00
-docs/
-  dashboard.html         Interactive dashboard (GitHub Pages)
-environment.yml          Conda environment (Python 3.11)
+eval_notebooks/   00–07 (main) + 08 (supplementary)
+src/              embedding.py (TransE/RotatE/GemmaNameEmbedder), loading.py,
+                  graph_utils.py, plotting.py, scoring.py, and more
+config.yaml       KG paths and analysis parameters
+scripts/          embedding runners (run_emb_model.py, run_gemma_*.{sh,py},
+                  run_resampled_nb08.sh), ddi_gap_audit.py, hpc/ (SLURM)
+results/          tables/ and figures/, prefixed by notebook number;
+                  checkpoints/ consumed by nb00
+docs/             dashboard.html (GitHub Pages)
+environment.yml   Conda environment (Python 3.11)
 ```
 
-Tested on macOS 14 (Apple Silicon) and Ubuntu 22.04. Python 3.10 to 3.12 expected to work.
+Tested on macOS 14 (Apple Silicon) and Ubuntu 22.04; Python 3.10–3.12.
 
 ## Data availability
 
