@@ -19,7 +19,7 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
 
 - `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC.
-- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself (no pre-computed drug→disease bridge). It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it), across a slate of local Ollama models and hosted APIs. KG predicates are mapped to canonical slots in `data/kg_slot_maps.yaml`.
+- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself (no pre-computed drug→disease bridge). It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it), across a slate of local Ollama models and hosted APIs.
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
@@ -87,18 +87,16 @@ Outputs: figures in `results/figures/` (PDF + PNG), per-notebook checkpoints in 
 eval_notebooks/          10 Jupyter notebooks (00 to 07 main, 08 and 09 supplementary)
 src/
   embedding.py           TransE, RotatE, and GemmaNameEmbedder
-  prompting_strategies.py  LLMPrompt strategy used by the nb09 pilot scripts
+  prompting_strategies.py  LLMPrompt strategy helper (nb09)
   loading.py, graph_utils.py, plotting.py, scoring.py, and more
 config.yaml              KG paths and analysis parameters
-data/kg_slot_maps.yaml   Semantic slot to relation maps per KG (nb09)
 scripts/
   run_emb_model.py         Standalone single-model / single-KG embedding runner
   run_gemma_benchmark.sh   Name-prior baseline for the 5 small KGs (nb08)
   run_gemma_matrix.py      Name-prior for MATRIX (subsampled or full)
   run_resampled_nb08.sh    Multi-rerun stability analysis end-to-end (nb08)
   run_prompting_pilot.sh   nb09 pilot run via Ollama
-  pilot_ranking.py         nb09 ranking pilot (KG-quality -> LLM repurposing)
-  pilot_packaging.py       KG-dossier builders + crosswalk resolvers used by pilot_ranking.py
+  pilot_packaging.py       KG-dossier builders + crosswalk resolvers (nb09 helper)
   ddi_gap_audit.py         One-off audit behind results/tables/09_ddi_gap_audit.json
   hpc/                     SLURM batch scripts for the HPC runs
 results/
