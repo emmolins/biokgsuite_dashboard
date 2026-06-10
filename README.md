@@ -1,8 +1,8 @@
 # BioKGSuite
 
-A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs (**PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** from Every Cure) are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook (TransE vs. RotatE vs. an EmbeddingGemma name-prior baseline, with multi-rerun resampling for stability) and a KG-augmented LLM notebook (does knowledge-graph context help an LLM rank the true repurposing candidate higher, and which KG helps most).
+A reproducible benchmark for biomedical knowledge graphs applied to drug repurposing. Six public KGs (**PrimeKG**, **Hetionet**, **DRKG**, **OpenBioLink**, **BioKG**, and **MATRIX** from Every Cure) are evaluated across **18 metrics spanning seven quality dimensions**: coverage, annotation accuracy, trustworthiness, topology, stability, task performance, and generalisation. Two supplementary notebooks extend the analysis: an embedding-validation notebook and a KG + LLM integration notebook).
 
-[**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html)
+[**Interactive dashboard**](https://emmolins.github.io/biokgsuite_dashboard/dashboard.html) - Last updated: May 2026.
 
 ## Evaluation dimensions
 
@@ -19,7 +19,7 @@ A reproducible benchmark for biomedical knowledge graphs applied to drug repurpo
 **Supplementary notebooks** (not part of the 7-dimension aggregate):
 
 - `08_embedding_validation` compares TransE, RotatE, and the EmbeddingGemma-300m name-prior baseline on drug-disease link prediction, with stability reported across multiple resampled reruns (`N_RERUNS`, default 3). Three figures: resampled AUROC per KG, lift over the Gemma name prior, and heuristic vs. embedding AUROC.
-- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself (no pre-computed drug→disease bridge). It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it), across a slate of local Ollama models and hosted APIs.
+- `09_llm_integration` poses a realistic repurposing task: for a target disease, the LLM ranks a pool of candidate drugs, with the true post-cutoff drug hidden among distractors drawn from a prospective (time-split) gold standard. Each candidate carries a balanced, query-independent KG dossier (targets, pathways, indications, side-effects) and the disease carries one profile (associated genes, phenotypes); the model must connect them itself. It reports MRR and hits@k per (model, KG) for a no-KG baseline vs. the KG arm, plus reliance fields (whether the model used the KG and over-trusted it).
 
 Notebook `00_benchmark_summary` aggregates the seven main dimensions into the final summary. Run `01` through `07`, then `00`. Notebooks `08` and `09` are independent.
 
@@ -44,8 +44,6 @@ data/matrix/nodes.tsv           data/matrix/edges.tsv
 
 Note: MATRIX is large (~5 GB nodes, ~14 GB edges). The loader streams in chunks and filters to the canonical drug/disease/gene/pathway/phenotype subset declared in `config.yaml` (`matrix.keep_categories`) to stay apples-to-apples with the other KGs.
 
-MATRIX disease nodes are heterogeneously identified (UMLS, OMIM, Orphanet, ICD9, NCIT, MONDO, DOID, MESH, and more). With `disease_id_scheme: mondo`, the loader bridges through three crosswalks in cascade: DOID to MONDO (`do_diseases.csv`), MESH to DOID to MONDO (`mesh_to_doid.csv`), and the broad MONDO SSSOM mapping table for the long-tail UMLS/OMIM/Orphanet/ICD9/NCIT cases. Run `bash scripts/download_mondo_sssom.sh` once to fetch the SSSOM file (~30 MB) into `data/gold_standards/`; the loader degrades gracefully if it isn't present.
-
 Gold-standard references go under `data/gold_standards/` (sources in [Data availability](#data-availability)).
 
 Run the main benchmark:
@@ -68,7 +66,7 @@ bash scripts/run_gemma_benchmark.sh      # optional Gemma name-prior baseline (n
 bash scripts/run_resampled_nb08.sh       # execute nb08 end-to-end, including resampling
 ```
 
-**Notebook 09** runs the ranking task across a configurable model slate. It defaults to `MODE = 'mock'` (no Ollama, no KG load) so the whole pipeline — pools, prompt, shuffles, parsing, scoring — runs anywhere as a smoke test. Set `MODE = 'real'` and edit the `MODELS` list to use local Ollama models (pull them first) and/or hosted APIs (each provider reads its key from the matching env var: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `GEMINI_API_KEY`). The loop is idempotent: results are cached to `results/tables/09_llm_runs/09_ranking.csv` and reused unless `FORCE_RERUN = True`.
+**Notebook 09** runs the ranking task across a configurable model slate. It defaults to `MODE = 'mock'`so the whole pipeline — pools, prompt, shuffles, parsing, scoring — runs anywhere as a smoke test. Set `MODE = 'real'` and edit the `MODELS` list to use local Ollama models (pull them first) and/or hosted APIs (each provider reads its key from the matching env var: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `GEMINI_API_KEY`). The loop is idempotent: results are cached to `results/tables/09_llm_runs/09_ranking.csv` and reused unless `FORCE_RERUN = True`.
 
 ```bash
 # local models (optional — APIs work without these)
@@ -137,8 +135,7 @@ All datasets are open access except DrugBank (free academic account required).
 ```bibtex
 @software{molins_biokgsuite_2026,
   author  = {Molins, Emily},
-  title   = {{BioKGSuite}: A systematic evaluation framework for biomedical
-             knowledge graphs for drug-repurposing applications},
+  title   = {{BioKGSuite}: A Multidimensional Framework for the Systematic Evaluation of Biomedical Knowledge Graphs},
   year    = {2026},
   version = {1.0.0},
   url     = {https://github.com/emmolins/biokgsuite_dashboard},
