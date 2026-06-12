@@ -31,7 +31,7 @@ SEEDS = {
     'metformin':  ('Metformin',        'drug',    ['CHEBI:6801']),
     'aspirin':    ('Aspirin',          'drug',    ['CHEBI:15365']),
     'ibuprofen':  ('Ibuprofen',        'drug',    ['CHEBI:5855']),
-    'levodopa':   ('Levodopa',         'drug',    ['CHEBI:15765']),
+    'levodopa':   ('Levodopa',         'drug',    ['CHEBI:15765', 'DRUGBANK:DB01235', 'PUBCHEM.COMPOUND:6047', 'UNII:46627O600J']),
     'warfarin':   ('Warfarin',         'drug',    ['CHEBI:10033']),
     'narcolepsy': ('Narcolepsy',       'disease', ['MONDO:0021107']),
     'tourette':   ('Tourette Syndrome','disease', ['MONDO:0007661']),
@@ -89,7 +89,12 @@ def main():
         for c in curies:
             if c in id_to_idx:
                 return id_to_idx[c]
-        return name_to_idx.get(name.lower())
+        nl = name.lower()
+        if nl in name_to_idx:
+            return name_to_idx[nl]
+        # last resort: shortest node name that contains the label
+        hits = sorted((k for k in name_to_idx if nl in k), key=len)
+        return name_to_idx[hits[0]] if hits else None
 
     def node_obj(idx, hop):
         return {'i': str(idx), 't': map_type(idx_to_type.get(idx, 'other')),
