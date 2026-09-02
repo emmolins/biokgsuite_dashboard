@@ -1,0 +1,44 @@
+Pair_ID,Drug,Active,NewIndication,TA_simplified,YearSet,DrugBank_ID,MONDO_ID,DOID_ID,StrictRepurposing,n_present
+9,Tafinlar+Mekinist,dabrafenib+trametinib,Pediatric BRAF V600E low-grade glioma,Oncology,2023,"DB08912,DB08911",MONDO:0021637,DOID:0060101,True,0
+12,Keytruda+Padcev,pembrolizumab+enfortumab vedotin,1L locally advanced/metastatic urothelial cancer,Oncology,2023,"DB09037,DB13007",MONDO:0040679,DOID:4006,True,0
+13,Qulipta,atogepant,Chronic migraine,CNS,2023,DB16098,MONDO:0043537,DOID:6364,True,0
+14,Trikafta,elexacaftor/tezacaftor/ivacaftor+ivacaftor,CF in children ages 2-5,Respiratory,2023,"DB15444,DB11712,DB08820,DB08820",MONDO:0009061,DOID:1485,False,0
+21,Talzenna+Xtandi,talazoparib+enzalutamide,HRR gene-mutated mCRPC,Oncology,2023,"DB11760,DB08899",MONDO:0008315,DOID:10283,True,0
+26,Lonsurf+Avastin,trifluridine/tipiracil+bevacizumab,Metastatic colorectal cancer,Oncology,2023,"DB00432,DB02631,DB00112",MONDO:0024331,DOID:0080199,True,0
+27,Gavreto,pralsetinib,NSCLC with RET gene fusions (regular approval),Oncology,2023,DB15822,MONDO:0005233,DOID:3908,True,0
+33,Braftovi+Mektovi,encorafenib+binimetinib,BRAF V600E metastatic NSCLC,Oncology,2023,"DB11718,DB11967",MONDO:0005233,DOID:3908,True,0
+43,Padcev+Keytruda,enfortumab vedotin+pembrolizumab,Advanced bladder cancer (1L+ later lines),Oncology,2023,"DB13007,DB09037",MONDO:0004986,DOID:4007,True,0
+46,Lodoco,colchicine,Cardiovascular risk reduction (first anti-inflammatory CV drug),Cardiovascular,2023,DB08117,MONDO:0004995,DOID:1287,True,0
+47,Akeega,niraparib+abiraterone acetate,BRCA-mutated mCRPC,Oncology,2023,"DB11793,DB05812",MONDO:0008315,DOID:10283,True,0
+49,Bylvay,odevixibat,Alagille syndrome cholestatic pruritus,GI/Metabolic,2023,DB16261,MONDO:0007318,DOID:9245,True,0
+53,Cibinqo,abrocitinib,Adolescent atopic dermatitis,Immunology,2023,DB14973,MONDO:0011596,DOID:0110098,False,0
+72,Bylvay,odevixibat,PFIC cholestatic pruritus,GI/Metabolic,2023,DB16261,MONDO:0015762,DOID:0070221,True,0
+76,Orkambi,lumacaftor/ivacaftor,Cystic fibrosis (pediatric expansion),Respiratory,2023,"DB09280,DB08820",MONDO:0009061,DOID:1485,False,0
+82,Metalyse,tenecteplase,Acute ischemic stroke,Cardiovascular,2023,DB00031,MONDO:1060198,DOID:0051062,True,0
+104,Rybrevant,amivantamab,1L EGFR-mutant NSCLC (+lazertinib),Oncology,2024-2026,DB16695,MONDO:0005233,DOID:3908,True,0
+111,Opdivo+Yervoy,nivolumab+ipilimumab,MSI-H/dMMR colorectal cancer 1L,Oncology,2024-2026,"DB09035,DB06186",MONDO:0024331,DOID:0080199,True,0
+113,Padcev+Keytruda,enfortumab vedotin+pembrolizumab,Muscle-invasive bladder cancer (non-cisplatin),Oncology,2024-2026,"DB13007,DB09037",MONDO:0004986,DOID:4007,True,0
+115,Pluvicto,lutetium-177 vipivotide,Post-ARPI mCRPC,Oncology,2024-2026,DB16778,MONDO:0008315,DOID:10283,True,0
+118,Lumakras,sotorasib+panitumumab,KRAS G12C+ mCRC,Oncology,2024-2026,"DB15569,DB01269",MONDO:0024331,DOID:0080199,True,0
+139,Cibinqo,abrocitinib,Atopic dermatitis (adolescents),Oncology,2024-2026,DB14973,MONDO:0011596,DOID:0110098,False,0
+160,Vyvgart,efgartigimod,Generalized myasthenia gravis (expanded),Immunology,2024-2026,DB15270,MONDO:0018324,DOID:437,True,0
+165,Amvuttra,vutrisiran,ATTR cardiomyopathy,Cardiovascular,2024-2026,DB16699,MONDO:0007100,DOID:0050638,True,0
+166,Kerendia,finerenone,HFpEF,Cardiovascular,2024-2026,DB16165,MONDO:0006727,DOID:9775,True,0
+167,TNKase,tenecteplase,Acute ischemic stroke,Cardiovascular,2024-2026,DB00031,MONDO:1060198,DOID:0051062,True,0
+175,Empaveli,pegcetacoplan,C3G/IC-MPGN,Nephrology,2024-2026,DB16694,MONDO:0018013,,True,0
+177,Yeztugo,lenacapavir,HIV PrEP,Infectious,2024-2026,DB15673,MONDO:0004951,DOID:526,True,0
+178,Mavyret,glecaprevir/pibrentasvir,Acute HCV pediatric,Infectious,2024-2026,"DB13879,DB13878",MONDO:0007256,DOID:684,False,0
+182,Kaftrio+Kalydeco,ivacaftor/tezacaftor/elexacaftor+ivacaftor,Additional CF mutations (non-class I),Respiratory,2024-2026,"DB08820,DB11712,DB15444,DB08820",MONDO:0009061,DOID:1485,False,0
+183,Aqvesme,mitapivat,Thalassemia anemia,Hematology,2024-2026,DB16236,MONDO:0000984,DOID:10241,True,0
+186,Pyrukynd,mitapivat,Thalassemia anemia (EU),Hematology,2024-2026,DB16236,MONDO:0000984,DOID:10241,True,0
+189,Livmarli,maralixibat,PFIC/Alagille syndrome cholestatic pruritus,,2024-2026,DB16226,MONDO:0015762,DOID:0070221,True,0
+196,Auvelity,dextromethorphan+bupropion,Agitation associated with Alzheimer's dementia,CNS,2024-2026,"DB00514,DB01156",MONDO:0004975,DOID:10652,True,0
+200,Tecvayli,teclistamab-cqyv,R/R MM +daratumumab hyaluronidase (≥1 prior line),Oncology,2024-2026,DB16655,MONDO:0009693,DOID:9538,True,0
+201,Breztri,budesonide/glycopyrrolate/formoterol,Asthma (was COPD only),Respiratory,2024-2026,"DB01222,DB00986,DB00983",MONDO:0004979,DOID:2841,True,0
+205,Vyvgart,efgartigimod alfa-fcab,All adult gMG (expanded from AChR+ only),Immunology,2024-2026,DB15270,MONDO:0018324,DOID:437,False,0
+210,Sotyktu,deucravacitinib,Psoriatic arthritis,Immunology,2024-2026,DB16650,MONDO:0011849,DOID:9008,True,0
+216,Aquipta,atogepant,Acute treatment of migraine (was prophylaxis only),CNS,2024-2026,DB16098,MONDO:0043219,DOID:6364,True,0
+219,Kerendia,finerenone,Symptomatic chronic HFpEF (LVEF≥40%),Cardiovascular,2024-2026,DB16165,MONDO:0006727,DOID:9775,True,0
+222,Dupixent,dupilumab,Chronic spontaneous urticaria pediatric 2-11yr,Immunology,2024-2026,DB12159,MONDO:0850230,DOID:0080747,True,0
+235,Inaqovi,cedazuridine+decitabine,"AML +venetoclax (newly diagnosed, ineligible for standard chemo)",Oncology,2024-2026,"DB15694,DB01262",MONDO:0018874,DOID:9119,True,0
+237,Comirnaty,tozinameran,COVID-19 updated strain (EMA Apr 2026),Infectious,2024-2026,DB15696,MONDO:0100320,DOID:0080599,False,0

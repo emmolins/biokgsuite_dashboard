@@ -1,0 +1,20 @@
+Pair_ID,Drug,Active,NewIndication,TA_simplified,YearSet,DrugBank_ID,MONDO_ID,DOID_ID,StrictRepurposing
+44,Yescarta,axicabtagene ciloleucel,2L+ DLBCL (expanded),Oncology,2023,,MONDO:0018905,DOID:0050745,True
+52,Adbry,tralokinumab,Atopic dermatitis pediatric 12-17,Immunology,2023,,MONDO:0011596,DOID:0110098,False
+73,Ervebo,Ebola Zaire vaccine,Ebola Zaire (pediatric 1+),Infectious,2023,,MONDO:0005737,DOID:4325,False
+138,Carvykti,ciltacabtagene autoleucel,R/R MM (earlier line),Oncology,2024-2026,,MONDO:0009693,DOID:9538,True
+142,Breyanzi,lisocabtagene maraleucel,Follicular lymphoma 3L+,Oncology,2024-2026,,MONDO:0018906,DOID:0050873,True
+208,Stelara,ustekinumab,Population expansion (FDA+EMA),Immunology,2024-2026,DB05679,,,False
+224,Keytruda,pembrolizumab,"New indication (EMA Feb 2026, TBD)",Oncology,2024-2026,DB09037,,,True
+227,Retsevmo,selpercatinib,"RET-fusion NSCLC expanded (EMA Mar 2026, TBD)",Oncology,2024-2026,DB15685,MONDO:0005233,DOID:3908,True
+228,Besponsa,inotuzumab ozogamicin,"Ph+ ALL frontline (EMA Mar 2026, TBD)",Oncology,2024-2026,DB05889,MONDO:0004967,DOID:9952,True
+229,Mekinist,trametinib,"BRAF V600E solid tumors (EMA Mar 2026, TBD)",Oncology,2024-2026,DB08911,MONDO:0004198,DOID:7360,True
+230,Tafinlar,dabrafenib,"BRAF V600E solid tumors (EMA Mar 2026, TBD)",Oncology,2024-2026,DB08912,MONDO:0004198,DOID:7360,True
+231,Feraccru,ferric maltol,"Iron deficiency anemia (EMA Mar 2026, TBD)",Hematology,2024-2026,DB15598,MONDO:0001356,DOID:11758,True
+233,Namuscla,mexiletine,"Myotonic dystrophy (EMA Mar 2026, TBD)",Cardiovascular,2024-2026,DB00379,MONDO:0023595,DOID:11722,True
+239,Keytruda,pembrolizumab,"Gastric/GEJ cancer (EMA May 2026, TBD)",Oncology,2024-2026,DB09037,MONDO:0001056,DOID:10534,True
+240,Padcev,enfortumab vedotin,"Muscle-invasive bladder cancer (EMA May 2026, TBD)",Oncology,2024-2026,DB13007,MONDO:0004986,DOID:4007,True
+241,Fasenra,benralizumab,"Eosinophilic esophagitis (EMA May 2026, TBD)",Immunology,2024-2026,DB12023,MONDO:0005361,DOID:13922,True
+243,Maviret,glecaprevir/pibrentasvir,"HCV pediatric extension (EMA May 2026, TBD)",Infectious,2024-2026,"DB13879,DB13878",MONDO:0007256,DOID:684,True
+246,Lunsumio,mosunetuzumab,R/R LBCL + FL (new dosage),Oncology,2024-2026,,MONDO:0968974,DOID:0081452,True
+253,Rysefio,ruseogliflozin,T2D pediatric dosage addition,Metabolic,2024-2026,,MONDO:0005148,DOID:9352,False

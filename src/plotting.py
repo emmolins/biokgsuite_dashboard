@@ -90,7 +90,11 @@ def setup_style():
         # Font
         'font.size':           9,
         'font.family':         'sans-serif',
-        'font.sans-serif':     ['Helvetica Neue', 'Helvetica', 'Arial', 'DejaVu Sans'],
+        # Liberation Sans is metrically identical to Arial and is present on
+        # machines that lack Helvetica/Arial; without it matplotlib falls
+        # back to DejaVu Sans, which is wider and not a Nature-preferred face.
+        'font.sans-serif':     ['Helvetica Neue', 'Helvetica', 'Arial',
+                                'Liberation Sans', 'DejaVu Sans'],
         'axes.titlesize':      10,
         'axes.titleweight':    'bold',
         'axes.labelsize':      9,
@@ -181,8 +185,39 @@ def bar_labels(ax, bars, fmt='{:.3f}', offset=0.02, fontsize=8):
         )
 
 
-def save_fig(fig, figs_dir, name):
-    """Save a figure as both PDF and PNG (300 DPI) for publication.
+def setup_manuscript_style():
+    """Nature-submission variant of `setup_style`.
+
+    Same palette, spines and grid as the notebook style, but typeset for
+    print at final size: 7 pt body (Nature's floor is 5 pt), hairline axes,
+    and TrueType embedding so the PDF stays editable in Illustrator.
+
+    Call INSTEAD of `setup_style()` in manuscript/figures/*.py. Notebook
+    figures should keep `setup_style()` — 7 pt is unreadable on screen.
+    """
+    setup_style()
+    mpl.rcParams.update({
+        'font.size':        7,
+        'axes.titlesize':   7.5,
+        'axes.labelsize':   7,
+        'xtick.labelsize':  6.5,
+        'ytick.labelsize':  6.5,
+        'legend.fontsize':  6.5,
+        'axes.linewidth':   0.6,
+        'xtick.major.width': 0.6,
+        'ytick.major.width': 0.6,
+        'xtick.major.size':  2.5,
+        'ytick.major.size':  2.5,
+        'lines.linewidth':   1.2,
+        # keep vector text as text, not outlines
+        'pdf.fonttype':     42,
+        'ps.fonttype':      42,
+        'svg.fonttype':     'none',
+    })
+
+
+def save_fig(fig, figs_dir, name, dpi=300):
+    """Save a figure as both PDF and PNG for publication.
 
     Parameters
     ----------
@@ -191,11 +226,15 @@ def save_fig(fig, figs_dir, name):
         Directory to save into (created if needed).
     name : str
         Base filename without extension, e.g. '01_entity_coverage'.
+    dpi : int
+        Raster resolution for the PNG (the PDF is vector, so this only
+        affects embedded images). 300 for notebooks, 600 for manuscript
+        submission.
     """
     figs_dir = Path(figs_dir)
     figs_dir.mkdir(parents=True, exist_ok=True)
     for ext in ('pdf', 'png'):
-        fig.savefig(figs_dir / f'{name}.{ext}', dpi=300,
+        fig.savefig(figs_dir / f'{name}.{ext}', dpi=dpi,
                     bbox_inches='tight', facecolor='white')
-    print(f'  → Saved: {name}.pdf / .png')
+    print(f'  → Saved: {name}.pdf / .png  ({dpi} dpi)')
 

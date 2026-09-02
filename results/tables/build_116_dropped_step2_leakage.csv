@@ -1,0 +1,85 @@
+Pair_ID,Drug,Active,NewIndication,TA_simplified,YearSet,DrugBank_ID,MONDO_ID,DOID_ID,StrictRepurposing,leaked
+3,Keytruda,pembrolizumab,Adjuvant NSCLC (stage IB-IIIA),Oncology,2023,DB09037,MONDO:0005233,DOID:3908,True,True
+19,Lynparza,olaparib,BRCA-mutated mCRPC (+abiraterone),Oncology,2023,DB09074,MONDO:0008315,DOID:10283,True,True
+20,Prevymis,letermovir,CMV disease prevention in kidney transplant recipients,Infectious,2023,DB12070,MONDO:0005132,DOID:0080827,True,True
+22,Blincyto,blinatumomab,MRD+ B-cell precursor ALL (full approval),Oncology,2023,DB09052,MONDO:0004967,DOID:9952,True,True
+23,Jardiance,empagliflozin,Type 2 diabetes in children 10+,Metabolic,2023,DB09038,MONDO:0005148,DOID:9352,False,True
+30,Bosulif,bosutinib,Pediatric Ph+ CML-CP,Oncology,2023,DB06616,MONDO:0011996,DOID:0081088,True,True
+31,Entyvio,vedolizumab,Subcutaneous maintenance UC,Immunology,2023,DB09033,MONDO:0005101,DOID:8577,False,True
+34,Opdivo,nivolumab,Adjuvant stage IIB/IIC melanoma,Oncology,2023,DB09035,MONDO:0005105,DOID:1909,True,True
+35,Keytruda,pembrolizumab,Neoadj+adj resectable NSCLC,Oncology,2023,DB09037,MONDO:0005233,DOID:3908,True,True
+36,Rozlytrek,entrectinib,Pediatric NTRK fusion solid tumors,Oncology,2023,DB11986,MONDO:0004198,DOID:7360,True,True
+40,Xtandi,enzalutamide,Non-metastatic castration-sensitive prostate cancer with BCR,Oncology,2023,DB08899,MONDO:0008315,DOID:10283,True,True
+41,Keytruda,pembrolizumab,1L HER2- gastric/GEJ adenocarcinoma (+chemo),Oncology,2023,DB09037,MONDO:0005036,DOID:3717,True,True
+45,Cresemba,isavuconazonium sulfate,Pediatric invasive aspergillosis/mucormycosis,Infectious,2023,DB06636,MONDO:0000240,DOID:0050073,True,True
+48,Injectafer,ferric carboxymaltose,Iron deficiency in heart failure,Cardiovascular,2023,DB08917,MONDO:0001356,DOID:11758,True,True
+50,Linzess,linaclotide,Functional constipation in pediatric patients 6-17,GI,2023,DB08890,MONDO:0005052,DOID:9778,False,True
+56,Keytruda,pembrolizumab,1L HER2+ gastric/GEJ adenocarcinoma (+trastuzumab+chemo),Oncology,2023,DB09037,MONDO:0005036,DOID:3717,True,True
+57,Opdivo,nivolumab,Adjuvant melanoma (stage IIB/IIC),Oncology,2023,DB09035,MONDO:0005105,DOID:1909,True,True
+58,Opdivo,nivolumab,Urothelial carcinoma (1L metastatic),Oncology,2023,DB09035,MONDO:0040679,DOID:4006,True,True
+63,Praluent,alirocumab,Heterozygous familial hypercholesterolemia,Cardiovascular,2023,DB09302,MONDO:0005439,DOID:13810,False,True
+64,Prevymis,letermovir,CMV prophylaxis in kidney transplant,Infectious,2023,DB12070,MONDO:0005132,DOID:0080827,True,True
+65,Rubraca,rucaparib,"Ovarian cancer (maintenance, 2L+)",Oncology,2023,DB12332,MONDO:0008170,DOID:2394,True,True
+66,Soliris,eculizumab,Pediatric generalized myasthenia gravis,Immunology,2023,DB01257,MONDO:0018324,DOID:437,True,True
+67,Takhzyro,lanadelumab,HAE prevention in children 2+,Immunology,2023,DB14597,MONDO:0019623,DOID:14735,False,True
+68,Jardiance,empagliflozin,T2D in children 10+ (EMA),Metabolic,2023,DB09038,MONDO:0005148,DOID:9352,False,True
+74,Adempas,riociguat,Chronic thromboembolic pulmonary hypertension,Cardiovascular,2023,DB08931,MONDO:0013024,DOID:6432,True,True
+77,Revestive,teduglutide,Short bowel syndrome (pediatric),GI,2023,DB08900,MONDO:0015183,DOID:10605,False,True
+80,Yervoy,ipilimumab,Adjuvant melanoma (+nivolumab),Oncology,2023,DB06186,MONDO:0005105,DOID:1909,True,True
+83,Zinplava,bezlotoxumab,Pediatric C. difficile infection (EMA),Infectious,2023,DB13140,MONDO:1014887,DOID:0060185,True,True
+86,Adcetris,brentuximab vedotin,Stage III Hodgkin lymphoma (EMA),Oncology,2023,DB08870,MONDO:0004952,DOID:8567,True,True
+88,Vanflyta,quizartinib,FLT3-ITD AML (EMA),Oncology,2023,DB12874,MONDO:0018874,DOID:9119,True,True
+89,Nordimet,methotrexate,Moderate psoriasis (EMA),Immunology,2023,DB00563,MONDO:0005083,DOID:8893,True,True
+97,Alecensa,alectinib,Adjuvant ALK+ NSCLC,Oncology,2024-2026,DB11363,MONDO:0005233,DOID:3908,True,True
+100,Imfinzi,durvalumab,Resectable NSCLC,Oncology,2024-2026,DB11714,MONDO:0005233,DOID:3908,True,True
+101,Imfinzi,durvalumab,Muscle-invasive bladder cancer,Oncology,2024-2026,DB11714,MONDO:0004986,DOID:4007,True,True
+105,Keytruda,pembrolizumab,Neoadj+adj HNSCC,Oncology,2024-2026,DB09037,MONDO:0010150,DOID:5520,True,True
+106,Keytruda,pembrolizumab,1L endometrial cancer (dMMR/MSI-H),Oncology,2024-2026,DB09037,MONDO:0011962,DOID:1380,True,True
+107,Keytruda,pembrolizumab,Cervical cancer,Oncology,2024-2026,DB09037,MONDO:0002974,DOID:4362,True,True
+108,Keytruda,pembrolizumab,Gastric/GEJ cancer,Oncology,2024-2026,DB09037,MONDO:0001056,DOID:10534,True,True
+110,Opdivo,nivolumab,1L metastatic urothelial carcinoma,Oncology,2024-2026,DB09035,MONDO:0040679,DOID:4006,True,True
+112,Darzalex,daratumumab,Newly diagnosed MM ineligible for ASCT,Oncology,2024-2026,DB09331,MONDO:0009693,DOID:9538,True,True
+117,Calquence,acalabrutinib,Untreated MCL,Oncology,2024-2026,DB11703,MONDO:0018876,DOID:0050746,True,True
+121,Libtayo,cemiplimab,Adjuvant cutaneous SCC,Oncology,2024-2026,DB14707,MONDO:0005096,DOID:1749,True,True
+122,Tagrisso,osimertinib,Adjuvant EGFR+ NSCLC,Oncology,2024-2026,DB09330,MONDO:0005233,DOID:3908,True,True
+123,Tagrisso,osimertinib,Stage III EGFR+ NSCLC post-chemoradiation,Oncology,2024-2026,DB09330,MONDO:0005233,DOID:3908,True,True
+124,Xalkori,crizotinib,ALK+ or ROS1+ NSCLC (pediatric/new formulation),Oncology,2024-2026,DB08865,MONDO:0005233,DOID:3908,True,True
+125,Lynparza,olaparib,BRCA-mutated mCRPC (+abiraterone),Oncology,2024-2026,DB09074,MONDO:0008315,DOID:10283,True,True
+127,Xtandi,enzalutamide,Metastatic hormone-sensitive prostate cancer,Oncology,2024-2026,DB08899,MONDO:0004956,DOID:10283,True,True
+130,Rozlytrek,entrectinib,NTRK fusion solid tumors (pediatric),Oncology,2024-2026,DB11986,MONDO:0004198,DOID:7360,True,True
+133,Onivyde,irinotecan (liposomal),Pancreatic cancer (2L+),Oncology,2024-2026,DB00762,MONDO:0006478,DOID:4905,True,True
+134,Adcetris,brentuximab vedotin,Stage III Hodgkin lymphoma,Oncology,2024-2026,DB08870,MONDO:0004952,DOID:8567,True,True
+135,Bosulif,bosutinib,Pediatric Ph+ CML-CP,Oncology,2024-2026,DB06616,MONDO:0011996,DOID:0081088,True,True
+136,Sarclisa,isatuximab,Newly diagnosed MM ineligible for ASCT,Oncology,2024-2026,DB14811,MONDO:0009693,DOID:9538,True,True
+137,Imbruvica,ibrutinib,Chronic GVHD,Oncology,2024-2026,DB09053,MONDO:0020547,DOID:0081267,True,True
+141,Blincyto,blinatumomab,CD19+ B-precursor ALL consolidation,Oncology,2024-2026,DB09052,MONDO:0004967,DOID:9952,True,True
+143,Gazyvaro,obinutuzumab,Follicular lymphoma (+chemo),Oncology,2024-2026,DB08935,MONDO:0018906,DOID:0050873,True,True
+152,Benlysta,belimumab,Pediatric SLE,Immunology,2024-2026,DB08879,MONDO:0007915,DOID:9074,False,True
+153,Gamifant,emapalumab,HLH/MAS in Still's disease,Immunology,2024-2026,DB14724,MONDO:0011336,DOID:0110924,True,True
+157,Nucala,mepolizumab,"EGPA (expanded, PMDA)",Immunology,2024-2026,DB06612,MONDO:0015943,DOID:3049,True,True
+159,Canakinumab,canakinumab,TRAPS,Immunology,2024-2026,DB06168,MONDO:0007727,DOID:0090018,True,True
+161,Otezla,apremilast,Plaque psoriasis,Immunology,2024-2026,DB05676,MONDO:0005083,DOID:8893,False,True
+170,Eliquis,apixaban,Pediatric VTE prevention/treatment,Cardiovascular,2024-2026,DB06605,MONDO:0005399,DOID:3574,False,True
+173,Ctexli,chenodiol,Cerebrotendinous xanthomatosis,Metabolic,2024-2026,DB06777,MONDO:0008948,DOID:4810,True,True
+174,Nityr/Harliku,nitisinone,Alkaptonuria,Metabolic,2024-2026,DB00348,MONDO:0008753,DOID:9270,True,True
+179,Prevymis,letermovir,CMV prophylaxis in organ transplant,Infectious,2024-2026,DB12070,MONDO:0005132,DOID:0080827,True,True
+181,Ofev,nintedanib,Progressive fibrosing ILDs in children/adolescents,Respiratory,2024-2026,DB09079,MONDO:0800504,DOID:0050156,True,True
+185,Xromi,hydroxycarbamide,Vaso-occlusive complications of sickle-cell disease in children,Hematology,2024-2026,DB01005,MONDO:0011382,DOID:0081445,True,True
+187,Susvimo,ranibizumab,DME/diabetic retinopathy,Ophthalmology,2024-2026,DB01270,MONDO:0004728,DOID:9191,True,True
+194,Opdivo,nivolumab,Previously untreated Stage III/IV cHL +AVD,Oncology,2024-2026,DB09035,MONDO:0004604,DOID:8543,True,True
+198,Tecentriq,atezolizumab,Adjuvant MIBC with ctDNA MRD post-cystectomy,Oncology,2024-2026,DB11595,MONDO:0004986,DOID:4007,True,True
+199,Calquence,acalabrutinib,CLL/SLL 1L +venetoclax (fixed-duration),Oncology,2024-2026,DB11703,MONDO:0004948,DOID:1040,True,True
+202,Wakix,pitolisant,Narcolepsy (expanded),CNS,2024-2026,DB11642,MONDO:0021107,DOID:8986,True,True
+203,Caldolor,ibuprofen (IV),Fever and pain in infants,Other,2024-2026,DB01050,MONDO:0001195,DOID:11104,True,True
+204,Ocrevus,ocrelizumab,Pediatric relapsing-remitting MS ≥10yr,Immunology,2024-2026,DB11988,MONDO:0005301,DOID:2377,False,True
+209,Cablivi,caplacizumab-yhdp,Acquired TTP pediatric ≥12yr,Hematology,2024-2026,DB06081,MONDO:0018896,DOID:10772,False,True
+212,Juxtapid,lomitapide,HoFH pediatric ≥2yr,Metabolic,2024-2026,DB08827,MONDO:0018328,DOID:0090105,False,True
+217,Iclusig,ponatinib,Newly diagnosed Ph+ ALL +chemotherapy,Oncology,2024-2026,DB08901,MONDO:0004967,DOID:9952,True,True
+220,Noxafil,posaconazole,Invasive fungal infections pediatric ≥2yr,Infectious,2024-2026,DB01263,MONDO:0044067,DOID:0050073,True,True
+221,Efmody,hydrocortisone (modified-release),Adrenal insufficiency adolescents ≥12yr,Endocrine,2024-2026,DB00741,MONDO:0000004,DOID:10493,False,True
+223,Jorveza,budesonide (orodispersible),Eosinophilic esophagitis pediatric 2-17yr,GI,2024-2026,DB01222,MONDO:0005361,DOID:13922,True,True
+234,Venclyxto,venetoclax,AML +Inaqovi (EMA Apr 2026),Oncology,2024-2026,DB11581,MONDO:0018874,DOID:9119,True,True
+236,Crysvita,burosumab,XLH infants <1yr,Metabolic,2024-2026,DB14012,MONDO:0010619,DOID:0050445,False,True
+242,Iclusig,ponatinib,"Ph+ ALL frontline (EMA May 2026, 2nd)",Oncology,2024-2026,DB08901,MONDO:0004967,DOID:9952,True,True
+247,Effexor SR,venlafaxine,Generalized anxiety disorder (first GAD drug in Japan),CNS,2024-2026,DB00285,MONDO:0001942,DOID:14320,True,True
+248,Eylea 8mg,aflibercept 8mg,Retinal vein occlusion (new high-dose formulation),Ophthalmology,2024-2026,DB08885,MONDO:0006951,DOID:1727,True,True

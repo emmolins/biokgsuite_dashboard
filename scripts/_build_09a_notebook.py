@@ -2,7 +2,8 @@
 """Assemble eval_notebooks/09a_selection_bias_audit.ipynb (generic, figures embedded)."""
 import os, json, base64
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIGS = os.path.join(ROOT, 'results', 'figures')
+FIGS = os.path.join(ROOT, 'results', 'figures', '09a_selection_bias')
+os.makedirs(FIGS, exist_ok=True)
 OUT = os.path.join(ROOT, 'eval_notebooks', '09a_selection_bias_audit.ipynb')
 
 def md(*lines): return {"cell_type": "markdown", "metadata": {}, "source": [l + "\n" for l in lines]}
@@ -99,11 +100,11 @@ C.append(md(
     "",
     "All three are regenerated from `df` on every run (the cells below show an example render)."))
 C.append(md("### 3a · Bias scorecard — odds of being kept per trait"))
-C.append(code("fig = plot_forest(df, 'kept', TRAITS); display(fig)", "bias_audit_forest.png"))
+C.append(code("plot_forest(df, 'kept', TRAITS);", "bias_audit_forest.png"))
 C.append(md("### 3b · Continuous covariate — kept vs dropped distribution"))
-C.append(code("for v in CONT_VARS:\n    display(plot_distribution(df, 'kept', v))", "bias_audit_dist.png"))
+C.append(code("for v in CONT_VARS:\n    plot_distribution(df, 'kept', v)", "bias_audit_dist.png"))
 C.append(md("### 3c · Composition of kept vs dropped across categorical covariates"))
-C.append(code("fig = plot_composition(df, 'kept', CAT_VARS); display(fig)", "bias_audit_composition.png"))
+C.append(code("plot_composition(df, 'kept', CAT_VARS);", "bias_audit_composition.png"))
 
 C.append(md(
     "## 4 · Reading the results",

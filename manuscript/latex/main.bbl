@@ -1,0 +1,305 @@
+\begin{thebibliography}{47}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[kgr(2026)]{kgregistry}
+{KG-Registry}: a registry of knowledge graphs, biomedical domain.
+\newblock \url{https://kghub.org/kg-registry/}, 2026.
+\newblock Accessed July 2026.
+
+\bibitem[Buniello et~al.(2025)]{buniello2025}
+Annalisa Buniello et~al.
+\newblock Open targets platform: facilitating therapeutic hypotheses building
+  in drug discovery.
+\newblock \emph{Nucleic Acids Research}, 53:\penalty0 D1467--D1475, 2025.
+
+\bibitem[Yu et~al.(2021)Yu, Huang, Zhang, Glass, Sun, and Xiao]{yu2021}
+Yue Yu, Kexin Huang, Chao Zhang, Lucas~M. Glass, Jimeng Sun, and Cao Xiao.
+\newblock {SumGNN}: multi-typed drug interaction prediction via efficient
+  knowledge graph summarization.
+\newblock \emph{Bioinformatics}, 37:\penalty0 2988--2995, 2021.
+
+\bibitem[Himmelstein et~al.(2017)]{himmelstein2017}
+Daniel~S. Himmelstein et~al.
+\newblock Systematic integration of biomedical knowledge prioritizes drugs for
+  repurposing.
+\newblock \emph{eLife}, 6:\penalty0 e26726, 2017.
+
+\bibitem[Bang et~al.(2023)Bang, Lim, Lee, and Kim]{bang2023}
+Dongmin Bang, Sangsoo Lim, Sangseon Lee, and Sun Kim.
+\newblock Biomedical knowledge graph learning for drug repurposing by extending
+  guilt-by-association to multiple layers.
+\newblock \emph{Nature Communications}, 14:\penalty0 3570, 2023.
+
+\bibitem[Fei et~al.(2026)Fei, Ding, Tong, He, and Cai]{fei2026}
+Y.~Fei, H.~Ding, S.~Tong, Y.~He, and W.~Cai.
+\newblock Application of knowledge graphs in rare disease research.
+\newblock \emph{Frontiers in Public Health}, 14:\penalty0 1757612, 2026.
+
+\bibitem[Zhao et~al.(2023)]{zhao2023}
+L.~Zhao et~al.
+\newblock Biological knowledge graph-guided investigation of immune therapy
+  response in cancer with graph neural network.
+\newblock \emph{Briefings in Bioinformatics}, 24:\penalty0 bbad023, 2023.
+
+\bibitem[Soman et~al.(2024)]{soman2024}
+Karthik Soman et~al.
+\newblock Biomedical knowledge graph-optimized prompt generation for large
+  language models.
+\newblock \emph{Bioinformatics}, 40:\penalty0 btae560, 2024.
+
+\bibitem[Chandak et~al.(2023)Chandak, Huang, and Zitnik]{chandak2023}
+Payal Chandak, Kexin Huang, and Marinka Zitnik.
+\newblock Building a knowledge graph to enable precision medicine.
+\newblock \emph{Scientific Data}, 10:\penalty0 67, 2023.
+
+\bibitem[Bradshaw et~al.(2024)Bradshaw, Gaskell, and Layer]{bradshaw2024}
+Michael~S. Bradshaw, Alisa Gaskell, and Ryan~M. Layer.
+\newblock The effects of biological knowledge graph topology on embedding-based
+  link prediction.
+\newblock \emph{bioRxiv}, 2024.
+\newblock 2024.06.10.598277. Preprint.
+
+\bibitem[Celebi et~al.(2019)]{celebi2019}
+Remzi Celebi et~al.
+\newblock Evaluation of knowledge graph embedding approaches for drug-drug
+  interaction prediction in realistic settings.
+\newblock \emph{BMC Bioinformatics}, 20:\penalty0 726, 2019.
+
+\bibitem[MacLean(2021)]{maclean2021}
+Finlay MacLean.
+\newblock Knowledge graphs and their applications in drug discovery.
+\newblock \emph{Expert Opinion on Drug Discovery}, 16:\penalty0 1057--1069,
+  2021.
+
+\bibitem[Rossi et~al.(2021)Rossi, Barbosa, Firmani, Matinata, and
+  Merialdo]{rossi2021}
+Andrea Rossi, Denilson Barbosa, Donatella Firmani, Antonio Matinata, and Paolo
+  Merialdo.
+\newblock Knowledge graph embedding for link prediction: a comparative
+  analysis.
+\newblock \emph{ACM Transactions on Knowledge Discovery from Data},
+  15:\penalty0 1--49, 2021.
+
+\bibitem[Lin et~al.(2024)]{lin2024}
+Xinna Lin et~al.
+\newblock {BioKGBench}: a knowledge graph checking benchmark of ai agent for
+  biomedical science.
+\newblock \emph{arXiv}, 2024.
+\newblock arXiv:2407.00466. Preprint.
+
+\bibitem[Pujara et~al.(2017)Pujara, Augustine, and Getoor]{pujara2017}
+Jay Pujara, Eriq Augustine, and Lise Getoor.
+\newblock Sparsity and noise: where knowledge graph embeddings fall short.
+\newblock In \emph{Proceedings of EMNLP 2017}, pages 1751--1756, 2017.
+
+\bibitem[Ma et~al.(2024)]{ma2024}
+Tengfei Ma et~al.
+\newblock Learning to denoise biomedical knowledge graph for robust molecular
+  interaction prediction.
+\newblock \emph{IEEE Transactions on Knowledge and Data Engineering}, 2024.
+
+\bibitem[Alshahrani et~al.(2021)Alshahrani, Thafar, and Essack]{alshahrani2021}
+Mona Alshahrani, Maha~A. Thafar, and Magbubah Essack.
+\newblock Application and evaluation of knowledge graph embeddings in
+  biomedical data.
+\newblock \emph{PeerJ Computer Science}, 7:\penalty0 e341, 2021.
+
+\bibitem[Chang et~al.(2020)Chang, Bala{\v{z}}evi{\'c}, Allen, Chawla, Brandt,
+  and Taylor]{chang2020}
+David Chang, Ivana Bala{\v{z}}evi{\'c}, Carl Allen, Daniel Chawla, Cynthia
+  Brandt, and Andrew Taylor.
+\newblock Benchmark and best practices for biomedical knowledge graph
+  embeddings.
+\newblock In \emph{Proceedings of the 19th SIGBioMed Workshop on Biomedical
+  Language Processing (BioNLP 2020)}, pages 167--176, 2020.
+
+\bibitem[Kotnis and Nastase(2017)]{kotnis2017}
+Bhushan Kotnis and Vivi Nastase.
+\newblock Analysis of the impact of negative sampling on link prediction in
+  knowledge graphs.
+\newblock \emph{arXiv}, 2017.
+\newblock arXiv:1708.06816. Preprint.
+
+\bibitem[Liben-Nowell and Kleinberg(2007)]{libennowell2007}
+David Liben-Nowell and Jon Kleinberg.
+\newblock The link prediction problem for social networks.
+\newblock \emph{Journal of the American Society for Information Science and
+  Technology}, 58:\penalty0 1019--1031, 2007.
+
+\bibitem[Bri{\`e}re et~al.(2025)]{briere2025}
+Galadriel Bri{\`e}re et~al.
+\newblock Benchmarking the impact of data leakage on the performance of
+  knowledge graph embedding models for biomedical link prediction.
+\newblock \emph{bioRxiv}, 2025.
+\newblock 2025.01.23.634511. Preprint.
+
+\bibitem[Gema et~al.(2024)Gema, Grabarczyk, De~Wulf, Borole, Alfaro, Minervini,
+  Vergari, and Rajan]{gema2024}
+Aryo~P. Gema, Dominik Grabarczyk, Wolf De~Wulf, Piyush Borole, Javier~A.
+  Alfaro, Pasquale Minervini, Antonio Vergari, and Ajitha Rajan.
+\newblock Knowledge graph embeddings in the biomedical domain: are they useful?
+  a look at link prediction, rule learning, and downstream polypharmacy tasks.
+\newblock \emph{Bioinformatics Advances}, 4:\penalty0 vbae097, 2024.
+
+\bibitem[Breit et~al.(2020)Breit, Ott, Agibetov, and Samwald]{breit2020}
+Anna Breit, Simon Ott, Asan Agibetov, and Matthias Samwald.
+\newblock {OpenBioLink}: a benchmarking framework for large-scale biomedical
+  link prediction.
+\newblock \emph{Bioinformatics}, 36:\penalty0 4097--4098, 2020.
+
+\bibitem[Walsh et~al.(2020)Walsh, Mohamed, and Nov{\'a}{\v{c}}ek]{walsh2020}
+Brian Walsh, Sameh~K. Mohamed, and V{\'\i}t Nov{\'a}{\v{c}}ek.
+\newblock {BioKG}: a knowledge graph for relational learning on biological
+  data.
+\newblock In \emph{Proceedings of the 29th ACM International Conference on
+  Information and Knowledge Management (CIKM '20)}, pages 3173--3180, 2020.
+
+\bibitem[Wang and Strong(1996)]{wang1996}
+Richard~Y. Wang and Diane~M. Strong.
+\newblock Beyond accuracy: what data quality means to data consumers.
+\newblock \emph{Journal of Management Information Systems}, 12:\penalty0 5--33,
+  1996.
+
+\bibitem[Zaveri et~al.(2016)Zaveri, Rula, Maurino, Pietrobon, Lehmann, and
+  Auer]{zaveri2016}
+Amrapali Zaveri, Anisa Rula, Andrea Maurino, Ricardo Pietrobon, Jens Lehmann,
+  and S{\"o}ren Auer.
+\newblock Quality assessment for linked data: a survey.
+\newblock \emph{Semantic Web}, 7:\penalty0 63--93, 2016.
+
+\bibitem[Debattista et~al.(2018)Debattista, Lange, Auer, and
+  Cortis]{debattista2018}
+Jeremy Debattista, Christoph Lange, S{\"o}ren Auer, and Dominic Cortis.
+\newblock Evaluating the quality of the {LOD} cloud: an empirical
+  investigation.
+\newblock \emph{Semantic Web}, 9:\penalty0 859--901, 2018.
+
+\bibitem[Cortes et~al.(2025)]{cortes2025}
+Kevin~G. Cortes et~al.
+\newblock Improving biomedical knowledge graph quality: a community approach.
+\newblock \emph{arXiv}, 2025.
+\newblock arXiv:2508.21774. Preprint.
+
+\bibitem[Liu et~al.(2024)]{liu2024}
+C.~Liu et~al.
+\newblock Research on traditional {Chinese} medicine: domain knowledge graph
+  completion and quality evaluation.
+\newblock \emph{JMIR Medical Informatics}, 12:\penalty0 e55090, 2024.
+
+\bibitem[Nguyen et~al.(2023)Nguyen, Chen, Chen, Kargozari, and
+  Ding]{nguyen2023}
+Huyen Nguyen, Haihua Chen, Jiangping Chen, Kimia Kargozari, and Junhua Ding.
+\newblock Construction and evaluation of a domain-specific knowledge graph for
+  knowledge discovery.
+\newblock \emph{Information Discovery and Delivery}, 2023.
+
+\bibitem[Schwabe et~al.(2024)Schwabe, Becker, Seyferth, Kla{\ss}, and
+  Schaeffter]{schwabe2024}
+Daniel Schwabe, Katinka Becker, Martin Seyferth, Andreas Kla{\ss}, and Tobias
+  Schaeffter.
+\newblock The {METRIC}-framework for assessing data quality for trustworthy
+  {AI} in medicine: a systematic review.
+\newblock \emph{npj Digital Medicine}, 7:\penalty0 203, 2024.
+
+\bibitem[Chen et~al.(2019)Chen, Cao, Chen, and Ding]{chen2019}
+Haihua Chen, Gaohui Cao, Jiangping Chen, and Junhua Ding.
+\newblock A practical framework for evaluating the quality of knowledge graph.
+\newblock In \emph{China Conference on Knowledge Graph and Semantic Computing
+  (CCKS 2019)}, pages 111--122. Springer, 2019.
+
+\bibitem[Paulheim(2017)]{paulheim2017}
+Heiko Paulheim.
+\newblock Knowledge graph refinement: a survey of approaches and evaluation
+  methods.
+\newblock \emph{Semantic Web}, 8:\penalty0 489--508, 2017.
+
+\bibitem[Xue and Zou(2023)]{xue2023}
+Bingcong Xue and Lei Zou.
+\newblock Knowledge graph quality management: a comprehensive survey.
+\newblock \emph{IEEE Transactions on Knowledge and Data Engineering},
+  35:\penalty0 4969--4988, 2023.
+
+\bibitem[Jarada et~al.(2020)Jarada, Rokne, and Alhajj]{jarada2020}
+Tamer~N. Jarada, Jon~G. Rokne, and Reda Alhajj.
+\newblock A review of computational drug repositioning: strategies, approaches,
+  opportunities, challenges, and directions.
+\newblock \emph{Journal of Cheminformatics}, 12:\penalty0 46, 2020.
+
+\bibitem[Li et~al.(2022)Li, Huang, and Zitnik]{li2022}
+Michelle~M. Li, Kexin Huang, and Marinka Zitnik.
+\newblock Graph representation learning in biomedicine and healthcare.
+\newblock \emph{Nature Biomedical Engineering}, 6:\penalty0 1353--1369, 2022.
+
+\bibitem[Wei et~al.(2025)]{wei2025multihop}
+Y.~Wei et~al.
+\newblock Multi-hop reasoning over biomedical knowledge graphs for drug
+  repurposing.
+\newblock \emph{Preprint}, 2025.
+\newblock TODO: add arXiv/bioRxiv identifier.
+
+\bibitem[Mei et~al.(2013)Mei, Kwoh, Yang, Li, and Zheng]{mei2013}
+Jian-Ping Mei, Chee-Keong Kwoh, Peng Yang, Xiao-Li Li, and Jie Zheng.
+\newblock Drug--target interaction prediction by learning from local
+  information and neighbors.
+\newblock \emph{Bioinformatics}, 29:\penalty0 238--245, 2013.
+
+\bibitem[Nov{\'a}{\v{c}}ek and Mohamed(2020)]{novacek2020}
+V{\'\i}t Nov{\'a}{\v{c}}ek and Sameh~K. Mohamed.
+\newblock Predicting polypharmacy side-effects using knowledge graph
+  embeddings.
+\newblock \emph{AMIA Joint Summits on Translational Science Proceedings},
+  2020:\penalty0 449--458, 2020.
+
+\bibitem[Bromberg(2013)]{bromberg2013}
+Yana Bromberg.
+\newblock Disease gene prioritization.
+\newblock \emph{PLoS Computational Biology}, 9:\penalty0 e1002902, 2013.
+
+\bibitem[Gnanaolivu et~al.(2025)]{gnanaolivu2025}
+Rohan~D. Gnanaolivu et~al.
+\newblock Knowledge-graph-based prioritisation of disease--gene associations
+  for rare and complex disorders.
+\newblock \emph{Preprint}, 2025.
+\newblock TODO: add identifier.
+
+\bibitem[Watts and Strogatz(1998)]{watts1998}
+Duncan~J. Watts and Steven~H. Strogatz.
+\newblock Collective dynamics of `small-world' networks.
+\newblock \emph{Nature}, 393:\penalty0 440--442, 1998.
+
+\bibitem[Albert et~al.(2000)Albert, Jeong, and Barab{\'a}si]{albert2000}
+R{\'e}ka Albert, Hawoong Jeong, and Albert-L{\'a}szl{\'o} Barab{\'a}si.
+\newblock Error and attack tolerance of complex networks.
+\newblock \emph{Nature}, 406:\penalty0 378--382, 2000.
+
+\bibitem[Joy and Su(2026)]{joy2026}
+Janet Joy and Andrew~I. Su.
+\newblock Federated knowledge retrieval elevates large language model
+  performance on biomedical benchmarks.
+\newblock \emph{GigaScience}, 15:\penalty0 giag007, 2026.
+
+\bibitem[Matsumoto et~al.(2024)]{matsumoto2024}
+Nicholas Matsumoto et~al.
+\newblock {KRAGEN}: a knowledge graph-enhanced {RAG} framework for biomedical
+  problem solving using large language models.
+\newblock \emph{Bioinformatics}, 40:\penalty0 btae353, 2024.
+
+\bibitem[Wei et~al.(2026)]{weidrugklm2026}
+Chih-Hsuan Wei et~al.
+\newblock Large language models meet biomedical knowledge graphs for
+  mechanistically grounded therapeutic prioritization.
+\newblock \emph{arXiv}, 2026.
+\newblock arXiv:2604.19815. Preprint.
+
+\bibitem[Wei et~al.(2022)]{weicot2022}
+Jason Wei et~al.
+\newblock Chain-of-thought prompting elicits reasoning in large language
+  models.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  35:\penalty0 24824--24837, 2022.
+
+\end{thebibliography}

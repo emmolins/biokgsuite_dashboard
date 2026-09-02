@@ -1,0 +1,110 @@
+disease,mrr_kg,hit1_kg,conf,n,mrr_nokg,lift,mrr_gpt,mrr_gemini,mrr_llama,frac_consistent,disease_name,drug,area,disease_id,n_eval_kgs
+COVID-19 updated strain,0.1430,0.0000,1.0000,53,0.2071,-0.0641,0.1478,0.1292,0.1513,0.0000,COVID-19 updated strain,mRNA-1273,Infectious,DOID:0080599,1.0000
+Obstructive sleep apnea with obesity,0.1482,0.0000,1.0000,54,0.1835,-0.0353,0.1290,0.1310,0.1848,0.0000,Obstructive sleep apnea with obesity,tirzepatide,Metabolic,DOID:0050848,3.0000
+First-line anemia in lower-risk MDS,0.1618,0.0093,1.0288,107,0.2081,-0.0463,0.1357,0.1361,0.2129,0.0000,First-line anemia in lower-risk MDS,luspatercept,Hematology,DOID:0050908,3.0000
+CRSwNP (eosinophilic chronic rhinosinusitis with nasal polyps),0.1765,0.0377,1.0769,53,0.1890,-0.0125,0.1316,0.1425,0.2535,0.0000,CRSwNP (eosinophilic chronic rhinosinusitis with nasal polyps),tezepelumab,Immunology,DOID:0110597,3.0000
+HoFH in children,0.1804,0.0377,1.1020,53,0.2187,-0.0383,0.2450,0.1320,0.1616,0.0000,HoFH in children,evinacumab,Metabolic,DOID:0090105,1.0000
+HoFH pediatric (EMA),0.1834,0.0185,1.0196,54,0.1815,0.0018,0.1493,0.2130,0.1878,0.0000,HoFH pediatric (EMA),evinacumab,Metabolic,DOID:0090105,1.0000
+Spinal muscular atrophy (pediatric expansion),0.1843,0.0189,1.1020,53,0.1604,0.0239,0.1570,0.2213,0.1732,0.0377,Spinal muscular atrophy (pediatric expansion),risdiplam,CNS,DOID:12377,1.0000
+COVID-19 (expanded population),0.1925,0.0000,1.4231,53,0.1528,0.0397,0.2088,0.1660,0.2011,0.1509,COVID-19 (expanded population),remdesivir,Infectious,DOID:0080599,1.0000
+Heart failure (broadened),0.1964,0.0000,1.5490,54,0.2246,-0.0282,0.2100,0.1839,0.1953,0.1852,Heart failure (broadened),dapagliflozin,Cardiovascular,SYMP:0000292,3.0000
+Acquired hypofibrinogenemia in cardiovascular surgery,0.2047,0.0370,1.0385,54,0.2570,-0.0523,0.1895,0.2176,0.2069,0.0000,Acquired hypofibrinogenemia in cardiovascular surgery,fibrinogen,Hematology,DOID:2219,1.0000
+Delay T1D onset in children ≥1yr,0.2108,0.0755,1.1176,53,0.3231,-0.1124,0.1925,0.2414,0.2003,0.0000,Delay T1D onset in children ≥1yr,teplizumab-mzwv,Metabolic,DOID:9744,3.0000
+PKU expanded to ≥12yr,0.2254,0.0741,1.0192,54,0.2318,-0.0064,0.1467,0.3166,0.2128,0.0000,PKU expanded to ≥12yr,pegvaliase-pqpz,Metabolic,DOID:9281,3.0000
+Chronic hepatitis B (pediatric),0.2371,0.0370,1.4118,54,0.1964,0.0406,0.1988,0.2673,0.2451,0.1667,Chronic hepatitis B (pediatric),tenofovir alafenamide,Infectious,DOID:2043,3.0000
+Chorea associated with Huntington's disease,0.2813,0.1296,1.6038,54,0.1769,0.1044,0.1568,0.4276,0.2595,0.1111,Chorea associated with Huntington's disease,valbenazine,CNS,DOID:12858,3.0000
+COVID-19 in severe renal impairment/dialysis,0.2986,0.0741,1.9000,54,0.2364,0.0622,0.2840,0.3819,0.2298,0.2593,COVID-19 in severe renal impairment/dialysis,remdesivir,Infectious,DOID:0080599,1.0000
+dMMR recurrent/advanced endometrial cancer,0.3366,0.2037,1.9038,54,0.2068,0.1298,0.3909,0.4382,0.1809,0.1852,dMMR recurrent/advanced endometrial cancer,dostarlimab,Oncology,DOID:1380,2.0000
+dMMR/MSI-H primary advanced endometrial cancer (+chemo),0.3609,0.2407,2.0192,54,0.2321,0.1288,0.3127,0.4720,0.2980,0.2407,dMMR/MSI-H primary advanced endometrial cancer (+chemo),dostarlimab,Oncology,DOID:1380,2.0000
+dMMR/MSI-H primary advanced endometrial cancer,0.3716,0.2407,1.9800,54,0.2589,0.1128,0.3819,0.3866,0.3464,0.2037,dMMR/MSI-H primary advanced endometrial cancer,dostarlimab,Oncology,DOID:1380,2.0000
+HR+/HER2- breast cancer,0.3736,0.1698,2.1154,53,0.2773,0.0962,0.3724,0.5403,0.2173,0.2264,HR+/HER2- breast cancer,sacituzumab govitecan,Oncology,DOID:1612,2.0000
+High LDL-C with increased CV risk (expanded),0.4116,0.3148,2.2830,54,0.2031,0.2085,0.4327,0.4196,0.3824,0.3148,High LDL-C with increased CV risk (expanded),inclisiran,Cardiovascular,DOID:13810,1.0000
+Ph+ CML-CP after 2+ TKIs,0.4205,0.3208,2.2830,53,0.2496,0.1708,0.4229,0.3855,0.4511,0.3208,Ph+ CML-CP after 2+ TKIs,asciminib,Oncology,DOID:0081088,2.0000
+HR+/HER2-low breast cancer,0.4246,0.2037,2.4118,54,0.2219,0.2027,0.3640,0.6052,0.3044,0.4259,HR+/HER2-low breast cancer,trastuzumab deruxtecan,Oncology,DOID:1612,2.0000
+Retinal vein occlusion,0.4369,0.3426,2.3241,108,0.2452,0.1916,0.4216,0.4312,0.4577,0.3333,Retinal vein occlusion,faricimab,Ophthalmology,DOID:1727,2.0000
+LDL-C elevation in statin-intolerant dyslipidemia,0.4455,0.3396,2.3137,53,0.1734,0.2721,0.4177,0.3961,0.5199,0.3208,LDL-C elevation in statin-intolerant dyslipidemia,pemafibrate,Cardiovascular,DOID:3146,1.0000
+Follicular lymphoma,0.4504,0.3519,2.3208,54,0.2146,0.2358,0.4218,0.4314,0.4980,0.3148,Follicular lymphoma,tafasitamab,Oncology,DOID:0050873,3.0000
+Ph+ CML-CP frontline (EMA Feb 2026),0.4567,0.3585,2.3774,53,0.1456,0.3111,0.4529,0.4385,0.4786,0.3396,Ph+ CML-CP frontline (EMA Feb 2026),asciminib,Oncology,DOID:0081088,2.0000
+Diabetic retinopathy/DME (EMA Mar+May 2026),0.4659,0.3704,2.4118,54,0.2431,0.2228,0.4200,0.4238,0.5540,0.3333,Diabetic retinopathy/DME (EMA Mar+May 2026),faricimab,Ophthalmology,DOID:8947,1.0000
+Nephrotic syndrome,0.4660,0.2593,2.1296,54,0.5494,-0.0834,0.4366,0.5963,0.3649,0.1667,Nephrotic syndrome,rituximab,Nephrology,DOID:1184,3.0000
+HER2+ solid tumors (tumor-agnostic),0.4884,0.2222,2.4151,54,0.2586,0.2298,0.4015,0.6111,0.4526,0.4074,HER2+ solid tumors (tumor-agnostic),trastuzumab deruxtecan,Oncology,DOID:7360,2.0000
+Acute HCV pediatric,0.5177,0.2500,2.1569,52,0.1659,0.3517,0.4787,0.6271,0.4593,0.2500,Acute HCV pediatric,glecaprevir/pibrentasvir,Infectious,DOID:684,3.0000
+HER2+ early-stage BC (neoadjuvant + adjuvant),0.5290,0.2963,2.4615,54,0.1835,0.3455,0.4545,0.6543,0.4784,0.4074,HER2+ early-stage BC (neoadjuvant + adjuvant),trastuzumab deruxtecan,Oncology,DOID:1612,2.0000
+Generalized myasthenia gravis,0.5384,0.3889,2.6111,54,0.2639,0.2746,0.5972,0.6250,0.3931,0.3704,Generalized myasthenia gravis,inebilizumab,Immunology,DOID:437,3.0000
+COPD (EMA 2025),0.5690,0.3208,2.9434,53,0.1784,0.3907,0.7380,0.4873,0.4774,0.4906,COPD (EMA 2025),dupilumab,Immunology,DOID:3083,3.0000
+1L biliary tract cancer (+gemcitabine+cisplatin),0.5728,0.3585,2.8302,53,0.2511,0.3217,0.5635,0.8088,0.3593,0.2264,1L biliary tract cancer (+gemcitabine+cisplatin),pembrolizumab,Oncology,DOID:4607,3.0000
+COPD,0.5778,0.3585,2.7547,53,0.1634,0.4144,0.5829,0.6539,0.5009,0.4151,COPD,dupilumab,Immunology,DOID:3083,3.0000
+Cerebral folate transport deficiency,0.5836,0.3962,1.9423,53,0.5864,-0.0028,0.5959,0.6732,0.4866,0.1887,Cerebral folate transport deficiency,leucovorin calcium,CNS,DOID:0050719,1.0000
+HER2-mutant NSCLC (EMA),0.5974,0.4630,2.0577,54,0.3627,0.2346,0.4213,0.8981,0.4727,0.2222,HER2-mutant NSCLC (EMA),trastuzumab deruxtecan,Oncology,DOID:3908,3.0000
+HER2-mutant NSCLC (PMDA),0.6200,0.4444,2.0741,54,0.2504,0.3695,0.5574,0.8611,0.4413,0.2593,HER2-mutant NSCLC (PMDA),trastuzumab deruxtecan,Oncology,DOID:3908,3.0000
+Indolent systemic mastocytosis,0.6368,0.5556,3.5000,54,0.2187,0.4181,0.6052,0.6878,0.6175,0.6296,Indolent systemic mastocytosis,avapritinib,Hematology,DOID:349,2.0000
+Biliary tract cancer,0.6388,0.4630,3.2222,54,0.3521,0.2867,0.6454,0.7037,0.5673,0.5000,Biliary tract cancer,pembrolizumab,Oncology,DOID:4607,3.0000
+Pediatric glioma (EMA),0.6680,0.5370,3.4151,54,0.3828,0.2852,0.6940,0.6861,0.6238,0.6667,Pediatric glioma (EMA),dabrafenib,Oncology,DOID:3774,3.0000
+ILD-associated pulmonary hypertension,0.6732,0.5185,3.1154,54,0.5121,0.1611,0.6870,0.7657,0.5669,0.4630,ILD-associated pulmonary hypertension,treprostinil,Cardiovascular,DOID:6432,3.0000
+RET-fusion NSCLC (expanded),0.6805,0.6111,3.5769,54,0.4198,0.2607,0.7106,0.7639,0.5670,0.6296,RET-fusion NSCLC (expanded),selpercatinib,Oncology,DOID:3908,3.0000
+Indolent systemic mastocytosis (EMA),0.6835,0.6296,3.4808,54,0.2055,0.4779,0.6623,0.7176,0.6706,0.6111,Indolent systemic mastocytosis (EMA),avapritinib,Hematology,DOID:349,2.0000
+IgG4-related disease,0.6888,0.6296,3.2222,54,0.2090,0.4798,0.6815,0.7093,0.6756,0.5000,IgG4-related disease,inebilizumab,Immunology,DOID:0080356,1.0000
+Acquired hypothalamic obesity,0.6896,0.6296,3.5385,54,0.2450,0.4445,0.6639,0.7199,0.6849,0.6296,Acquired hypothalamic obesity,setmelanotide,Metabolic,DOID:6676,2.0000
+Metastatic colorectal cancer,0.7019,0.5577,3.3462,52,0.3958,0.3062,0.6903,0.7573,0.6644,0.6731,Metastatic colorectal cancer,trifluridine/tipiracil+bevacizumab,Oncology,DOID:0080199,3.0000
+HR+/HER2- metastatic breast cancer,0.7113,0.6389,3.4190,108,0.2107,0.5007,0.7713,0.7672,0.5955,0.5926,HR+/HER2- metastatic breast cancer,sacituzumab govitecan / talazoparib,Oncology,DOID:1612,2.0000
+MASH with fibrosis,0.7140,0.5926,3.5577,54,0.1968,0.5172,0.5820,1.0000,0.5599,0.5556,MASH with fibrosis,semaglutide,Metabolic,DOID:0080547,1.0000
+Advanced RCC after PD-1/PD-L1 + VEGF-TKI,0.7222,0.5849,3.5769,53,0.1673,0.5550,0.7153,0.8725,0.5873,0.5660,Advanced RCC after PD-1/PD-L1 + VEGF-TKI,belzutifan,Oncology,DOID:4450,3.0000
+Chronic kidney disease,0.7298,0.6111,3.2075,54,0.2181,0.5117,0.6745,0.8611,0.6539,0.5370,Chronic kidney disease,empagliflozin,Cardiovascular,DOID:784,3.0000
+Agitation associated with Alzheimer's dementia,0.7311,0.5794,3.6731,107,0.3936,0.3376,0.6943,0.8571,0.6454,0.6729,Agitation associated with Alzheimer's dementia,brexpiprazole / dextromethorphan+bupropion,CNS,DOID:10652,3.0000
+Urothelial carcinoma (expanded population),0.7326,0.6415,3.5094,53,0.3989,0.3337,0.8598,1.0000,0.3529,0.5849,Urothelial carcinoma (expanded population),enfortumab vedotin,Oncology,DOID:4006,3.0000
+Polycythaemia vera and essential thrombocytopenia,0.7334,0.6111,3.2830,54,0.5222,0.2112,0.7241,0.8241,0.6521,0.6481,Polycythaemia vera and essential thrombocytopenia,peginterferon alfa-2a,Hematology,DOID:8997,3.0000
+Neoadj+adj HNSCC,0.7470,0.6415,3.7059,53,0.2261,0.5209,0.8488,0.8431,0.5545,0.4528,Neoadj+adj HNSCC,pembrolizumab,Oncology,DOID:5520,2.0000
+Invasive fungal infections pediatric ≥2yr,0.7507,0.6296,2.8491,54,0.3198,0.4309,0.6255,0.9722,0.6543,0.5556,Invasive fungal infections pediatric ≥2yr,posaconazole,Infectious,DOID:0050073,3.0000
+Measles prophylaxis post-exposure,0.7528,0.5926,2.8519,54,0.5268,0.2260,0.7407,0.8056,0.7120,0.5000,Measles prophylaxis post-exposure,immune globulin IV,Infectious,DOID:8622,3.0000
+TRD monotherapy,0.7586,0.5926,4.0784,54,0.2671,0.4915,0.6698,0.9167,0.6894,0.8148,TRD monotherapy,esketamine,CNS,DOID:1470,2.0000
+Pediatric BRAF V600E low-grade glioma,0.7876,0.7037,3.7500,54,0.2241,0.5636,0.7677,0.8139,0.7812,0.6852,Pediatric BRAF V600E low-grade glioma,dabrafenib+trametinib,Oncology,DOID:0060101,1.0000
+HR+/HER2- node-positive high-risk early breast cancer,0.8010,0.6852,4.4200,54,0.2979,0.5030,0.7765,0.9167,0.7099,0.8333,HR+/HER2- node-positive high-risk early breast cancer,abemaciclib,Oncology,DOID:1612,2.0000
+EGPA,0.8042,0.6792,3.4423,53,0.5021,0.3022,0.9630,0.5980,0.8403,0.7170,EGPA,omalizumab,Immunology,DOID:3049,3.0000
+Pediatric atopic dermatitis,0.8193,0.7358,4.0980,53,0.2329,0.5864,0.9167,1.0000,0.5511,0.7358,Pediatric atopic dermatitis,upadacitinib,Immunology,DOID:0110098,2.0000
+Pheochromocytoma/paraganglioma,0.8196,0.7222,3.7593,54,0.1479,0.6717,0.8287,0.9028,0.7274,0.7407,Pheochromocytoma/paraganglioma,belzutifan,Oncology,DOID:0050771,3.0000
+Resectable gastric/GEJ adenocarcinoma (neoadj+adj +FLOT),0.8237,0.7037,4.2642,54,0.2487,0.5750,0.8302,0.8889,0.7519,0.8704,Resectable gastric/GEJ adenocarcinoma (neoadj+adj +FLOT),durvalumab,Oncology,DOID:3717,3.0000
+IV formulation for rheumatic diseases (EMA),0.8280,0.7407,4.4118,54,0.2522,0.5759,0.8796,0.8444,0.7600,0.8148,IV formulation for rheumatic diseases (EMA),secukinumab,Immunology,DOID:1575,3.0000
+Atopic dermatitis,0.8328,0.7736,4.1346,53,0.3086,0.5241,0.9537,0.9477,0.6032,0.7736,Atopic dermatitis,baricitinib,Immunology,DOID:0110098,2.0000
+Giant cell arteritis,0.8328,0.7222,4.0385,54,0.2098,0.6231,0.8580,0.8673,0.7731,0.8333,Giant cell arteritis,upadacitinib,Immunology,DOID:13375,3.0000
+CKD in T2D,0.8388,0.7593,4.1538,54,0.2047,0.6342,0.7894,0.9722,0.7549,0.6296,CKD in T2D,semaglutide,Metabolic,DOID:784,3.0000
+Gastric/GEJ adenocarcinoma,0.8391,0.7407,4.1765,54,0.2030,0.6361,0.8333,0.9167,0.7673,0.7593,Gastric/GEJ adenocarcinoma,durvalumab,Oncology,DOID:3717,3.0000
+Unresectable thymic carcinoma (PMDA),0.8428,0.7593,3.0566,54,0.2804,0.5624,0.8750,0.9028,0.7506,0.3333,Unresectable thymic carcinoma (PMDA),lenvatinib,Oncology,DOID:3284,3.0000
+"Pediatric low-grade glioma (+dabrafenib, BRAF V600E)",0.8451,0.7925,3.7925,53,0.5530,0.2921,0.9028,1.0000,0.6412,0.7170,"Pediatric low-grade glioma (+dabrafenib, BRAF V600E)",selumetinib,Oncology,DOID:0060101,1.0000
+mHSPC + ADT,0.8512,0.7547,3.8824,53,0.1685,0.6827,0.7932,0.9412,0.8241,0.6792,mHSPC + ADT,darolutamide,Oncology,DOID:10283,3.0000
+Reduce MACE in CVD + obesity/overweight,0.8530,0.7963,4.3469,54,0.1490,0.7040,0.8951,0.9722,0.6917,0.7593,Reduce MACE in CVD + obesity/overweight,semaglutide,Cardiovascular,DOID:1287,3.0000
+Chronic thromboembolic pulmonary hypertension,0.8566,0.7963,4.0755,54,0.2816,0.5749,0.9236,1.0000,0.6461,0.7778,Chronic thromboembolic pulmonary hypertension,edoxaban tosilate,Cardiovascular,DOID:6432,3.0000
+Polymyalgia rheumatica,0.8625,0.7925,4.1538,53,0.2617,0.6008,0.7261,0.9412,0.9246,0.8868,Polymyalgia rheumatica,sarilumab,Immunology,DOID:853,3.0000
+HR+/HER2- early breast cancer (adjuvant),0.8652,0.7593,4.6863,54,0.2119,0.6533,0.9167,0.8889,0.7901,0.8704,HR+/HER2- early breast cancer (adjuvant),ribociclib,Oncology,DOID:1612,2.0000
+Antibody-mediated rejection in organ transplantation,0.8654,0.7778,4.3019,54,0.4328,0.4326,0.9000,0.9259,0.7704,0.8519,Antibody-mediated rejection in organ transplantation,rituximab,Immunology,MONDO:1010185,
+Gastric/GEJ adenocarcinoma (1L +chemo),0.8801,0.8333,4.3396,54,0.2200,0.6601,0.8565,1.0000,0.7840,0.8704,Gastric/GEJ adenocarcinoma (1L +chemo),durvalumab,Oncology,DOID:3717,3.0000
+GVHD + pediatric,0.8894,0.8462,4.3878,52,0.2679,0.6215,0.9228,1.0000,0.7577,0.8269,GVHD + pediatric,ruxolitinib,Immunology,DOID:0081267,3.0000
+Biliary tract cancer 1L,0.8941,0.8148,3.7778,54,0.2664,0.6277,0.8306,1.0000,0.8519,0.5000,Biliary tract cancer 1L,durvalumab,Oncology,DOID:4607,3.0000
+BRAF+ thyroid cancer,0.9114,0.8585,4.4423,106,0.2907,0.6207,0.9583,0.9224,0.8540,0.9057,BRAF+ thyroid cancer,binimetinib / encorafenib,Oncology,DOID:1781,3.0000
+Platinum-resistant ovarian carcinoma (PD-L1+ CPS≥1),0.9115,0.8868,4.6800,53,0.1741,0.7374,0.8258,1.0000,0.9085,0.9057,Platinum-resistant ovarian carcinoma (PD-L1+ CPS≥1),pembrolizumab,Oncology,DOID:4001,3.0000
+Juvenile idiopathic arthritis (EMA Feb 2026),0.9136,0.8704,4.7255,54,0.3042,0.6094,0.9722,0.9444,0.8241,0.9444,Juvenile idiopathic arthritis (EMA Feb 2026),baricitinib,Immunology,DOID:676,3.0000
+Primary immunodeficiency pediatric (EMA),0.9156,0.8519,4.2830,54,0.6370,0.2786,0.9722,0.8519,0.9228,0.9630,Primary immunodeficiency pediatric (EMA),immune globulin subcutaneous,Immunology,DOID:0111941,3.0000
+Psoriasis in children 6-11 (cream),0.9156,0.8519,4.4423,54,0.3166,0.5991,0.8951,0.9444,0.9074,0.7593,Psoriasis in children 6-11 (cream),roflumilast,Immunology,DOID:8893,3.0000
+Follicular lymphoma (+obinutuzumab),0.9157,0.8868,3.8235,53,0.2832,0.6325,0.9506,1.0000,0.8011,0.6604,Follicular lymphoma (+obinutuzumab),zanubrutinib,Oncology,DOID:0050873,3.0000
+EGPA (expanded),0.9158,0.8704,4.4906,54,0.2061,0.7097,1.0000,0.9444,0.8030,0.9444,EGPA (expanded),benralizumab,Immunology,DOID:3049,3.0000
+Hidradenitis suppurativa,0.9203,0.8704,4.4906,54,0.1718,0.7485,0.9444,0.8858,0.9306,0.9074,Hidradenitis suppurativa,secukinumab,Immunology,DOID:2280,3.0000
+Primary mediastinal large B-cell lymphoma,0.9327,0.9074,4.6923,54,0.2800,0.6527,1.0000,0.9228,0.8752,0.9259,Primary mediastinal large B-cell lymphoma,pembrolizumab,Oncology,DOID:0080210,3.0000
+Oral tablet formulation for weight management,0.9399,0.9259,4.7500,54,0.1526,0.7873,1.0000,1.0000,0.8198,0.9259,Oral tablet formulation for weight management,semaglutide,Metabolic,DOID:9970,3.0000
+IDH1-mutated relapsed/refractory MDS,0.9403,0.9245,4.8600,53,0.3277,0.6126,1.0000,1.0000,0.8241,0.9245,IDH1-mutated relapsed/refractory MDS,ivosidenib,Oncology,DOID:0050908,3.0000
+Ulcerative colitis,0.9413,0.9167,4.7524,108,0.2427,0.6985,0.9753,0.9722,0.8763,0.9259,Ulcerative colitis,guselkumab / risankizumab,Immunology,DOID:8577,3.0000
+KRAS G12C+ mCRC,0.9416,0.9259,4.7308,54,0.1697,0.7719,1.0000,0.9506,0.8742,0.9074,KRAS G12C+ mCRC,sotorasib+panitumumab,Oncology,DOID:0080199,3.0000
+Allergic fungal rhinosinusitis (AFRS) ≥6yr,0.9465,0.9074,4.5577,54,0.2285,0.7180,1.0000,0.8889,0.9506,0.9259,Allergic fungal rhinosinusitis (AFRS) ≥6yr,dupilumab,Immunology,DOID:13565,3.0000
+RAS wild-type HER2+ metastatic colorectal cancer,0.9481,0.9074,4.4444,54,0.3644,0.5837,0.9000,0.9444,1.0000,0.9815,RAS wild-type HER2+ metastatic colorectal cancer,tucatinib,Oncology,DOID:0080199,3.0000
+"mCRC BRAF V600E (traditional approval, was accelerated)",0.9506,0.9444,5.0000,54,0.2080,0.7426,0.9506,1.0000,0.9012,0.9444,"mCRC BRAF V600E (traditional approval, was accelerated)",encorafenib,Oncology,DOID:0080199,3.0000
+BRAF V600E metastatic NSCLC,0.9515,0.9444,4.8491,54,0.2350,0.7165,1.0000,1.0000,0.8544,0.9444,BRAF V600E metastatic NSCLC,encorafenib+binimetinib,Oncology,DOID:3908,3.0000
+Crohn's disease,0.9560,0.9259,4.6262,108,0.1648,0.7912,0.9722,0.9792,0.9167,0.9537,Crohn's disease,guselkumab / upadacitinib,Immunology,DOID:8778,3.0000
+Pancreatic NET,0.9570,0.9434,4.4510,53,0.2653,0.6918,1.0000,1.0000,0.8735,0.9434,Pancreatic NET,cabozantinib,Oncology,DOID:0112306,3.0000
+Retinopathy of prematurity,0.9604,0.9444,4.6038,54,0.1741,0.7863,1.0000,0.9506,0.9306,0.9630,Retinopathy of prematurity,aflibercept,Ophthalmology,DOID:13025,3.0000
+Palmoplantar pustulosis (PMDA),0.9653,0.9444,4.5926,54,0.1833,0.7820,1.0000,1.0000,0.8958,0.9444,Palmoplantar pustulosis (PMDA),guselkumab,Immunology,DOID:4398,1.0000
+Heterozygous familial hypercholesterolemia,0.9653,0.9444,4.8889,54,0.1737,0.7916,0.9722,1.0000,0.9236,0.9444,Heterozygous familial hypercholesterolemia,alirocumab,Cardiovascular,DOID:13810,1.0000
+MSI-H/dMMR solid tumors (full approval conversion),0.9658,0.9615,4.7200,52,0.2554,0.7104,1.0000,1.0000,0.9012,0.9231,MSI-H/dMMR solid tumors (full approval conversion),pembrolizumab,Oncology,DOID:7360,2.0000
+Chronic lymphocytic leukemia,0.9670,0.9434,4.0980,53,0.1723,0.7947,1.0000,0.9412,0.9583,0.7358,Chronic lymphocytic leukemia,zanubrutinib,Oncology,DOID:1040,3.0000
+IgE-mediated food allergy,0.9671,0.9630,4.8846,54,0.3455,0.6216,1.0000,1.0000,0.9012,0.9630,IgE-mediated food allergy,omalizumab,Immunology,DOID:3044,2.0000
+"Crohn's disease (moderate-severe, refractory)",0.9745,0.9630,4.8148,54,0.2146,0.7599,1.0000,0.9722,0.9514,1.0000,"Crohn's disease (moderate-severe, refractory)",guselkumab,Immunology,DOID:8778,3.0000
+"ALK+ solid tumors (tissue-agnostic, world-first)",0.9838,0.9815,4.9259,54,0.2054,0.7784,1.0000,1.0000,0.9514,0.9815,"ALK+ solid tumors (tissue-agnostic, world-first)",alectinib,Oncology,DOID:7360,2.0000
+Schnitzler syndrome (Japan),0.9841,0.9815,4.6667,54,0.3398,0.6443,1.0000,1.0000,0.9524,0.9630,Schnitzler syndrome (Japan),canakinumab,Immunology,DOID:4371,3.0000
+Primary humoral immunodeficiency pediatric 2-11yr,0.9907,0.9815,4.5000,54,0.5712,0.4195,1.0000,1.0000,0.9722,1.0000,Primary humoral immunodeficiency pediatric 2-11yr,immune globulin IV (human-slra),Immunology,DOID:0111941,3.0000

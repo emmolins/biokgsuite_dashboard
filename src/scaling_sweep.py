@@ -17,14 +17,13 @@ run so far (fills in as HPC jobs finish).
 """
 import os, glob, numpy as np, pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib import font_manager
 from matplotlib.lines import Line2D
-
-_pref = ['Arial', 'Helvetica', 'Liberation Sans', 'DejaVu Sans']
-_avail = {f.name for f in font_manager.fontManager.ttflist}
-FONT = next((f for f in _pref if f in _avail), 'DejaVu Sans')
-plt.rcParams.update({'font.family': FONT, 'axes.linewidth': 0.8, 'savefig.dpi': 300, 'figure.dpi': 150,
-    'axes.spines.top': False, 'axes.spines.right': False, 'legend.frameon': False})
+try:
+    from src import figstyle
+except ImportError:
+    import figstyle
+figstyle.apply()
+PALETTE, KG, GEN_MARK = figstyle.PALETTE, figstyle.KG, figstyle.GEN_MARK
 
 # ---- the Llama 3.x ladder: raw model tag -> (params in B, generation, nice label) ----
 # NB the ladder spans three generations (no clean single-gen 5-point ladder exists in Llama):
@@ -99,63 +98,93 @@ def compute_scaling(df, cov_csv):
     return out
 
 
-# ----------------------------- figures -----------------------------
+# ----------------------------- figures (matplotlib, shared house style) -----------------------------
+KG_ORDER = ['primekg', 'drkg', 'biokg']
+KG_LABEL = {'primekg': 'PrimeKG', 'drkg': 'DRKG', 'biokg': 'BioKG'}
+
+
 def _logx(ax, params):
     ax.set_xscale('log')
     ax.set_xticks(sorted(set(params)))
     ax.set_xticklabels([f'{int(p)}B' for p in sorted(set(params))])
-    ax.set_xlabel('model size (parameters, log scale)')
+    ax.minorticks_off()
+    ax.set_xlabel('model size (log scale)')
 
 
 def fig_lift_vs_size(scaling):
-    """Headline: KG lift vs model size — pooled vs covered-arm, error bars = 95% cluster bootstrap CI."""
+    """Headline: KG lift vs model size — pooled vs covered arm, 95% cluster-bootstrap CI."""
     s = scaling.sort_values('params')
-    fig, ax = plt.subplots(figsize=(7.8, 5.2))
-    ax.axhline(0, color='#bbb', ls=':', lw=1.2)
-    # pooled
-    ax.errorbar(s.params, s.lift, yerr=[s.lift - s.lift_lo, s.lift_hi - s.lift],
-                fmt='-', color=C_ALL, lw=2, capsize=3, zorder=2, label='pooled (all 3 KG arms)')
-    # covered-only
-    ax.errorbar(s.params, s.lift_cov, yerr=[s.lift_cov - s.lift_cov_lo, s.lift_cov_hi - s.lift_cov],
-                fmt='-', color=C_COV, lw=2, capsize=3, zorder=3, label='covered arm only')
-    # generation-coded markers on the pooled line
-    for _, r in s.iterrows():
-        ax.scatter(r.params, r.lift, marker=GEN_MARK.get(r.gen, 'o'), s=85,
-                   color=C_ALL, edgecolor='white', linewidth=1, zorder=4)
-        ax.scatter(r.params, r.lift_cov, marker=GEN_MARK.get(r.gen, 'o'), s=85,
-                   color=C_COV, edgecolor='white', linewidth=1, zorder=5)
+    fig, ax = plt.subplots(figsize=(7.6, 4.8))
+    ax.axhline(0, color='#B4B2A9', ls='--', lw=0.8, zorder=1)
+    for arm, col, mk, lo, hi, val in [
+        ('covered arm', PALETTE['covered'], 'D', s.lift_cov_lo, s.lift_cov_hi, s.lift_cov),
+        ('pooled (all 3 KGs)', PALETTE['pooled'], 'o', s.lift_lo, s.lift_hi, s.lift),
+    ]:
+        ax.vlines(s.params, lo, hi, color=col, lw=1, zorder=2)
+        ax.plot(s.params, val, marker=mk, ls='-', color=col, lw=1.6,
+                mfc='white', mec=col, mew=1.4, ms=8, label=arm, zorder=3)
     _logx(ax, s.params)
-    ax.set_ylabel('KG lift  (MRR$_{KG}$ − MRR$_{no\\,KG}$)')
-    ax.set_title('Does the KG lift grow or shrink as the model scales?',
-                 fontsize=12.5, fontweight='bold', loc='left', pad=24)
-    ax.text(0, 1.05, 'Covered-arm lift isolates KG use from memorization (which inflates the no-KG baseline).',
-            transform=ax.transAxes, fontsize=8.4, color='#666')
-    gens = sorted(s.gen.unique())
-    gleg = [Line2D([0], [0], marker=GEN_MARK.get(g, 'o'), color='#666', ls='', ms=8,
-                   label=f'Llama {g}') for g in gens]
-    leg1 = ax.legend(loc='upper right', fontsize=9)
-    ax.add_artist(leg1)
-    ax.legend(handles=gleg, loc='lower right', fontsize=8.5, title='generation', title_fontsize=8.5)
+    ax.set_ylabel('MRR lift  (KG − no-KG)')
+    figstyle.title(ax, 'KG lift vs model size',
+                   'Mean reciprocal-rank lift over no-KG  ·  pooled vs covered arm  ·  95% CI')
+    ax.legend(loc='lower right', handlelength=1.8)
+    fig.tight_layout()
+    return fig
+
+
+def kg_by_model_table(df):
+    """Per (model, KG) MRR on the KG arm + the per-model no-KG baseline. Tidy table."""
+    d = df.copy()
+    present = sorted([m for m in LADDER if m in set(d.model)], key=lambda m: LADDER[m][0])
+    rows = []
+    for m in present:
+        nokg = d[(d.model == m) & (d.condition == 'no_kg')]['reciprocal_rank'].mean()
+        rec = {'model': LADDER[m][2], 'params': LADDER[m][0], 'no_KG': nokg}
+        for kg in KG_ORDER:
+            sub = d[(d.model == m) & (d.condition == 'kg') & (d.kg == kg)]
+            rec[KG_LABEL[kg]] = sub['reciprocal_rank'].mean()
+        rows.append(rec)
+    return pd.DataFrame(rows)
+
+
+def fig_kg_by_model(df):
+    """Grouped bars: each KG's MRR (+ no-KG baseline) across the Llama ladder.
+    Shows whether one graph drives the lift and how each KG's benefit scales with model size."""
+    t = kg_by_model_table(df).sort_values('params')
+    labels = list(t['model'])
+    arms = [('no-KG', 'no_KG'), ('PrimeKG', 'PrimeKG'), ('DRKG', 'DRKG'), ('BioKG', 'BioKG')]
+    x = np.arange(len(labels))
+    w = 0.2
+    fig, ax = plt.subplots(figsize=(9.4, 4.8))
+    for i, (lab, col) in enumerate(arms):
+        ax.bar(x + (i - 1.5) * w, t[col].values, w, label=lab,
+               color=KG[lab], edgecolor='white', linewidth=0.6, zorder=2)
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel('MRR on the 116-set')
+    ax.set_ylim(0, None)
+    figstyle.title(ax, 'MRR by knowledge graph and model size',
+                   'Mean reciprocal rank per KG vs the no-KG baseline, across the Llama ladder')
+    ax.legend(ncol=4, loc='upper left', columnspacing=1.3, handlelength=1.1)
     fig.tight_layout()
     return fig
 
 
 def fig_mrr_vs_size(scaling):
-    """Diagnostic: no-KG vs KG-arm MRR across size — a rising no-KG line is the memorization signal."""
+    """Diagnostic: prior-only vs KG-grounded MRR across size — a flat no-KG line rules out memorization."""
     s = scaling.sort_values('params')
-    fig, ax = plt.subplots(figsize=(7.8, 5.0))
-    ax.plot(s.params, s.mrr_nokg, '-o', color=C_NOKG, lw=2, ms=9, label='no-KG (prior only)')
-    ax.plot(s.params, s.mrr_kg, '-o', color=C_ALL, lw=2, ms=9, label='KG arm (pooled)')
-    ax.plot(s.params, s.mrr_kg_cov, '-D', color=C_COV, lw=2, ms=9, label='KG arm (covered only)')
-    for _, r in s.iterrows():
-        for y in (r.mrr_nokg, r.mrr_kg, r.mrr_kg_cov):
-            ax.annotate(f'{y:.2f}', (r.params, y), textcoords='offset points',
-                        xytext=(0, 7), ha='center', fontsize=7.5, color='#666')
+    fig, ax = plt.subplots(figsize=(7.6, 4.8))
+    for arm, col, mk, ls, val in [
+        ('KG arm (covered)', PALETTE['covered'], 'D', '-', s.mrr_kg_cov),
+        ('KG arm (pooled)', PALETTE['pooled'], 'o', '-', s.mrr_kg),
+        ('no-KG (prior only)', PALETTE['nokg'], 's', '--', s.mrr_nokg),
+    ]:
+        ax.plot(s.params, val, marker=mk, ls=ls, color=col, lw=1.6,
+                mfc='white', mec=col, mew=1.4, ms=7.5, label=arm, zorder=3)
     _logx(ax, s.params)
     ax.set_ylabel('MRR on the 116-set')
-    ax.set_ylim(0, 1)
-    ax.set_title('Where the lift comes from: prior vs KG-grounded ranking by size',
-                 fontsize=12.5, fontweight='bold', loc='left', pad=14)
-    ax.legend(loc='lower right', fontsize=9)
+    figstyle.title(ax, 'Prior-only vs KG-grounded MRR by model size',
+                   'no-KG, pooled KG and covered-arm MRR across the Llama ladder')
+    ax.legend(loc='lower right', handlelength=2.2)
     fig.tight_layout()
     return fig

@@ -63,8 +63,9 @@ echo "Done."
 echo
 echo "Resampled outputs:"
 echo "  - results/tables/08_embedding_comparison_resampled.csv         (long-form, one row per rerun)"
-echo "  - results/figures/08_resampled_headline.{pdf,png}    (bars w/ empirical CIs)"
-echo "  - results/figures/08_resampled_stability_boxplot.{pdf,png}  (per-KG/model spread)"
+echo "  - results/figures/08_resampled_auroc.{pdf,png}              (AUROC by KG x model)"
+echo "  - results/figures/08_lift_over_gemma.{pdf,png}              (lift over Gemma prior)
+#   - results/figures/08_heuristic_vs_embedding_scatter.{pdf,png}"
 echo
 echo "The 'bootstrap vs rerun' table in the notebook quantifies how much"
 echo "the single-run bootstrap CIs were too tight. Cite the rerun-empirical"

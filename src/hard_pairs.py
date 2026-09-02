@@ -9,6 +9,11 @@ import os, numpy as np, pandas as pd
 import matplotlib                       # don't force a backend (keeps %matplotlib inline working)
 import matplotlib.pyplot as plt
 from .headline_figures import load_runs, MODELS, MCOL
+try:                                    # shared house style (consistent across 09/09a/09b/09c)
+    from . import figstyle
+except ImportError:
+    import figstyle
+figstyle.apply()
 
 _MC = [m.split('-')[0] for m in MODELS]          # short keys: GPT, Gemini, Llama
 
@@ -66,36 +71,34 @@ def fig_hardest_pairs(per, n=20):
     h = per.head(n).iloc[::-1]
     fig, ax = plt.subplots(figsize=(8.4, 0.34 * n + 1.4))
     y = np.arange(len(h))
-    ax.barh(y, h['mrr'], color='#e2e2e2', height=0.64, zorder=1)
+    ax.barh(y, h['mrr'], color=figstyle.PALETTE['grid'], height=0.64, zorder=1)
     for m, k in zip(MODELS, _MC):
         ax.scatter(h[k], y, s=26, color=MCOL[m], zorder=3, edgecolor='white', lw=0.4, label=m)
     ax.set_yticks(y)
     ax.set_yticklabels([f'{r.disease[:40]}\n({str(r.drug)[:26]} · {r.area})' for r in h.itertuples()], fontsize=6.8)
-    ax.set_xlim(0, 1.0); ax.set_xlabel('Mean MRR on KG arm   (grey = pooled · dots = per model)', fontsize=9)
+    ax.set_xlim(0, 1.0); ax.set_xlabel('Mean MRR on KG arm   (grey = pooled · dots = per model)')
     ax.legend(loc='lower right', fontsize=8, title='per-model MRR', title_fontsize=7.5)
-    for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title(f'The {n} hardest-to-rank drug–disease pairs', fontsize=12.5, fontweight='bold', loc='left', pad=8)
+    figstyle.title(ax, f'The {n} hardest-to-rank drug–disease pairs', pad=10)
     fig.tight_layout(); return fig
 
 
 def fig_difficulty_drivers(per):
     """The model knows: per-disease MRR vs self-reported confidence, coloured by
     share of consistent KG evidence."""
-    fig, ax = plt.subplots(figsize=(7.4, 5.0))
-    sc = ax.scatter(per['conf'], per['mrr'], c=per['frac_consistent'], cmap='viridis',
+    fig, ax = plt.subplots(figsize=figstyle.FIGSIZE)
+    sc = ax.scatter(per['conf'], per['mrr'], c=per['frac_consistent'], cmap=figstyle.SEQ_CMAP,
                     s=46, edgecolor='white', lw=0.4, vmin=0, vmax=1)
     r = per[['conf', 'mrr']].corr().iloc[0, 1]
     ax.text(0.04, 0.96, f'Pearson r = {r:.2f}', transform=ax.transAxes, va='top', fontsize=10,
-            color='#333', fontweight='bold')
+            color=figstyle.PALETTE['ink'], fontweight='bold')
     cb = fig.colorbar(sc, ax=ax, fraction=0.045, pad=0.02); cb.set_label('share of consistent KG evidence', fontsize=9)
-    ax.set_xlabel("model's self-reported confidence (1–5)", fontsize=10)
-    ax.set_ylabel('mean MRR on KG arm', fontsize=10)
-    for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title('Hard pairs are the ones the model is unsure about', fontsize=12.5, fontweight='bold', loc='left', pad=8)
+    ax.set_xlabel("model's self-reported confidence (1–5)")
+    ax.set_ylabel('mean MRR on KG arm')
+    figstyle.title(ax, 'Per-pair MRR vs model confidence', pad=10)
     fig.tight_layout(); return fig
 
 
-_COVCOL = {1: '#D9534F', 2: '#F0AD4E', 3: '#5CB85C'}     # 1/2/3 KGs covering the pair
+_COVCOL = figstyle.COV_RAMP                              # ordinal teal ramp: 1/2/3 KGs covering
 
 def fig_difficulty_by_area(per, min_n=4):
     """Per-area difficulty: each dot a disease, a clear mean marker per area, areas
@@ -109,17 +112,16 @@ def fig_difficulty_by_area(per, min_n=4):
     ax.axvline(per['mrr'].mean(), color='#c8c8c8', ls='--', lw=1, zorder=1)
     for i, a in enumerate(order):
         y = len(order) - 1 - i; sub = d[d.area == a]
-        ax.scatter(sub['mrr'], y + rng.uniform(-0.15, 0.15, len(sub)), s=34, color='#9FB6D4',
-                   alpha=0.8, edgecolor='white', lw=0.3, zorder=2)
+        ax.scatter(sub['mrr'], y + rng.uniform(-0.15, 0.15, len(sub)), s=34, color='#BFD8D2',
+                   alpha=0.9, edgecolor='white', lw=0.3, zorder=2)
         mu = sub['mrr'].mean()
-        ax.scatter(mu, y, s=150, color='#2C3E66', marker='D', zorder=4, edgecolor='white', lw=1)
+        ax.scatter(mu, y, s=150, color='#1F6F5E', marker='D', zorder=4, edgecolor='white', lw=1)
     ax.set_yticks(range(len(order)))
     ax.set_yticklabels([f'{a}  (n={int(stat.loc[a, "size"])})' for a in order[::-1]], fontsize=9.5)
     ax.set_xlim(0, 1.02); ax.set_ylim(-0.6, len(order) - 0.4)
-    ax.set_xlabel('MRR on KG arm   (small dot = disease · large diamond = area mean)', fontsize=9.5)
-    ax.text(per['mrr'].mean(), len(order) - 0.5, 'overall mean', fontsize=8, color='#999', ha='center')
-    for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title('Ranking difficulty by therapeutic area', fontsize=12.5, fontweight='bold', loc='left', pad=10)
+    ax.set_xlabel('MRR on KG arm   (small dot = disease · large diamond = area mean)')
+    ax.text(per['mrr'].mean(), len(order) - 0.5, 'overall mean', fontsize=8, color=figstyle.PALETTE['muted'], ha='center')
+    figstyle.title(ax, 'Ranking difficulty by therapeutic area', pad=10)
     fig.tight_layout(); return fig
 
 
@@ -132,15 +134,13 @@ def fig_intrinsic_difficulty(per):
     for ax, (a, b) in zip(axes, pairs):
         d = per[[a, b]].dropna()
         ax.plot([0, 1], [0, 1], color='#bbb', ls='--', lw=1, zorder=1)
-        ax.scatter(d[a], d[b], s=34, color='#5B6C8F', alpha=0.7, edgecolor='white', lw=0.3, zorder=2)
+        ax.scatter(d[a], d[b], s=34, color=figstyle.PALETTE['covered'], alpha=0.7, edgecolor='white', lw=0.3, zorder=2)
         r = st.pearsonr(d[a], d[b])[0]
-        ax.text(0.04, 0.93, f'r = {r:.2f}', transform=ax.transAxes, fontsize=11, fontweight='bold', color='#2C3E66')
+        ax.text(0.04, 0.93, f'r = {r:.2f}', transform=ax.transAxes, fontsize=11, fontweight='bold', color=figstyle.PALETTE['ink'])
         ax.set_xlim(0, 1.02); ax.set_ylim(0, 1.02); ax.set_aspect('equal')
-        ax.set_xlabel(f'{a} — MRR', fontsize=9.5); ax.set_ylabel(f'{b} — MRR', fontsize=9.5)
-        for s in ('top', 'right'): ax.spines[s].set_visible(False)
+        ax.set_xlabel(f'{a} — MRR'); ax.set_ylabel(f'{b} — MRR')
     ravg = cross_model_corr(per)
-    fig.suptitle(f'Hard pairs are hard for every model   (mean pairwise r = {ravg:.2f})',
-                 fontsize=13, fontweight='bold', x=0.5, y=1.0)
+    figstyle.suptitle(fig, f'Per-pair MRR agreement between models   (mean pairwise r = {ravg:.2f})', y=1.02)
     fig.tight_layout(); return fig
 
 
@@ -162,21 +162,22 @@ def fig_coverage_fair(df, cov_csv):
     covered = kg[kg.covered == 1].groupby('n_kg')['reciprocal_rank'].mean()
     nokg = df[df.condition == 'no_kg']['reciprocal_rank'].mean()
     x = [1, 2, 3]
-    fig, ax = plt.subplots(figsize=(7.4, 5.0))
-    ax.axhline(nokg, color='#bbb', ls=':', lw=1.2); ax.text(3.05, nokg, ' no-KG', va='center', fontsize=8.5, color='#999')
-    ax.plot(x, [pooled.get(k, np.nan) for k in x], '-o', color='#9AA0A6', lw=2, ms=10, label='pooled (all 3 KG arms)')
-    ax.plot(x, [covered.get(k, np.nan) for k in x], '-D', color='#1B9E77', lw=2, ms=10, label='covered arm only')
+    _pool, _cov = figstyle.PALETTE['pooled'], figstyle.PALETTE['covered']
+    fig, ax = plt.subplots(figsize=figstyle.FIGSIZE)
+    ax.axhline(nokg, color='#bbb', ls=':', lw=1.2); ax.text(3.05, nokg, ' no-KG', va='center', fontsize=8.5, color=figstyle.PALETTE['muted'])
+    ax.plot(x, [pooled.get(k, np.nan) for k in x], '-o', color=_pool, lw=1.8, ms=9,
+            mfc='white', mec=_pool, mew=1.4, label='pooled (all 3 KG arms)')
+    ax.plot(x, [covered.get(k, np.nan) for k in x], '-D', color=_cov, lw=1.8, ms=9,
+            mfc='white', mec=_cov, mew=1.4, label='covered arm only')
     for k in x:
-        if k in covered: ax.text(k, covered[k] + 0.025, f'{covered[k]:.2f}', ha='center', fontsize=9, color='#1B9E77', fontweight='bold')
-        if k in pooled: ax.text(k, pooled[k] - 0.04, f'{pooled[k]:.2f}', ha='center', fontsize=9, color='#777', fontweight='bold')
-    ax.set_xticks(x); ax.set_xticklabels([f'{k} KG' + ('s' if k > 1 else '') for k in x], fontsize=10)
+        if k in covered: ax.text(k, covered[k] + 0.03, f'{covered[k]:.2f}', ha='center', fontsize=9, color=_cov, fontweight='bold')
+        if k in pooled: ax.text(k, pooled[k] - 0.045, f'{pooled[k]:.2f}', ha='center', fontsize=9, color=figstyle.PALETTE['muted'], fontweight='bold')
+    ax.set_xticks(x); ax.set_xticklabels([f'{k} KG' + ('s' if k > 1 else '') for k in x])
     ax.set_xlim(0.7, 3.5); ax.set_ylim(0, 0.9)
-    ax.set_xlabel('number of KGs covering the pair', fontsize=10); ax.set_ylabel('MRR on KG arm', fontsize=10)
-    ax.legend(loc='lower right', fontsize=9.5)
-    for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title('When a KG covers the pair, the model ranks it well', fontsize=12.5, fontweight='bold', loc='left', pad=24)
-    ax.text(0, 1.05, "The pooled coverage 'penalty' is mostly empty arms — not the covering graph failing.",
-            transform=ax.transAxes, fontsize=8.4, color='#666')
+    ax.set_xlabel('number of KGs covering the pair'); ax.set_ylabel('MRR on KG arm')
+    ax.legend(loc='lower right')
+    figstyle.title(ax, 'MRR by number of KGs covering the pair',
+                   "Pooled (all 3 arms) vs covered-arm only — the gap is the empty-arm effect")
     fig.tight_layout(); return fig
 
 
@@ -186,16 +187,15 @@ def fig_age_effect(per):
     from scipy import stats as st
     r, p = st.pearsonr(d['orig'], d['mrr'])
     s, i = np.polyfit(d['orig'], d['mrr'], 1)
-    fig, ax = plt.subplots(figsize=(7.2, 4.8))
-    ax.scatter(d['orig'], d['mrr'], s=44, color='#8a8a8a', alpha=0.7, edgecolor='white', lw=0.4, zorder=2)
+    fig, ax = plt.subplots(figsize=figstyle.FIGSIZE)
+    ax.scatter(d['orig'], d['mrr'], s=44, color=figstyle.PALETTE['pooled'], alpha=0.75, edgecolor='white', lw=0.4, zorder=2)
     xl = np.array([d['orig'].min(), d['orig'].max()])
-    ax.plot(xl, s * xl + i, color='#C0392B', lw=1.8, ls='--', zorder=3)
+    ax.plot(xl, s * xl + i, color=figstyle.PALETTE['nokg'], lw=1.8, ls='--', zorder=3)
     ax.text(0.04, 0.06, f'Pearson r = {r:+.2f}   (p = {p:.2f}, n.s.)', transform=ax.transAxes,
-            fontsize=10.5, color='#C0392B', fontweight='bold')
-    ax.set_xlabel("drug's original approval year   (older ←      → newer)", fontsize=10)
-    ax.set_ylabel('mean MRR on KG arm', fontsize=10); ax.set_ylim(0, 1.02)
-    for sp in ('top', 'right'): ax.spines[sp].set_visible(False)
-    ax.set_title('Drug age does not predict ranking difficulty', fontsize=12.5, fontweight='bold', loc='left', pad=8)
+            fontsize=10.5, color=figstyle.PALETTE['nokg'], fontweight='bold')
+    ax.set_xlabel("drug's original approval year   (older ←      → newer)")
+    ax.set_ylabel('mean MRR on KG arm'); ax.set_ylim(0, 1.02)
+    figstyle.title(ax, 'MRR vs drug approval year', pad=10)
     fig.tight_layout(); return fig
 
 
@@ -203,16 +203,15 @@ def fig_coverage_effect(per):
     """The axis that actually predicts difficulty: number of KGs covering the pair."""
     d = per.dropna(subset=['n_kg']).copy(); d['n_kg'] = d['n_kg'].astype(int)
     groups = [1, 2, 3]; rng = np.random.default_rng(11)
-    fig, ax = plt.subplots(figsize=(6.6, 4.6))
+    fig, ax = plt.subplots(figsize=figstyle.FIGSIZE)
     for i, k in enumerate(groups):
         v = d[d.n_kg == k]['mrr']
-        ax.scatter(i + rng.uniform(-0.16, 0.16, len(v)), v, s=44, color=_COVCOL[k], alpha=0.8,
+        ax.scatter(i + rng.uniform(-0.16, 0.16, len(v)), v, s=44, color=_COVCOL[k], alpha=0.85,
                    edgecolor='white', lw=0.4, zorder=3)
-        ax.plot([i - 0.28, i + 0.28], [v.mean()] * 2, color='#333', lw=2.6, zorder=4, solid_capstyle='round')
-        ax.text(i, v.mean() + 0.03, f'{v.mean():.2f}', ha='center', fontsize=9.5, fontweight='bold', color='#333')
-    ax.set_xticks(range(3)); ax.set_xticklabels([f'{k} KG' + ('s' if k > 1 else '') + f'\n(n={int((d.n_kg==k).sum())})' for k in groups], fontsize=9.5)
-    ax.set_ylim(0, 1.02); ax.set_ylabel('MRR on KG arm  (dot = disease)', fontsize=9.5)
-    ax.set_xlabel('number of KGs covering the pair', fontsize=9.5)
-    for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title('Coverage — not drug age or type — predicts difficulty', fontsize=12, fontweight='bold', loc='left', pad=8)
+        ax.plot([i - 0.28, i + 0.28], [v.mean()] * 2, color=figstyle.PALETTE['ink'], lw=2.6, zorder=4, solid_capstyle='round')
+        ax.text(i, v.mean() + 0.03, f'{v.mean():.2f}', ha='center', fontsize=9.5, fontweight='bold', color=figstyle.PALETTE['ink'])
+    ax.set_xticks(range(3)); ax.set_xticklabels([f'{k} KG' + ('s' if k > 1 else '') + f'\n(n={int((d.n_kg==k).sum())})' for k in groups])
+    ax.set_ylim(0, 1.02); ax.set_ylabel('MRR on KG arm  (dot = disease)')
+    ax.set_xlabel('number of KGs covering the pair')
+    figstyle.title(ax, 'MRR by KG coverage count', pad=10)
     fig.tight_layout(); return fig

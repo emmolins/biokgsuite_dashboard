@@ -105,9 +105,9 @@ echo
 echo "================================================================="
 echo "Done. Outputs:"
 echo "  - results/tables/08_embedding_comparison_resampled.csv       (long-form)"
-echo "  - results/figures/08_resampled_headline.{pdf,png}"
-echo "  - results/figures/08_resampled_stability_boxplot.{pdf,png}"
-echo "  - results/figures/08_gemma_vs_kge_auroc.{pdf,png}"
+echo "  - results/figures/08_resampled_auroc.{pdf,png}"
+echo "  - results/figures/08_lift_over_gemma.{pdf,png}"
+echo "  - results/figures/08_heuristic_vs_embedding_scatter.{pdf,png}"
 echo "  - results/checkpoints/08_embedding_validation.pkl"
 echo
 echo "To pull results back to your Mac:"

@@ -1,0 +1,54 @@
+<svg viewBox="0 0 920 400" xmlns="http://www.w3.org/2000/svg" role="img" font-family="ui-sans-serif, system-ui, sans-serif">
+  <title>Emulability-gated discovery pipeline</title>
+  <desc>Three stages — generation, operationalization, testing — separated by fitness gates (trustworthy? testable?), with a feedback loop, grounded in two evidence axes and domains: EHR emulation via Truveta for neurovascular, and genetic/MR via UK Biobank for immunology.</desc>
+  <rect x="0" y="0" width="920" height="400" fill="#FFFFFF"/>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#534AB7"/></marker>
+    <marker id="arM" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888780"/></marker>
+  </defs>
+  <text x="460" y="26" text-anchor="middle" font-size="17" font-weight="700" fill="#2C2C2A">Causally-grounded biomedical discovery</text>
+  <text x="460" y="46" text-anchor="middle" font-size="12.5" fill="#5F5E5A">generation &#8594; operationalization &#8594; testing, gated by testability</text>
+  <rect x="40" y="62" width="840" height="26" rx="13" fill="#EEEDFE" stroke="#534AB7" stroke-opacity="0.35"/>
+  <text x="460" y="79" text-anchor="middle" font-size="11" font-weight="600" fill="#534AB7">Unifying idea: an artifact&#8217;s value is set by the next stage &#8212; honest evaluation under real constraints</text>
+  <g>
+    <rect x="40" y="110" width="220" height="150" rx="13" fill="#FBFAF6" stroke="#B4B2A9"/>
+    <text x="150" y="137" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.3" fill="#534AB7">STAGE 1</text>
+    <text x="150" y="162" text-anchor="middle" font-size="14.5" font-weight="700" fill="#2C2C2A">Hypothesis generation</text>
+    <line x1="66" y1="178" x2="234" y2="178" stroke="#D3D1C7"/>
+    <text x="150" y="200" text-anchor="middle" font-size="11" fill="#5F5E5A">Knowledge-graph methods</text>
+    <text x="150" y="218" text-anchor="middle" font-size="10" fill="#888780">BioKGSuite selects the KG</text>
+    <rect x="350" y="110" width="220" height="150" rx="13" fill="#FBFAF6" stroke="#B4B2A9"/>
+    <text x="460" y="137" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.3" fill="#534AB7">STAGE 2</text>
+    <text x="460" y="162" text-anchor="middle" font-size="14.5" font-weight="700" fill="#2C2C2A">Operationalization</text>
+    <line x1="376" y1="178" x2="544" y2="178" stroke="#D3D1C7"/>
+    <text x="460" y="200" text-anchor="middle" font-size="11" fill="#5F5E5A">Design-routing agent</text>
+    <text x="460" y="218" text-anchor="middle" font-size="10" fill="#888780">frame testably: EHR + genetics</text>
+    <rect x="660" y="110" width="220" height="150" rx="13" fill="#FBFAF6" stroke="#B4B2A9"/>
+    <text x="770" y="137" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.3" fill="#534AB7">STAGE 3</text>
+    <text x="770" y="162" text-anchor="middle" font-size="14.5" font-weight="700" fill="#2C2C2A">Testing</text>
+    <line x1="686" y1="178" x2="854" y2="178" stroke="#D3D1C7"/>
+    <text x="770" y="200" text-anchor="middle" font-size="11" fill="#5F5E5A">Triangulated causal tests</text>
+    <text x="770" y="218" text-anchor="middle" font-size="10" fill="#888780">TTE + MR + FAERS &#183; rigor</text>
+  </g>
+  <text x="305" y="150" text-anchor="middle" font-size="10.5" font-weight="600" fill="#5F5E5A">Trustworthy?</text>
+  <path d="M305,163 L327,185 L305,207 L283,185 Z" fill="#F1EFE8" stroke="#B4B2A9"/>
+  <text x="305" y="189" text-anchor="middle" font-size="12" font-weight="700" fill="#5F5E5A">?</text>
+  <text x="305" y="226" text-anchor="middle" font-size="9.5" fill="#888780">quality</text>
+  <text x="615" y="150" text-anchor="middle" font-size="10.5" font-weight="700" fill="#534AB7">Testable?</text>
+  <path d="M615,161 L639,185 L615,209 L591,185 Z" fill="#534AB7"/>
+  <text x="615" y="190" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">?</text>
+  <text x="615" y="226" text-anchor="middle" font-size="9.5" font-weight="600" fill="#534AB7">emulability</text>
+  <path d="M262,185 L281,185" stroke="#534AB7" stroke-width="2" marker-end="url(#ar)"/>
+  <path d="M329,185 L348,185" stroke="#534AB7" stroke-width="2" marker-end="url(#ar)"/>
+  <path d="M572,185 L589,185" stroke="#534AB7" stroke-width="2" marker-end="url(#ar)"/>
+  <path d="M641,185 L658,185" stroke="#534AB7" stroke-width="2" marker-end="url(#ar)"/>
+  <path d="M770,260 C770,300 560,306 460,306 C360,306 150,300 150,260" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ar)"/>
+  <rect x="330" y="295" width="260" height="20" rx="5" fill="#FFFFFF"/>
+  <text x="460" y="309" text-anchor="middle" font-size="10" font-weight="600" fill="#534AB7">results re-rank generation (active learning)</text>
+  <rect x="60" y="340" width="380" height="44" rx="10" fill="#F1EFE8" stroke="#D3D1C7"/>
+  <text x="250" y="359" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">EHR emulation &#183; Truveta</text>
+  <text x="250" y="375" text-anchor="middle" font-size="10" fill="#888780">&#8594; neurovascular (primary domain)</text>
+  <rect x="480" y="340" width="380" height="44" rx="10" fill="#F1EFE8" stroke="#D3D1C7"/>
+  <text x="670" y="359" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">Genetic / MR &#183; UK Biobank</text>
+  <text x="670" y="375" text-anchor="middle" font-size="10" fill="#888780">&#8594; immunology (breadth domain)</text>
+</svg>

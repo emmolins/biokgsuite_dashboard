@@ -1,0 +1,13 @@
+kg,coverage_n,coverage_pct,stratum,n_diseases,mean_lift,ci_lo,ci_hi,note
+primekg,111,95.7,all_116,109,0.2954,0.2567,0.3327,confounds coverage with quality
+primekg,111,95.7,covered_by_this_kg,104,0.3039,0.2656,0.3415,"own support, not comparable"
+primekg,111,95.7,common_core_72,67,0.3134,0.267,0.3598,QUALITY GIVEN COVERAGE
+primekg,111,95.7,not_covered,5,0.1177,-0.044,0.3122,sanity: expect no lift
+drkg,90,77.6,all_116,109,0.2233,0.18,0.2647,confounds coverage with quality
+drkg,90,77.6,covered_by_this_kg,84,0.2713,0.227,0.3142,"own support, not comparable"
+drkg,90,77.6,common_core_72,67,0.2605,0.2106,0.3077,QUALITY GIVEN COVERAGE
+drkg,90,77.6,not_covered,25,0.062,-0.0184,0.154,sanity: expect no lift
+biokg,78,67.2,all_116,109,0.2391,0.1971,0.2813,confounds coverage with quality
+biokg,78,67.2,covered_by_this_kg,73,0.2878,0.2425,0.33,"own support, not comparable"
+biokg,78,67.2,common_core_72,67,0.2795,0.23,0.3264,QUALITY GIVEN COVERAGE
+biokg,78,67.2,not_covered,36,0.1404,0.0686,0.2108,sanity: expect no lift

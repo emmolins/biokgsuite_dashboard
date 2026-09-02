@@ -24,10 +24,12 @@ REPO_DIR="${REPO_DIR:-$HOME/biokgsuite}"
 cd "$REPO_DIR"; mkdir -p logs
 
 echo "HOST $(hostname)  DATE $(date)  JOB ${SLURM_JOB_ID:-none}"
-module purge
-module load python/3.12.11
+module purge 2>/dev/null || true
+module load python/3.12.11 2>/dev/null || module load python 2>/dev/null || true
 module load uv/latest 2>/dev/null || true
 source .venv/bin/activate
+# fail loudly only if the venv python is actually unusable on this node
+python -c "import sys; print('python', sys.version.split()[0])" || { echo "FATAL: venv python unusable on $(hostname)"; exit 1; }
 export PYTHONUNBUFFERED=1 TQDM_MININTERVAL=15
 
 # ── Ollama: install to ~/.local if missing (no root needed) ─────────────────
@@ -35,9 +37,10 @@ export OLLAMA_MODELS="${OLLAMA_MODELS:-$HOME/.ollama/models}"   # ~40 GB lives h
 export OLLAMA_HOST=127.0.0.1:11434
 mkdir -p "$HOME/.local/bin" "$OLLAMA_MODELS"
 if ! command -v ollama >/dev/null 2>&1 && [[ ! -x "$HOME/.local/bin/ollama" ]]; then
-    echo "[ollama] installing standalone binary..."
-    curl -fsSL https://ollama.com/download/ollama-linux-amd64.tgz -o /tmp/ollama.tgz
-    tar -xzf /tmp/ollama.tgz -C "$HOME/.local"
+    echo "[ollama] downloading standalone binary (GitHub release, .tar.zst)..."
+    curl -fL https://github.com/ollama/ollama/releases/latest/download/ollama-linux-amd64.tar.zst -o /tmp/ollama.tar.zst
+    ( tar --zstd -xf /tmp/ollama.tar.zst -C "$HOME/.local" 2>/dev/null \
+      || tar -I zstd -xf /tmp/ollama.tar.zst -C "$HOME/.local" )   # -> ~/.local/bin/ollama + ~/.local/lib/ollama
 fi
 export PATH="$HOME/.local/bin:$PATH"
 nvidia-smi || true
@@ -56,6 +59,7 @@ echo "[ollama] up"
 ollama pull llama3.3:70b
 
 # ── run the sweep (bare tag -> harness routes to local Ollama) ───────────────
-python eval_notebooks/run_llm_sweep.py --model llama3.3:70b --out 09_ranking_llama3.3_70b.csv
+SEED="${SEED:-1}"   # one seed per job (~5h); submit once per seed via --export
+python eval_notebooks/run_llm_sweep.py --model llama3.3:70b --gold gold_standard_v4_bigset.tsv --seeds "$SEED" --shuffles 2 --out "09_big_llama_s${SEED}.csv"
 
 echo "DONE -> results/tables/09_llm_runs/09_ranking_llama3.3_70b.csv"

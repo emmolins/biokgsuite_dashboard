@@ -8,8 +8,14 @@ statistics and draw the figures. Nothing here is specific to any one benchmark.
 import numpy as np, pandas as pd
 from scipy import stats as st
 import matplotlib.pyplot as plt
+try:                                    # shared house style (consistent across 09/09a/09b/09c)
+    from . import figstyle
+except ImportError:
+    import figstyle
+figstyle.apply()
 
-KEPT_C, DROP_C = '#2BA37A', '#E07B39'
+KEPT_C, DROP_C = figstyle.PALETTE['covered'], figstyle.PALETTE['nokg']
+_NEG, _NEUT = figstyle.PALETTE['nokg'], figstyle.PALETTE['pooled']
 
 
 # ───────────────────────── statistics ─────────────────────────
@@ -59,16 +65,16 @@ def plot_forest(df, kept_col, traits, title='Odds of being kept, by trait'):
     ax.axvline(1, color='#999', lw=1.1)
     for i, (lbl, orr, lo, hi, p) in enumerate(data):
         sig = p < 0.05
-        c = '#C0392B' if (sig and orr < 1) else (KEPT_C if sig else '#9AA0A6')
+        c = _NEG if (sig and orr < 1) else (KEPT_C if sig else _NEUT)
         ax.plot([lo, hi], [i, i], color=c, lw=2.2, solid_capstyle='round', zorder=2)
         ax.scatter(orr, i, s=80, color=c, zorder=3, edgecolor='white', lw=1.1)
         ax.text(0.02, i, lbl, transform=ax.get_yaxis_transform(), ha='right', va='center', fontsize=9)
         star = '***' if p < .001 else '**' if p < .01 else '*' if p < .05 else 'n.s.'
         ax.text(hi * 1.05, i, star, va='center', fontsize=8.5, color=c, fontweight='bold' if sig else 'normal')
     ax.set_xscale('log'); ax.set_yticks([]); ax.set_ylim(-0.7, len(data) - 0.3)
-    ax.set_xlabel('odds of being kept  (95% CI, log scale)', fontsize=9.5)
+    ax.set_xlabel('odds of being kept  (95% CI, log scale)')
     for s in ('top', 'right'): ax.spines[s].set_visible(False)
-    ax.set_title(title, fontsize=11.5, fontweight='bold', loc='left', pad=10)
+    figstyle.title(ax, title, pad=12)
     fig.tight_layout(); return fig
 
 
@@ -83,9 +89,9 @@ def plot_distribution(df, kept_col, cont_var, title=None):
         m = v.median(); ax.plot([m, m], [(1 - i) - 0.33, (1 - i) + 0.33], color=c, lw=3, solid_capstyle='round')
         ax.text(v.min(), 1 - i, f'  {lbl} (n={len(v)})', ha='left', va='center', fontsize=9, color=c, fontweight='bold')
     ax.set_yticks([]); ax.set_ylim(-0.7, 1.7)
-    ax.set_xlabel(cont_var, fontsize=9.5)
+    ax.set_xlabel(cont_var)
     for s in ('top', 'right', 'left'): ax.spines[s].set_visible(False)
-    ax.set_title(title or f'{cont_var}: kept vs dropped', fontsize=11, fontweight='bold', loc='left', pad=8)
+    figstyle.title(ax, title or f'{cont_var}: kept vs dropped', pad=10)
     fig.tight_layout(); return fig
 
 
@@ -119,5 +125,5 @@ def plot_composition(df, kept_col, cat_vars, title='Composition of kept vs dropp
     from matplotlib.patches import Patch
     fig.legend(handles=[Patch(color=DROP_C, label=f'dropped (n={n_d})'), Patch(color=KEPT_C, label=f'kept (n={n_k})')],
                loc='upper center', ncol=2, frameon=False, fontsize=9.5, bbox_to_anchor=(0.5, 1.0))
-    fig.suptitle(title, fontsize=13, fontweight='bold', y=1.08)
+    figstyle.suptitle(fig, title, y=1.08)
     fig.tight_layout(); return fig

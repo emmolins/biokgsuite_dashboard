@@ -1,0 +1,93 @@
+<svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" role="img" font-family="ui-sans-serif, system-ui, sans-serif">
+  <title>Emulability-ranked repurposing pipeline with active-learning loop</title>
+  <desc>Three stages: a knowledge graph generates drug-disease candidates; an emulability and optimal-design layer (the thesis contribution) predicts feasibility and ranks candidates by expected information gain; target trial emulation tests the survivors. A feedback loop returns realized outcomes to refine the hypothesis prior. Mendelian randomization is an optional side-screen.</desc>
+  <rect x="0" y="0" width="900" height="600" fill="#FFFFFF"/>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#534AB7"/>
+    </marker>
+    <marker id="arrowMuted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888780"/>
+    </marker>
+  </defs>
+
+  <text x="450" y="32" text-anchor="middle" font-size="16.5" font-weight="700" fill="#2C2C2A">Emulability-ranked repurposing pipeline</text>
+  <text x="450" y="54" text-anchor="middle" font-size="12.5" fill="#5F5E5A">Hypothesis generation &#8594; operationalization &#8594; testing</text>
+
+  <!-- Funnel count band -->
+  <g font-size="11.5" font-weight="600" text-anchor="middle">
+    <rect x="80" y="80" width="200" height="30" rx="15" fill="#F1EFE8" stroke="#D3D1C7"/>
+    <text x="180" y="99" fill="#5F5E5A">1,000s of drug&#8211;disease pairs</text>
+    <rect x="360" y="80" width="180" height="30" rx="15" fill="#F1EFE8" stroke="#D3D1C7"/>
+    <text x="450" y="99" fill="#5F5E5A">top ~50 runnable</text>
+    <rect x="640" y="80" width="180" height="30" rx="15" fill="#F1EFE8" stroke="#D3D1C7"/>
+    <text x="730" y="99" fill="#5F5E5A">~10 supported</text>
+    <path d="M288,95 L352,95" stroke="#888780" stroke-width="1.4" marker-end="url(#arrowMuted)"/>
+    <path d="M548,95 L632,95" stroke="#888780" stroke-width="1.4" marker-end="url(#arrowMuted)"/>
+  </g>
+
+  <!-- Cards -->
+  <g>
+    <!-- Card A -->
+    <rect x="80" y="150" width="200" height="200" rx="14" fill="#FBFAF6" stroke="#B4B2A9"/>
+    <text x="180" y="178" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1.4" fill="#534AB7">STAGE 1</text>
+    <text x="180" y="199" text-anchor="middle" font-size="11.5" font-weight="600" fill="#5F5E5A">Hypothesis generation</text>
+    <text x="180" y="242" text-anchor="middle" font-size="16" font-weight="700" fill="#2C2C2A">Knowledge Graph</text>
+    <text x="180" y="268" text-anchor="middle" font-size="11.5" fill="#5F5E5A">propose drug&#8211;disease pairs</text>
+    <line x1="104" y1="300" x2="256" y2="300" stroke="#D3D1C7"/>
+    <text x="180" y="326" text-anchor="middle" font-size="11" font-weight="600" fill="#888780">Associational hypotheses</text>
+
+    <!-- Card B (highlighted contribution) -->
+    <rect x="360" y="150" width="200" height="200" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="2.5"/>
+    <rect x="372" y="139" width="176" height="20" rx="10" fill="#534AB7"/>
+    <text x="460" y="153" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1" fill="#ffffff">THESIS CONTRIBUTION</text>
+    <text x="460" y="182" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1.4" fill="#534AB7">STAGE 2</text>
+    <text x="460" y="201" text-anchor="middle" font-size="11.5" font-weight="600" fill="#5F5E5A">Hypothesis operationalization</text>
+    <text x="460" y="230" text-anchor="middle" font-size="15" font-weight="700" fill="#2C2C2A">Emulability &amp;</text>
+    <text x="460" y="249" text-anchor="middle" font-size="15" font-weight="700" fill="#2C2C2A">Design Layer</text>
+    <text x="460" y="274" text-anchor="middle" font-size="11" fill="#5F5E5A">predict feasibility &#183; rank by info gain</text>
+    <line x1="384" y1="300" x2="536" y2="300" stroke="#CECBF6"/>
+    <text x="460" y="326" text-anchor="middle" font-size="11" font-weight="600" fill="#534AB7">Which trials can we run?</text>
+
+    <!-- Card C -->
+    <rect x="640" y="150" width="200" height="200" rx="14" fill="#FBFAF6" stroke="#B4B2A9"/>
+    <text x="740" y="178" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1.4" fill="#534AB7">STAGE 3</text>
+    <text x="740" y="199" text-anchor="middle" font-size="11.5" font-weight="600" fill="#5F5E5A">Hypothesis testing</text>
+    <text x="740" y="234" text-anchor="middle" font-size="16" font-weight="700" fill="#2C2C2A">Target Trial</text>
+    <text x="740" y="253" text-anchor="middle" font-size="16" font-weight="700" fill="#2C2C2A">Emulation</text>
+    <text x="740" y="278" text-anchor="middle" font-size="11.5" fill="#5F5E5A">run on EHR cohorts</text>
+    <line x1="664" y1="300" x2="816" y2="300" stroke="#D3D1C7"/>
+    <text x="740" y="326" text-anchor="middle" font-size="11" font-weight="600" fill="#888780">Clinical causal evidence</text>
+  </g>
+
+  <!-- Inter-card arrows -->
+  <g font-size="10.5" font-weight="600" text-anchor="middle" fill="#534AB7">
+    <path d="M284,250 L356,250" stroke="#534AB7" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="320" y="242">rank</text>
+    <path d="M564,250 L636,250" stroke="#534AB7" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="600" y="242">emulate</text>
+  </g>
+
+  <!-- Active-learning feedback loop -->
+  <g>
+    <path d="M740,350 C740,432 560,442 460,442 C360,442 180,432 180,352" fill="none" stroke="#534AB7" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+    <rect x="300" y="431" width="320" height="22" rx="6" fill="#FFFFFF"/>
+    <text x="460" y="446" text-anchor="middle" font-size="10.5" font-weight="600" fill="#534AB7">Active learning: results refine the hypothesis prior</text>
+  </g>
+
+  <!-- Optional MR side-screen -->
+  <g>
+    <rect x="300" y="482" width="320" height="46" rx="12" fill="#F1EFE8" stroke="#B4B2A9" stroke-dasharray="5 4"/>
+    <text x="460" y="503" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5F5E5A">Optional: Mendelian randomization</text>
+    <text x="460" y="519" text-anchor="middle" font-size="10.5" fill="#888780">genetics-based parallel screen &#183; no EHR &#183; Truveta hedge</text>
+  </g>
+
+  <!-- Axis -->
+  <g>
+    <path d="M120,564 L820,564" stroke="#888780" stroke-width="1.6" marker-end="url(#arrow)"/>
+    <text x="120" y="585" text-anchor="start" font-size="11.5" font-weight="600" fill="#888780">Association</text>
+    <text x="470" y="585" text-anchor="middle" font-size="11" fill="#888780">increasing causal rigor &#183; fewer, stronger candidates</text>
+    <text x="820" y="585" text-anchor="end" font-size="11.5" font-weight="600" fill="#534AB7">Intervention</text>
+  </g>
+</svg>

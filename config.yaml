@@ -79,15 +79,16 @@ knowledge_graphs:
     # to the canonical entity-type subset declared in keep_categories.
     nodes_path: data/matrix/nodes.tsv
     edges_path: data/matrix/edges.tsv
-    # 'all' keeps every node category and every edge — full graph. Use a
-    # restricted list (e.g. [drug, disease, gene/protein, pathway,
-    # effect/phenotype]) to scope down for memory-constrained machines.
-    # Full-graph footprint at scale: ~44 M nodes / 87 M edges, ~10 GB RAM
-    # for the in-memory DataFrames; NetworkX graph in nb04 will be ~25 GB.
-    # 'all' was causing OOM (>150 GB) in nb01 + nb02. Restricted to the 5
-    # core categories used by every notebook (drops Matrix from ~87 M edges
-    # to ~10 M; ~250 MB resident vs ~10 GB).
-    keep_categories: [drug, disease, gene/protein, pathway, effect/phenotype]
+    # 'all' keeps every node category and every edge — the full released
+    # graph, and the setting used for the reported results. Use a restricted
+    # list (e.g. [drug, disease, gene/protein, pathway, effect/phenotype]) only
+    # to scope down on memory-constrained machines; note that this evaluates
+    # MATRIX on a subset while every other KG is evaluated as released, which
+    # must be disclosed if used.
+    # Full-graph footprint at scale: ~10 GB RAM for the in-memory DataFrames,
+    # ~25 GB for the NetworkX graph in nb04; peak across nb01+nb02 exceeded
+    # 150 GB, so run_main.sbatch requests 256 GB.
+    keep_categories: all
     # Disease ID bridges: when a disease lacks a direct MONDO ID, the loader
     # falls back through these tables in order:
     #   1. DOID -> MONDO          (do_diseases.csv from gold standards)

@@ -1,0 +1,7 @@
+characteristic,split,effect,stat,p_value
+Oncology,116 yes / 137 no,kept-rate 41% vs 50%,OR=0.72,p=0.2068
+Biologic (any),119 yes / 134 no,kept-rate 50% vs 42%,OR=1.42,p=0.2062
+Multi-agency (>=2),18 yes / 235 no,kept-rate 39% vs 46%,OR=0.74,p=0.6279
+Strict repurposing,212 yes / 41 no,kept-rate 47% vs 39%,OR=1.40,p=0.3936
+Drug age (yrs since orig approval),median kept 6 vs dropped 8,mean 7.4 vs 8.5,Mann-Whitney,p=0.0133
+Therapeutic area (overall),8 groups,chi-square,chi2=10.8,p=0.1458

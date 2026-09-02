@@ -3,7 +3,7 @@
 import os, sys, json, base64
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-FIGDIR = os.path.join(ROOT, 'results', 'figures', '09_hard_pairs')
+FIGDIR = os.path.join(ROOT, 'results', 'figures', '09b_hard_pairs')
 OUT = os.path.join(ROOT, 'eval_notebooks', '09b_hard_pairs.ipynb')
 
 # 1) (re)generate the five figures from current data so embedded previews are fresh

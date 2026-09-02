@@ -20,16 +20,22 @@ _avail = {f.name for f in font_manager.fontManager.ttflist}
 FONT = next((f for f in _pref if f in _avail), 'DejaVu Sans')
 plt.rcParams.update({'font.family': FONT, 'axes.linewidth': 0.8, 'savefig.dpi': 300, 'figure.dpi': 150,
     'axes.spines.top': False, 'axes.spines.right': False, 'legend.frameon': False})
+try:                                    # shared house style (consistent across 09/09a/09b/09c)
+    from . import figstyle
+except ImportError:
+    import figstyle
+figstyle.apply()
 
 MODELS = ['GPT-4.1-mini', 'Gemini-3.1-flash-lite', 'Llama-3.3-70B']
-MCOL = {'GPT-4.1-mini': '#4C72B0', 'Gemini-3.1-flash-lite': '#A24FA0', 'Llama-3.3-70B': '#55A868'}
-VCOL = {'GPT-4.1-mini': '#0F9D8C', 'Gemini-3.1-flash-lite': '#5B4FB8', 'Llama-3.3-70B': '#D1791F'}
-VMK = {'GPT-4.1-mini': 'o', 'Gemini-3.1-flash-lite': 's', 'Llama-3.3-70B': '^'}
+_MSHORT = {'GPT-4.1-mini': 'GPT', 'Gemini-3.1-flash-lite': 'Gemini', 'Llama-3.3-70B': 'Llama'}
+MCOL = {m: figstyle.MODEL[_MSHORT[m]] for m in MODELS}     # shared model palette
+VCOL = MCOL
+VMK = {'GPT-4.1-mini': 'o', 'Gemini-3.1-flash-lite': 's', 'Llama-3.3-70B': 'D'}
 KGS = ['primekg', 'drkg', 'biokg']
 KLAB = {'primekg': 'PrimeKG', 'drkg': 'DRKG', 'biokg': 'BioKG'}
-KCOL = {'primekg': '#4C72B0', 'drkg': '#DD8452', 'biokg': '#55A868'}
+KCOL = {k: figstyle.KG[KLAB[k]] for k in KGS}              # shared KG palette
 RANK_BINS = ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4–8', 'Missed']
-RANK_COL = ['#1A7D3C', '#5CB85C', '#A8DCA8', '#F0AD4E', '#D9534F']
+RANK_COL = figstyle.RANK_RAMP                              # shared best->worst ramp
 FOOT = '116-set · 3 seeds × 2 shuffles · Open Targets distractors · GPT-4.1-mini + Gemini-3.1-flash-lite + Llama-3.3-70B'
 _RAW2NICE = {'gpt-4.1-mini': 'GPT-4.1-mini', 'gemini:gemini-3.1-flash-lite': 'Gemini-3.1-flash-lite',
              'llama3.3:70b': 'Llama-3.3-70B'}
@@ -116,7 +122,7 @@ def fig_rank_distribution(df):
                 ax.barh(y, v, left=left, height=0.72, color=c, edgecolor='white', lw=0.6)
                 if v > 0.05:
                     ax.text(left + v/2, y, f'{v*100:.0f}', ha='center', va='center', fontsize=8.5,
-                            color='white' if c in ('#1A7D3C', '#D9534F') else '#333')
+                            color='white' if c in ('#1F6F5E', '#C2705A') else '#333')
                 left += v
         ax.set_yticks(range(len(arms))); ax.set_yticklabels([alab[a] for a in arms][::-1] if m == MODELS[0] else [], fontsize=10)
         ax.set_xlim(0, 1); ax.set_xticks([0, 0.5, 1]); ax.set_xlabel('Fraction of queries', fontsize=10)
@@ -149,7 +155,7 @@ def fig_dim_tracks_lift(df, summary_csv, min_range=0.02):
     h1 = plt.Rectangle((0, 0), 1, 1, color='#2E8B57'); h2 = plt.Rectangle((0, 0), 1, 1, color='#c4c4c4')
     ax.legend([h1, h2], ['KG order matches lift order', 'order differs'], loc='lower right', fontsize=8.5)
     ax.text(-1.0, len(T) - 0.6, 'exploratory: n = 3 KGs, no inference', fontsize=8, color='#999', style='italic')
-    ax.set_title('Which quality dimension tracks lift?', fontsize=13.5, fontweight='bold', pad=10)
+    ax.set_title('Quality dimensions vs KG lift', fontsize=13.5, fontweight='bold', pad=10)
     return fig
 
 
@@ -172,7 +178,7 @@ def fig_lift_vs_coverage(df, summary_csv, xdim='Coverage [dim]'):
         ax.set_xlim(0.44, 0.61); ax.set_xlabel('coverage', fontsize=10)
         ax.set_title(m, fontsize=12, fontweight='bold', color=VCOL[m], pad=6)
     axes[0].set_ylabel('Downstream lift (ΔMRR)', fontsize=10)
-    fig.suptitle('Faceted by LLM', fontsize=13, fontweight='bold', x=0.07, ha='left', y=0.97)
+    fig.suptitle('Lift vs KG coverage, by LLM', fontsize=13, fontweight='bold', x=0.07, ha='left', y=0.97)
     return fig
 
 
@@ -197,7 +203,7 @@ def fig_evidence_quality(df):
     axL.set_yticks(range(len(cats))); axL.set_yticklabels([c[1] for c in cats][::-1], fontsize=10.5)
     axL.set_xlim(0, 11.5); axL.set_xticks(range(0, 9)); axL.set_ylim(-0.6, len(cats) - 0.4)
     axL.set_xlabel('Mean rank of the true drug   (1 = best, 8 = worst)', fontsize=10)
-    axL.set_title('When the KG backs the true drug,\nthe model ranks it #1', fontsize=11.5,
+    axL.set_title('Mean rank of the true drug by KG evidence', fontsize=11.5,
                   fontweight='bold', loc='left', color='#2b3a55', pad=6)
     # right: confidence calibration
     g = kg.groupby('pos_confidence')['hit@1'].mean()
@@ -210,8 +216,8 @@ def fig_evidence_quality(df):
                      fontsize=9.5, fontweight='bold', color='#333')
     axR.set_xticks([1, 2, 3, 4, 5]); axR.set_xlim(0.6, 5.4); axR.set_ylim(-0.04, 1.1)
     axR.set_xlabel("Model's self-reported confidence (1–5)", fontsize=10); axR.set_ylabel('Hits@1', fontsize=10)
-    axR.set_title('…and it knows when it has the evidence', fontsize=11.5, fontweight='bold', loc='left', pad=6)
-    fig.suptitle('The KG lift is an evidence-quality effect', fontsize=14, fontweight='bold', y=0.97)
+    axR.set_title('Hits@1 by model confidence', fontsize=11.5, fontweight='bold', loc='left', pad=6)
+    fig.suptitle('True-drug rank and Hits@1 vs KG evidence', fontsize=14, fontweight='bold', y=0.97)
     _footer(fig, '116-set · 3 seeds × 2 shuffles · GPT + Gemini + Llama, KG arms · model self-reports')
     return fig
 

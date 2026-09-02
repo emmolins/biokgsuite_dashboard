@@ -1,0 +1,22 @@
+dim_1,dim_2,reversals,comparisons,fraction
+Coverage,Annotation Accuracy,6,9,0.6666666666666666
+Coverage,Trustworthiness,6,15,0.4
+Coverage,Topology,2,15,0.13333333333333333
+Coverage,Stability,4,15,0.26666666666666666
+Coverage,Task Performance,7,15,0.4666666666666667
+Coverage,Generalisation,7,15,0.4666666666666667
+Annotation Accuracy,Trustworthiness,7,9,0.7777777777777778
+Annotation Accuracy,Topology,6,9,0.6666666666666666
+Annotation Accuracy,Stability,5,9,0.5555555555555556
+Annotation Accuracy,Task Performance,5,9,0.5555555555555556
+Annotation Accuracy,Generalisation,5,9,0.5555555555555556
+Trustworthiness,Topology,6,15,0.4
+Trustworthiness,Stability,10,15,0.6666666666666666
+Trustworthiness,Task Performance,5,15,0.3333333333333333
+Trustworthiness,Generalisation,5,15,0.3333333333333333
+Topology,Stability,6,15,0.4
+Topology,Task Performance,5,15,0.3333333333333333
+Topology,Generalisation,7,15,0.4666666666666667
+Stability,Task Performance,11,15,0.7333333333333333
+Stability,Generalisation,5,15,0.3333333333333333
+Task Performance,Generalisation,6,15,0.4

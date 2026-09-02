@@ -9,15 +9,17 @@ Fills in automatically as more HPC jobs land — no hardcoded numbers.
 import os, sys, json, base64
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-FIGDIR = os.path.join(ROOT, 'results', 'figures', '09_scaling')
+FIGDIR = os.path.join(ROOT, 'results', 'figures', '09c_scaling')
 OUT = os.path.join(ROOT, 'eval_notebooks', '09c_scaling_sweep.ipynb')
 
-from src.scaling_sweep import load_llama_runs, compute_scaling, fig_lift_vs_size, fig_mrr_vs_size
+from src.scaling_sweep import (load_llama_runs, compute_scaling, fig_lift_vs_size,
+                               fig_mrr_vs_size, fig_kg_by_model, kg_by_model_table)
 os.makedirs(FIGDIR, exist_ok=True)
 _df = load_llama_runs(os.path.join(ROOT, 'results', 'tables', '09_llm_runs'))
 _cov = os.path.join(ROOT, 'data', 'gold_standards', 'coverage_annotation_v4.csv')
 _s = compute_scaling(_df, _cov)
-_FIGS = {'lift_vs_size': fig_lift_vs_size(_s), 'mrr_vs_size': fig_mrr_vs_size(_s)}
+_FIGS = {'lift_vs_size': fig_lift_vs_size(_s), 'mrr_vs_size': fig_mrr_vs_size(_s),
+         'kg_by_model': fig_kg_by_model(_df)}
 for n, f in _FIGS.items():
     f.savefig(os.path.join(FIGDIR, n + '.png'), dpi=200, bbox_inches='tight', facecolor='white')
     f.savefig(os.path.join(FIGDIR, n + '.pdf'), bbox_inches='tight', facecolor='white')
@@ -51,14 +53,16 @@ C.append(md(
 ))
 C.append(md("## Setup"))
 C.append(code(
-    "import os, sys\n"
+    "import os, sys, importlib\n"
     "from IPython.display import display\n"
     "%matplotlib inline\n"
     "BASE = os.getcwd()\n"
     "while not os.path.exists(os.path.join(BASE, 'src', 'scaling_sweep.py')) and os.path.dirname(BASE) != BASE:\n"
     "    BASE = os.path.dirname(BASE)\n"
     "sys.path.insert(0, BASE)\n"
-    "from src.scaling_sweep import (load_llama_runs, compute_scaling, fig_lift_vs_size, fig_mrr_vs_size)\n"
+    "import src.scaling_sweep as _ss; importlib.reload(_ss)   # pick up edits without a kernel restart\n"
+    "from src.scaling_sweep import (load_llama_runs, compute_scaling, fig_lift_vs_size,\n"
+    "    fig_mrr_vs_size, fig_kg_by_model, kg_by_model_table)\n"
     "\n"
     "RUNS = os.path.join(BASE, 'results', 'tables', '09_llm_runs')\n"
     "COV  = os.path.join(BASE, 'data', 'gold_standards', 'coverage_annotation_v4.csv')\n"
@@ -76,6 +80,22 @@ C.append(code(
     "   'lift','lift_lo','lift_hi','lift_cov','lift_cov_lo','lift_cov_hi','n_dis']].round(3)"))
 
 C.append(md(
+    "### Covered vs pooled — side by side",
+    "",
+    "The KG arm two ways for every model: **pooled** (all 3 KG arms, including pairs the graph",
+    "doesn't contain) vs **covered only** (restricted to cells where the KG actually holds the pair).",
+    "`gap = covered − pooled` is the **empty-arm penalty** — how much the pooled number is dragged",
+    "down by coverage holes rather than by the model failing to use evidence that's present."))
+C.append(code(
+    "cmp = s[['label','params','mrr_nokg','mrr_kg','mrr_kg_cov','lift','lift_cov']].copy()\n"
+    "cmp['mrr_gap']  = cmp['mrr_kg_cov'] - cmp['mrr_kg']      # covered - pooled (MRR)\n"
+    "cmp['lift_gap'] = cmp['lift_cov']   - cmp['lift']        # covered - pooled (lift)\n"
+    "cmp = cmp.round(3)\n"
+    "cmp.columns = ['model','params(B)','MRR no-KG','MRR KG pooled','MRR KG covered',\n"
+    "               'lift pooled','lift covered','MRR gap (cov-pool)','lift gap (cov-pool)']\n"
+    "cmp.reset_index(drop=True)"))
+
+C.append(md(
     "## Figures",
     "",
     "**1 · KG lift vs model size** — the headline. Pooled (grey) vs covered-arm (green) lift across",
@@ -84,7 +104,12 @@ C.append(md(
     "diverge at the small end, that gap is the empty-arm/memorization artifact, not capability."))
 C.append(code("fig_lift_vs_size(s);", "lift_vs_size.png"))
 C.append(md(
-    "**2 · Where the lift comes from** — no-KG (prior-only) vs KG-arm MRR by size. A **rising no-KG",
+    "**2 · KG context by graph and model** — the pooled KG arm broken out into the three individual",
+    "graphs (PrimeKG, DRKG, BioKG) next to the no-KG baseline, across the ladder. Shows whether one",
+    "graph drives the lift and how each KG's benefit scales with model size."))
+C.append(code("display(kg_by_model_table(df).round(3))\nfig_kg_by_model(df);", "kg_by_model.png"))
+C.append(md(
+    "**3 · Where the lift comes from** — no-KG (prior-only) vs KG-arm MRR by size. A **rising no-KG",
     "line** with scale is the memorization signal (bigger models recall more pairs unaided); the gap",
     "to the KG line is the lift."))
 C.append(code("fig_mrr_vs_size(s);", "mrr_vs_size.png"))

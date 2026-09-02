@@ -4,14 +4,16 @@
 #SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=32
-#SBATCH --mem=120G
+#SBATCH --mem=256G
 #SBATCH --output=logs/main-%j.out
 #SBATCH --error=logs/main-%j.err
 #
 # Runs the main benchmark notebooks 01-07 in order, then 00 (which aggregates
 # their checkpoints), on one CPU compute node. No GPU is requested: embedding
 # training and Gemma encoding live in nb08 (scripts/hpc/run_all.sbatch), not
-# here. MATRIX is the memory driver, hence 120 GB.
+# here. MATRIX is the memory driver: evaluated on its full released
+# graph (config.yaml keep_categories: all) it peaks above 150 GB across
+# nb01+nb02, hence 256 GB.
 #
 # Submit:   sbatch scripts/hpc/run_main.sbatch
 # Monitor:  squeue -u $USER
